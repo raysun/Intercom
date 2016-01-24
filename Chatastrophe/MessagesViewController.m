@@ -54,11 +54,17 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
+
     [[NSNotificationCenter defaultCenter]
      addObserver:self
      selector:@selector(useNotificationWithString:)
      name:@"NewMessages"
+     object:nil];
+
+    [[NSNotificationCenter defaultCenter]
+     addObserver:self
+     selector:@selector(useNotificationWithString:)
+     name:@"AllMessagesDownloadedFromCloud"
      object:nil];
     
     appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
@@ -90,7 +96,14 @@
 //    if (self.selectedIndex.section == 0) {
         deviceName = @"All devices";
         deviceID = @"All";
-        self.title = deviceName;
+
+    // Format the title
+    NSMutableDictionary *titleBarAttributes = [NSMutableDictionary dictionaryWithDictionary: [[UINavigationBar appearance] titleTextAttributes]];
+    [titleBarAttributes setValue:[UIFont fontWithName:@"Avenir Next" size:22] forKey:NSFontAttributeName];
+//    [titleBarAttributes setValue:[UIColor colorWithRed:124 green:23 blue:33 alpha:.5] forKey:NSFontAttributeName];
+    [[UINavigationBar appearance] setTitleTextAttributes:titleBarAttributes];
+    self.title = @"Intercom";
+    
         self.demoData = allMessages[@"All"];
     /*
 } else {
@@ -111,7 +124,7 @@
         self.collectionView.collectionViewLayout.outgoingAvatarViewSize = CGSizeZero;
     }
     
-    self.showLoadEarlierMessagesHeader = YES;
+  //  self.showLoadEarlierMessagesHeader = YES;
     
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage jsq_defaultTypingIndicatorImage]
                                                                               style:UIBarButtonItemStyleBordered
@@ -156,8 +169,9 @@
 }
 
 - (void)useNotificationWithString:(NSNotification *)notification {
+    NSLog(@"%@",notification.name);
     [self finishReceivingMessageAnimated:YES];
-    NSLog(@"Received notification");
+
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -609,10 +623,10 @@
     if (!msg.isMediaMessage) {
         
         if ([msg.senderId isEqualToString:self.senderId]) {
-            cell.textView.textColor = [UIColor blackColor];
+            cell.textView.textColor = [UIColor whiteColor];
         }
         else {
-            cell.textView.textColor = [UIColor whiteColor];
+            cell.textView.textColor = [UIColor blackColor];
         }
         
         cell.textView.linkTextAttributes = @{ NSForegroundColorAttributeName : cell.textView.textColor,

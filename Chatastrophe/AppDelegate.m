@@ -82,7 +82,7 @@
     publicDB = [[CKContainer defaultContainer] publicCloudDatabase];
     
     // Register for CloudKit push notifications (based on the subscription server queries)
-    UIUserNotificationSettings *notificationSettings = [UIUserNotificationSettings settingsForTypes:(UIUserNotificationTypeAlert, UIUserNotificationTypeBadge, UIUserNotificationTypeSound) categories:nil];
+    UIUserNotificationSettings *notificationSettings = [UIUserNotificationSettings settingsForTypes:(UIUserNotificationTypeAlert | UIUserNotificationTypeBadge | UIUserNotificationTypeSound) categories:nil];
     [application registerUserNotificationSettings:notificationSettings];
     [application registerForRemoteNotifications];
     
@@ -90,14 +90,14 @@
     NSUserDefaults *localStore = [NSUserDefaults standardUserDefaults];
 
     // RESET APP - uncomment next line
-//        [store removeObjectForKey:@"deviceList"];
+//    [store removeObjectForKey:@"deviceList"];
     
     // DeviceList is completely empty - first device for this user
     if (![store arrayForKey:@"deviceList"]) {
         [store setArray:[NSMutableArray new] forKey:@"deviceList"];
-        // Set up CloudKit server queries (subscriptions) - only needs to be run once
-        [self createCloudKitSubscriptions];
     }
+    // Set up CloudKit server queries (subscriptions) - only needs to be run once
+    [self createCloudKitSubscriptions];
 
     [[NSNotificationCenter defaultCenter]
      addObserver: self
@@ -173,6 +173,9 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
         for (CKRecord *record in results) {
             [self saveRecordToLocalMessages:record];
         }
+        NSLog(@"Query finished, messages loaded");
+        [self notify:@"AllMessagesDownloadedFromCloud"];
+
     }];
     
 }
@@ -215,21 +218,15 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
             [self saveRecordToLocalMessages:record];
             
             // Tell message view controller to refresh views
-            [self notifyNewMessageArrived];
+            [self notify:@"NewMessage"];
         
         }];
     }
     completionHandler(UIBackgroundFetchResultNewData);
 }
 
-- (void)notifyNewMessageArrived
-{
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"NewMessages" object:nil userInfo:nil];
-}
-
-- (void)notifyNewDevice
-{
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"NewDevice" object:nil userInfo:nil];
+- (void)notify:(NSString *)notificationName {
+    [[NSNotificationCenter defaultCenter] postNotificationName:notificationName object:nil userInfo:nil];
 }
 
 - (void)saveRecordToLocalMessages:(CKRecord *)record {
@@ -363,7 +360,7 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
             [userDefaults setObject:value forKey:key];
             self.deviceList = value;
         }
-        [self notifyNewDevice];
+        [self notify:@"NewDevice"];
         NSLog(@"Cloud KV store update notification: %@",self.deviceList);
     }
 }
