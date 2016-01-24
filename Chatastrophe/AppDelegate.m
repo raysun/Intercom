@@ -22,10 +22,10 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
-    UISplitViewController *splitViewController = (UISplitViewController *)self.window.rootViewController;
-    UINavigationController *navigationController = [splitViewController.viewControllers lastObject];
-    navigationController.topViewController.navigationItem.leftBarButtonItem = splitViewController.displayModeButtonItem;
-    splitViewController.delegate = self;
+//    UISplitViewController *splitViewController = (UISplitViewController *)self.window.rootViewController;
+ //   UINavigationController *navigationController = [splitViewController.viewControllers lastObject];
+//    navigationController.topViewController.navigationItem.leftBarButtonItem = splitViewController.displayModeButtonItem;
+//    splitViewController.delegate = self;
     
     // Get the device's name to use in the UI on other devices
     self.myName = [[UIDevice currentDevice] name];
@@ -35,6 +35,7 @@
                       @"deviceName":self.myName
                     };
     
+    /*
     // set up onesignal for APNS
     self.oneSignal = [[OneSignal alloc]
                       initWithLaunchOptions:launchOptions
@@ -52,6 +53,8 @@
                           
                       }];
 
+     */
+    
     // local messages array init
     self.allMessages = [NSMutableDictionary new];
 
@@ -89,9 +92,11 @@
     // RESET APP - uncomment next line
 //        [store removeObjectForKey:@"deviceList"];
     
-    // DeviceList is completely empty for this user; create it
+    // DeviceList is completely empty - first device for this user
     if (![store arrayForKey:@"deviceList"]) {
         [store setArray:[NSMutableArray new] forKey:@"deviceList"];
+        // Set up CloudKit server queries (subscriptions) - only needs to be run once
+        [self createCloudKitSubscriptions];
     }
 
     [[NSNotificationCenter defaultCenter]
@@ -108,9 +113,7 @@
 
     // RESET SUBSCRIPTIONS
 //    [self resetSubscriptions];
-    // Set up CloudKit server queries (subscriptions) - only needs to be run once
-//    [self createCloudKitSubscriptions];
-
+    
     // Add this device if it's new
     if (![[localStore objectForKey:@"deviceList"] containsObject:self.myDevice]) {
         self.deviceList = [self.deviceList arrayByAddingObjectsFromArray:@[self.myDevice]];
@@ -121,15 +124,13 @@
     }
     NSLog(@"Startup device list: %@",self.deviceList);
     
+    /* was going to add onesignal ID to the devicelist in onesignal closure here, but delaying while using intercom
     // Register my OneSignalID with the deviceList
     [self.oneSignal IdsAvailable:^(NSString* userId, NSString* pushToken) {
         
-
-
-
-        
 //    MyObject *object10 = myArray[indexOfObject10];
     }];
+    */
     
     // Load messages (BUGBUG: really shouldn't reload the whole dang database from CloudKit, just new messages, but I don't have the local store yet
     for (NSDictionary *device in self.deviceList) {
@@ -298,15 +299,15 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
 - (void)addSubscriptionForPredicate:(NSPredicate *)predicate {
     CKNotificationInfo *info = [CKNotificationInfo new];
     info.shouldBadge = YES;
-    info.shouldSendContentAvailable = YES;
+//    info.shouldSendContentAvailable = YES;
 //    info.alertBody = @"";
-    /*
+    
     info.alertLocalizationKey = @"%@: %@";
     info.alertLocalizationArgs = @[
                                    @"FromFriendlyName",
                                    @"Body"
                                    ];
-     */
+    
     info.desiredKeys = @[@"FromFriendlyName"];
     
     CKSubscription *subscription = [[CKSubscription alloc] initWithRecordType:@"Message" predicate:predicate options:CKSubscriptionOptionsFiresOnRecordCreation];

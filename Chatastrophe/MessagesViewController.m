@@ -86,18 +86,20 @@
 //    self.demoData = model;
     
     // Set the title
-    if (self.selectedIndex.section == 0) {
+    // no longer checking selectedindex - all messages to ALL
+//    if (self.selectedIndex.section == 0) {
         deviceName = @"All devices";
         deviceID = @"All";
         self.title = deviceName;
         self.demoData = allMessages[@"All"];
-    } else {
+    /*
+} else {
         deviceName = [deviceList[self.selectedIndex.row] valueForKey:@"deviceName"];
         deviceID = [deviceList[self.selectedIndex.row] valueForKey:@"deviceID"];
         self.title = deviceName;
         self.demoData = allMessages[deviceID];
     }
-    
+  */
     /**
      *  You can set custom avatar sizes
      */
