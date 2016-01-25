@@ -17,7 +17,7 @@
 //
 
 #import "DemoModelData.h"
-
+#import "AppDelegate.h"
 #import "NSUserDefaults+DemoSettings.h"
 
 
@@ -27,12 +27,15 @@
  *  Do not actually do anything like this.
  */
 
-@implementation DemoModelData
+@implementation DemoModelData {
+    AppDelegate *appDelegate;
+}
 
 - (id)init {
 //- (id)initWithCoder:(NSCoder *)decoder {
     self = [super init];
     if (self) {
+            appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
         
 //        if ([NSUserDefaults emptyMessagesSetting]) {
             self.messages = [NSMutableArray new];
@@ -132,6 +135,7 @@
 // Add a new message to the store, which will then be read by message view & displayed
 - (void)add:(JSQMessage *)newMessage {
     [self.messages addObject:newMessage];
+//    NSLog(@"%@",newMessage);
 //    [[NSNotificationCenter defaultCenter] postNotificationName:@"Save" object:nil];
 //    NSUbiquitousKeyValueStore *store = [NSUbiquitousKeyValueStore new];
     
@@ -142,6 +146,15 @@
     JSQPhotoMediaItem *photoItem = [[JSQPhotoMediaItem alloc] initWithImage:[UIImage imageNamed:@"goldengate"]];
     JSQMessage *photoMessage = [JSQMessage messageWithSenderId:kJSQDemoAvatarIdSquires
                                                    displayName:kJSQDemoAvatarDisplayNameSquires
+                                                         media:photoItem];
+    [self.messages addObject:photoMessage];
+}
+
+- (void)addPhotoMediaMessage:(UIImage *)image
+{
+    JSQPhotoMediaItem *photoItem = [[JSQPhotoMediaItem alloc] initWithImage:image];
+    JSQMessage *photoMessage = [JSQMessage messageWithSenderId:appDelegate.myID
+                                                   displayName:appDelegate.myName
                                                          media:photoItem];
     [self.messages addObject:photoMessage];
 }

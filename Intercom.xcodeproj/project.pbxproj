@@ -14,6 +14,7 @@
 		B6657BB31C445CE2006DE461 /* Message.m in Sources */ = {isa = PBXBuildFile; fileRef = B6657BB21C445CE2006DE461 /* Message.m */; };
 		B6657BB81C446AEE006DE461 /* MessagesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B6657BB51C446AEE006DE461 /* MessagesViewController.m */; };
 		B6657BB91C446AEE006DE461 /* DemoModelData.m in Sources */ = {isa = PBXBuildFile; fileRef = B6657BB71C446AEE006DE461 /* DemoModelData.m */; };
+		B6785EF01C55908C0078D903 /* APLViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B6785EEF1C55908C0078D903 /* APLViewController.m */; };
 		B68D86C31C4891B00007F64E /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B68D86C21C4891B00007F64E /* CloudKit.framework */; };
 		B69513411C45D4A200546E64 /* MessageFile.m in Sources */ = {isa = PBXBuildFile; fileRef = B69513401C45D4A200546E64 /* MessageFile.m */; };
 		B6B584631C3E31E8007B8AB4 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B6B584621C3E31E8007B8AB4 /* main.m */; };
@@ -41,6 +42,8 @@
 		B6657BB51C446AEE006DE461 /* MessagesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = MessagesViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		B6657BB61C446AEE006DE461 /* DemoModelData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemoModelData.h; sourceTree = "<group>"; };
 		B6657BB71C446AEE006DE461 /* DemoModelData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DemoModelData.m; sourceTree = "<group>"; };
+		B6785EEE1C55908C0078D903 /* APLViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = APLViewController.h; sourceTree = "<group>"; };
+		B6785EEF1C55908C0078D903 /* APLViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = APLViewController.m; sourceTree = "<group>"; };
 		B68D86C21C4891B00007F64E /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		B695133F1C45D4A200546E64 /* MessageFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageFile.h; sourceTree = "<group>"; };
 		B69513401C45D4A200546E64 /* MessageFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageFile.m; sourceTree = "<group>"; };
@@ -138,6 +141,8 @@
 				B6B584681C3E31E8007B8AB4 /* MasterViewController.m */,
 				B6657BB41C446AEE006DE461 /* MessagesViewController.h */,
 				B6657BB51C446AEE006DE461 /* MessagesViewController.m */,
+				B6785EEE1C55908C0078D903 /* APLViewController.h */,
+				B6785EEF1C55908C0078D903 /* APLViewController.m */,
 				B637DA781C446D9600072F0C /* Images.xcassets */,
 				B6B584701C3E31E8007B8AB4 /* Assets.xcassets */,
 				B6B584751C3E31E8007B8AB4 /* Info.plist */,
@@ -291,6 +296,7 @@
 			files = (
 				B6B584661C3E31E8007B8AB4 /* AppDelegate.m in Sources */,
 				B6657BB31C445CE2006DE461 /* Message.m in Sources */,
+				B6785EF01C55908C0078D903 /* APLViewController.m in Sources */,
 				B6657BB91C446AEE006DE461 /* DemoModelData.m in Sources */,
 				B69513411C45D4A200546E64 /* MessageFile.m in Sources */,
 				B6B584691C3E31E8007B8AB4 /* MasterViewController.m in Sources */,

@@ -53,7 +53,7 @@ static NSString * const kJSQDemoAvatarIdWoz = @"309-41802-93823";
 - (void)add:(JSQMessage *)newMessage;
 
 - (void)addPhotoMediaMessage;
-
+- (void)addPhotoMediaMessage:(UIImage *)image;
 - (void)addLocationMediaMessageCompletion:(JSQLocationMediaItemCompletionBlock)completion;
 
 - (void)addVideoMediaMessage;

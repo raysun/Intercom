@@ -141,7 +141,7 @@
     [self.allMessages setValue:[DemoModelData new] forKey:@"All"];
 
     CKQuery *query = [[CKQuery alloc] initWithRecordType:@"Message" predicate:[NSPredicate predicateWithValue:YES]];
-    query.sortDescriptors = @[[[NSSortDescriptor alloc] initWithKey:@"Date" ascending:false]];
+    query.sortDescriptors = @[[[NSSortDescriptor alloc] initWithKey:@"Date" ascending:true]];
     [self performQuery:query];
 
     /*
@@ -218,7 +218,7 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
             [self saveRecordToLocalMessages:record];
             
             // Tell message view controller to refresh views
-            [self notify:@"NewMessage"];
+            [self notify:@"NewMessages"];
         
         }];
     }
@@ -235,9 +235,16 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     NSString *to = [record objectForKey:@"To"];
     NSString *body = [record objectForKey:@"Body"];
     NSDate *date = [record objectForKey:@"Date"];
+    UIImage *image = [UIImage imageWithData:[record objectForKey:@"Image"]];
     if (!fromFriendlyName) fromFriendlyName = @"iPhone";
     
-    JSQMessage *message = [[JSQMessage alloc] initWithSenderId:from senderDisplayName:fromFriendlyName date:date text:body];
+    JSQMessage *message;
+    if (image) {
+        message = [[JSQMessage alloc] initWithSenderId:from senderDisplayName:fromFriendlyName date:date media:[[JSQPhotoMediaItem alloc] initWithImage:image]];
+//        NSLog(@"%@",message);
+    } else {
+        message = [[JSQMessage alloc] initWithSenderId:from senderDisplayName:fromFriendlyName date:date text:body];
+    }
     
     // Messages to ALL always go to ALL. Then messages NOT FROM ME go to OTHERS' mailboxes. Then messages from ME TO OTHERS go to OTHERS.
     if ([to isEqualToString:@"All"]) {

@@ -21,6 +21,8 @@
 #import "AppDelegate.h"
 #import "MessageFile.h"
 @import CloudKit;
+#import "APLViewController.h"
+#import "JSQMessage.h"
 
 @interface MessagesViewController()
 
@@ -36,6 +38,7 @@
     
     NSString *deviceID;
     NSString *deviceName;
+    APLViewController *photoPickerVC;
     
 }
 
@@ -359,21 +362,6 @@
     [self.delegateModal didDismissJSQDemoViewController:self];
 }
 
-// BUGBUG: hack to let the model add a received message for now
-- (void) addMessage:(NSString *)text {
-    [JSQSystemSoundPlayer jsq_playMessageSentSound];
-    
-    JSQMessage *message = [[JSQMessage alloc] initWithSenderId:@"iPhone"
-                                             senderDisplayName:@"iPhone"
-                                                          date:[NSDate date]
-                                                          text:text];
-    
-    NSLog(@"Adding message to list (without sending): %@", message);
-    [self.demoData add:message];
-    
-    [self finishSendingMessageAnimated:YES];
-
-}
 
 
 #pragma mark - User sent message
@@ -394,7 +382,6 @@
     [JSQSystemSoundPlayer jsq_playMessageSentSound];
     
     // BUGBUG: fake text for testing
-//    if ([text isEqualToString:@""]) text = @"!Test message";
     JSQMessage *message = [[JSQMessage alloc] initWithSenderId:appDelegate.myID
                                              senderDisplayName:appDelegate.myName
                                                           date:date
@@ -425,21 +412,64 @@
 
 - (void)didPressAccessoryButton:(UIButton *)sender
 {
+    /*
     // BUGBUG: For testing, reusing the attachment button to send test text
     int randomNumber = arc4random_uniform(10);
     NSString *testMessage = [NSString stringWithFormat:@"Yo %d",randomNumber];
     [self didPressSendButton:nil withMessageText:testMessage senderId:appDelegate.myID senderDisplayName:appDelegate.myName date:[NSDate date]];
-    /*
+    */
+    
     [self.inputToolbar.contentView.textView resignFirstResponder];
 
-    UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:@"Media messages"
-                                                       delegate:self
-                                              cancelButtonTitle:@"Cancel"
-                                         destructiveButtonTitle:nil
-                                              otherButtonTitles:@"Send photo", @"Send location", @"Send video", nil];
+    [self performSegueWithIdentifier:@"ShowPhotoPicker" sender:self];
     
-    [sheet showFromToolbar:self.inputToolbar];
-     */
+}
+
+-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    photoPickerVC = [segue destinationViewController];
+}
+
+// Coming back from photo picker, we call unwindAction on the segue
+- (IBAction)unwindAction:(UIStoryboardSegue*)unwindSegue {
+    [JSQSystemSoundPlayer jsq_playMessageSentSound];
+    
+    JSQPhotoMediaItem *photoItem = [[JSQPhotoMediaItem alloc] initWithImage:photoPickerVC.selectedImage];
+    JSQMessage *photoMessage = [JSQMessage messageWithSenderId:appDelegate.myID
+                                                   displayName:appDelegate.myName
+                                                         media:photoItem];
+    
+
+    [self.demoData.messages addObject:photoMessage];
+    
+    CKDatabase *publicDB = [[CKContainer defaultContainer] publicCloudDatabase];
+    CKRecord *dbMessage = [[CKRecord alloc] initWithRecordType:@"Message"];
+    dbMessage[@"From"] = appDelegate.myID;  //mydeviceid
+    dbMessage[@"FromFriendlyName"] = appDelegate.myName;
+    dbMessage[@"To"] = deviceID;
+    dbMessage[@"ToFriendlyName"] = deviceName;
+    dbMessage[@"Body"] = @"Photo attached";
+    dbMessage[@"Date"] = [NSDate date];
+
+    UIImage *image = photoPickerVC.selectedImage;
+    CGRect rect = CGRectMake(0.0, 0.0, 320.0, 240.0);
+    UIGraphicsBeginImageContext(rect.size);
+    [image drawInRect:rect];
+    UIImage* newImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+
+    NSData *imageData = UIImageJPEGRepresentation(newImage, 0.2);
+    dbMessage[@"Image"] = imageData;
+    
+    [publicDB saveRecord:dbMessage completionHandler:^(CKRecord *savedPlace, NSError *error) {
+        // handle errors here
+        if (!error) {
+            NSLog(@"Saved record %@",savedPlace);
+        }
+    }];
+    
+    [self finishSendingMessageAnimated:YES];
+    
 }
 
 - (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex
@@ -639,8 +669,6 @@
 
 
 #pragma mark - UICollectionView Delegate
-
-#pragma mark - Custom menu items
 
 - (BOOL)collectionView:(UICollectionView *)collectionView canPerformAction:(SEL)action forItemAtIndexPath:(NSIndexPath *)indexPath withSender:(id)sender
 {
