@@ -409,7 +409,9 @@
     
 //    [self sendPushNotification:message];
 
-    [self finishSendingMessageAnimated:YES];
+    dispatch_async(dispatch_get_main_queue(), ^(void){
+        [self finishSendingMessageAnimated:YES];
+    });
 }
 
 - (void)didPressAccessoryButton:(UIButton *)sender
@@ -486,7 +488,9 @@
         }
     }];
     
-    [self finishSendingMessageAnimated:YES];
+    dispatch_async(dispatch_get_main_queue(), ^(void){
+        [self finishSendingMessageAnimated:YES];
+    });
     
 }
 
