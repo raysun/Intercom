@@ -24,6 +24,7 @@
 		B6B5846F1C3E31E8007B8AB4 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B6B5846D1C3E31E8007B8AB4 /* Main.storyboard */; };
 		B6B584711C3E31E8007B8AB4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B6B584701C3E31E8007B8AB4 /* Assets.xcassets */; };
 		B6B584741C3E31E8007B8AB4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B6B584721C3E31E8007B8AB4 /* LaunchScreen.storyboard */; };
+		B6BB18211C57E48C00AB5E6F /* Purr.aiff in Resources */ = {isa = PBXBuildFile; fileRef = B6BB18201C57E48C00AB5E6F /* Purr.aiff */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -47,7 +48,7 @@
 		B68D86C21C4891B00007F64E /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		B695133F1C45D4A200546E64 /* MessageFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageFile.h; sourceTree = "<group>"; };
 		B69513401C45D4A200546E64 /* MessageFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageFile.m; sourceTree = "<group>"; };
-		B6B5845E1C3E31E8007B8AB4 /* Intercom.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Intercom.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B6B5845E1C3E31E8007B8AB4 /* Chirp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Chirp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B6B584621C3E31E8007B8AB4 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		B6B584641C3E31E8007B8AB4 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		B6B584651C3E31E8007B8AB4 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = AppDelegate.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
@@ -59,6 +60,7 @@
 		B6B584701C3E31E8007B8AB4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B6B584731C3E31E8007B8AB4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		B6B584751C3E31E8007B8AB4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B6BB18201C57E48C00AB5E6F /* Purr.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = Purr.aiff; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -124,7 +126,7 @@
 		B6B5845F1C3E31E8007B8AB4 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				B6B5845E1C3E31E8007B8AB4 /* Intercom.app */,
+				B6B5845E1C3E31E8007B8AB4 /* Chirp.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -145,7 +147,6 @@
 				B6785EEF1C55908C0078D903 /* APLViewController.m */,
 				B637DA781C446D9600072F0C /* Images.xcassets */,
 				B6B584701C3E31E8007B8AB4 /* Assets.xcassets */,
-				B6B584751C3E31E8007B8AB4 /* Info.plist */,
 				B69D81691C456C0000866BC9 /* Old */,
 				B6B584611C3E31E8007B8AB4 /* Supporting Files */,
 			);
@@ -155,6 +156,8 @@
 		B6B584611C3E31E8007B8AB4 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				B6B584751C3E31E8007B8AB4 /* Info.plist */,
+				B6BB18201C57E48C00AB5E6F /* Purr.aiff */,
 				B6B584621C3E31E8007B8AB4 /* main.m */,
 			);
 			name = "Supporting Files";
@@ -180,7 +183,7 @@
 			);
 			name = Intercom;
 			productName = Chatastrophe;
-			productReference = B6B5845E1C3E31E8007B8AB4 /* Intercom.app */;
+			productReference = B6B5845E1C3E31E8007B8AB4 /* Chirp.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -234,6 +237,7 @@
 			files = (
 				B6B584741C3E31E8007B8AB4 /* LaunchScreen.storyboard in Resources */,
 				B637DA791C446D9600072F0C /* Images.xcassets in Resources */,
+				B6BB18211C57E48C00AB5E6F /* Purr.aiff in Resources */,
 				B6B584711C3E31E8007B8AB4 /* Assets.xcassets in Resources */,
 				B6B5846F1C3E31E8007B8AB4 /* Main.storyboard in Resources */,
 			);
@@ -424,7 +428,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.raysun.Chatastrophe;
-				PRODUCT_NAME = Intercom;
+				PRODUCT_NAME = Chirp;
 				PROVISIONING_PROFILE = "";
 			};
 			name = Debug;
@@ -441,7 +445,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.raysun.Chatastrophe;
-				PRODUCT_NAME = Intercom;
+				PRODUCT_NAME = Chirp;
 				PROVISIONING_PROFILE = "";
 			};
 			name = Release;

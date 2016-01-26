@@ -35,52 +35,29 @@
                       @"deviceName":self.myName
                     };
     
-    /*
-    // set up onesignal for APNS
-    self.oneSignal = [[OneSignal alloc]
-                      initWithLaunchOptions:launchOptions
-                      appId:@"ffbc7659-7cd4-4a71-ad91-1c2d31beefa6"
-                      handleNotification:^(NSString* message, NSDictionary* additionalData, BOOL isActive) {
-                          NSLog(@"OneSignal Notification opened:\nMessage: %@", message);
-                          
-                          if (additionalData) {
-                              NSLog(@"additionalData: %@", additionalData);
-                              
-                              // Check for and read any custom values you added to the notification
-                              // This done with the "Additonal Data" section the dashbaord.
-                              // OR setting the 'data' field on our REST API.
-                          }
-                          
-                      }];
-
-     */
-    
     // local messages array init
     self.allMessages = [NSMutableDictionary new];
 
     // Make sure user is signed in to iCloud before using CloudKit
     [[CKContainer defaultContainer] accountStatusWithCompletionHandler:^(CKAccountStatus accountStatus, NSError *error) {
         if (accountStatus == CKAccountStatusNoAccount) {
-            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Sign in to iCloud"
-                                                                           message:@"Intercom requires iCloud Drive. Please enable it by..."
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Chirp requires iCloud"
+                                                                           message:@"Please enable your account in Settings."
                                                                     preferredStyle:UIAlertControllerStyleAlert];
             [alert addAction:[UIAlertAction actionWithTitle:@"OK"
                                                       style:UIAlertActionStyleCancel
                                                     handler:nil]];
-  
-            //BUGBUG: not sure which viewcontroller is alive at this point to present the UI. Maybe this check needs to be somewhere else, like in a new custom class for the uisplitviewcontroller
-//            [self.window makeKeyAndVisible];
-//            [splitViewController presentViewController:alert animated:YES completion:nil];
-            
-        }
-        else {
-            // Insert your just-in-time schema code here
         }
     }];
     
     // CloudKit Public Database
     publicDB = [[CKContainer defaultContainer] publicCloudDatabase];
-    
+
+    // Request making this iCloud account discoverable by other users. Other users still need my email address in their contacts.
+    [[CKContainer defaultContainer] requestApplicationPermission:CKApplicationPermissionUserDiscoverability completionHandler:^(CKApplicationPermissionStatus applicationPermissionStatus, NSError * _Nullable error) {
+        
+    }];
+
     // Register for CloudKit push notifications (based on the subscription server queries)
     UIUserNotificationSettings *notificationSettings = [UIUserNotificationSettings settingsForTypes:(UIUserNotificationTypeAlert | UIUserNotificationTypeBadge | UIUserNotificationTypeSound) categories:nil];
     [application registerUserNotificationSettings:notificationSettings];
@@ -112,6 +89,7 @@
     NSLog(@"Local store: %@",[localStore objectForKey:@"deviceList"]);
 
     // RESET SUBSCRIPTIONS
+    // Shouldn't need to do this in production, the first user will set the subscription, and others will try & fail due to duplicate
 //    [self resetSubscriptions];
     
     // Add this device if it's new
@@ -165,7 +143,8 @@
 
 - (void)application:(UIApplication *)application
 didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
-// TODO: handle case where user has disabled (or not accepted) notifications
+    // TODO: handle case where user has disabled (or not accepted) notifications
+    NSLog(@"Notifications enabled: %@",[application currentUserNotificationSettings]);
 }
 
 - (void)performQuery:(CKQuery *)query {
@@ -235,7 +214,8 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     NSString *to = [record objectForKey:@"To"];
     NSString *body = [record objectForKey:@"Body"];
     NSDate *date = [record objectForKey:@"Date"];
-    UIImage *image = [UIImage imageWithData:[record objectForKey:@"Image"]];
+    CKAsset *imageAsset = [record objectForKey:@"Image"];
+    UIImage *image = [UIImage imageWithContentsOfFile:imageAsset.fileURL.path];
     if (!fromFriendlyName) fromFriendlyName = @"iPhone";
     
     JSQMessage *message;
@@ -300,12 +280,14 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
 
 }
 
+#pragma mark - Define Notification content for subscription
 - (void)addSubscriptionForPredicate:(NSPredicate *)predicate {
     CKNotificationInfo *info = [CKNotificationInfo new];
     info.shouldBadge = YES;
 //    info.shouldSendContentAvailable = YES;
-//    info.alertBody = @"";
-    
+    info.alertBody = @" ";
+    info.soundName = @"Purr.aiff";
+//    info.soundName = UILocalNotificationDefaultSoundName;
     info.alertLocalizationKey = @"%@: %@";
     info.alertLocalizationArgs = @[
                                    @"FromFriendlyName",
@@ -417,5 +399,7 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
  
 //    return YES;
 }
+
+// Check icon from Baby Chick Image Illustration of a ...clipartsheep.com
 
 @end

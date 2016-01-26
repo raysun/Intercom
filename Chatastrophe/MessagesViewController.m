@@ -101,11 +101,13 @@
         deviceID = @"All";
 
     // Format the title
+    /*
     NSMutableDictionary *titleBarAttributes = [NSMutableDictionary dictionaryWithDictionary: [[UINavigationBar appearance] titleTextAttributes]];
     [titleBarAttributes setValue:[UIFont fontWithName:@"Avenir Next" size:22] forKey:NSFontAttributeName];
 //    [titleBarAttributes setValue:[UIColor colorWithRed:124 green:23 blue:33 alpha:.5] forKey:NSFontAttributeName];
     [[UINavigationBar appearance] setTitleTextAttributes:titleBarAttributes];
     self.title = @"Intercom";
+     */
     
         self.demoData = allMessages[@"All"];
     /*
@@ -128,11 +130,11 @@
     }
     
   //  self.showLoadEarlierMessagesHeader = YES;
-    
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage jsq_defaultTypingIndicatorImage]
-                                                                              style:UIBarButtonItemStyleBordered
+    // BUGBUG: Plus button for add friend is not correct, will finalize later.
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd
                                                                              target:self
                                                                              action:@selector(receiveMessagePressed:)];
+    self.navigationItem.rightBarButtonItem.tintColor = [UIColor whiteColor];
 
     /**
      *  Register custom menu actions for cells.
@@ -172,7 +174,7 @@
 }
 
 - (void)useNotificationWithString:(NSNotification *)notification {
-    NSLog(@"%@",notification.name);
+    NSLog(@"MessagesView received notification %@",notification.name);
     [self finishReceivingMessageAnimated:YES];
 
 }
@@ -448,18 +450,34 @@
     dbMessage[@"FromFriendlyName"] = appDelegate.myName;
     dbMessage[@"To"] = deviceID;
     dbMessage[@"ToFriendlyName"] = deviceName;
-    dbMessage[@"Body"] = @"Photo attached";
+    dbMessage[@"Body"] = @"Photo";
     dbMessage[@"Date"] = [NSDate date];
 
     UIImage *image = photoPickerVC.selectedImage;
-    CGRect rect = CGRectMake(0.0, 0.0, 320.0, 240.0);
+
+        // this will create a sized down/compressed cached image in the caches folder
+    //BUGBUG: doesn't handle portrait photos or selfies properly
+    const CGSize kImageSize = {504, 378};
+    NSURL *imageURL = [self createCachedImageFromImage:image size:kImageSize];
+    if (imageURL != nil)
+    {
+        CKAsset *asset = [[CKAsset alloc] initWithFileURL:imageURL];
+        dbMessage[@"Image"] = asset;
+    }
+    
+    /*
+    // BUGBUG: Need to figure out the right JPEG size
+    CGSize size = [image size];
+    float aspectRatio = size.width/size.height;
+    CGRect rect = CGRectMake(0.0, 0.0, 320.0, 320.0/aspectRatio);
     UIGraphicsBeginImageContext(rect.size);
     [image drawInRect:rect];
     UIImage* newImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
 
-    NSData *imageData = UIImageJPEGRepresentation(newImage, 0.2);
+    NSData *imageData = UIImageJPEGRepresentation(newImage, 0.8);
     dbMessage[@"Image"] = imageData;
+    */
     
     [publicDB saveRecord:dbMessage completionHandler:^(CKRecord *savedPlace, NSError *error) {
         // handle errors here
@@ -471,6 +489,43 @@
     [self finishSendingMessageAnimated:YES];
     
 }
+
+// this will create a sized down/compressed cached image in the caches folder
+- (NSURL *)createCachedImageFromImage:(UIImage *)image size:(CGSize)size
+{
+    NSURL *resultURL = nil;
+    
+    if (image != nil)
+    {
+        if (image.size.width > image.size.height)
+        {
+            size.height = round(size.width * image.size.height / image.size.width);
+        }
+        else
+        {
+            size.width = round(size.height * image.size.width / image.size.height);
+        }
+        
+        UIGraphicsBeginImageContext(size);
+        [image drawInRect:CGRectMake(0, 0, size.width, size.height)];
+        
+        NSData *data = UIImageJPEGRepresentation(UIGraphicsGetImageFromCurrentImageContext(), 0.75);
+        UIGraphicsEndImageContext();
+        
+        // write the image out to a cache file
+        NSURL *cachesDirectory = [[NSFileManager defaultManager] URLForDirectory:NSCachesDirectory
+                                                                        inDomain:NSUserDomainMask
+                                                               appropriateForURL:nil
+                                                                          create:YES
+                                                                           error:nil];
+        NSString *temporaryName = [[NSUUID UUID].UUIDString stringByAppendingPathExtension:@"jpeg"];
+        resultURL = [cachesDirectory URLByAppendingPathComponent:temporaryName];
+        [data writeToURL:resultURL atomically:YES];
+    }
+    
+    return resultURL;
+}
+
 
 - (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex
 {
