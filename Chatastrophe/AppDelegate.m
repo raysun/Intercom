@@ -10,6 +10,7 @@
 #import "MessagesViewController.h"
 #import "JSQMessage.h"
 @import CloudKit;
+#import "APLCloudManager.h"
 
 @interface AppDelegate () <UISplitViewControllerDelegate> {
     CKDatabase *publicDB;
@@ -102,14 +103,6 @@
     }
     NSLog(@"Startup device list: %@",self.deviceList);
     
-    /* was going to add onesignal ID to the devicelist in onesignal closure here, but delaying while using intercom
-    // Register my OneSignalID with the deviceList
-    [self.oneSignal IdsAvailable:^(NSString* userId, NSString* pushToken) {
-        
-//    MyObject *object10 = myArray[indexOfObject10];
-    }];
-    */
-    
     // Load messages (BUGBUG: really shouldn't reload the whole dang database from CloudKit, just new messages, but I don't have the local store yet
     for (NSDictionary *device in self.deviceList) {
         NSString *deviceID = device[@"deviceID"];
@@ -175,25 +168,6 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
             NSLog(@"Body is %@",[record valueForKey:@"Body"]);
             NSLog(@"FromFriendlyName is %@", cloudKitNotification.recordFields[@"FromFriendlyName"]);
             
-//            NSDictionary *apsDict = [userInfo objectForKey:@"aps"];
-//            NSString *alertText = [apsDict objectForKey:@"alert"];
-            
-//            if(application.applicationState == UIApplicationStateActive) {
-//                UIAlertView * alert = [[UIAlertView alloc] initWithTitle:cloudKitNotification.recordFields[@"From"] message:alertBody delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles: nil];
-//                [alert show];
-//            } else {
-//                    if ([application currentUserNotificationSettings].types & UIUserNotificationTypeBadge) {
-            /*
-                        UILocalNotification * localNotification = [[UILocalNotification alloc] init];
-                        localNotification.alertTitle = cloudKitNotification.recordFields[@"FromFriendlyName"];
-//                        localNotification.alertBody = alertText;
-                        localNotification.alertBody = [record valueForKey:@"Body"];
-                        [application presentLocalNotificationNow:localNotification];
-                        NSLog(@"Local Notification %@",localNotification);
-             */
-//                }
-//            }
-            
             [self saveRecordToLocalMessages:record];
             
             // Tell message view controller to refresh views
@@ -234,6 +208,22 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     } else {
         [((DemoModelData*) self.allMessages[to]) add:message];
     }
+    
+    /* TODO: Later, if we want to implement per-user, can utilize this part of APLCloudManager
+    // we provide the owner of the current record in the subtite of our cell
+    APLCloudManager *cloudManager = [APLCloudManager new];
+    [cloudManager fetchUserNameFromRecordID:record.creatorUserRecordID completionHandler:^(NSString *firstName, NSString *lastName) {
+        NSLog(@"%@, %@",firstName,lastName);
+        if (firstName == nil && lastName == nil)
+        {
+//            self.createdByLabel.text = [NSString stringWithFormat:@"%@", NSLocalizedString(@"Unknown User Name", nil)];
+        }
+        else
+        {
+  //          self.createdByLabel.text = [NSString stringWithFormat:@"%@", [NSString stringWithFormat:@"%@ %@", firstName, lastName]];
+        }
+    }];
+    */
     
 }
 

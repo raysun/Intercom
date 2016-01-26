@@ -17,12 +17,15 @@
 //
 
 #import "MessagesViewController.h"
-#import "DemoModelData.h"
-#import "AppDelegate.h"
-#import "MessageFile.h"
+
 @import CloudKit;
-#import "APLViewController.h"
+#import "AppDelegate.h"
+
+#import "DemoModelData.h"
 #import "JSQMessage.h"
+
+#import "APLViewController.h"
+#import "APLCloudManager.h"
 
 @interface MessagesViewController()
 
@@ -457,7 +460,7 @@
 
     UIImage *image = photoPickerVC.selectedImage;
 
-        // this will create a sized down/compressed cached image in the caches folder
+    // create a sized down/compressed cached image in the caches folder, to utilize CKAsset
     //BUGBUG: doesn't handle portrait photos or selfies properly
     const CGSize kImageSize = {504, 378};
     NSURL *imageURL = [self createCachedImageFromImage:image size:kImageSize];
@@ -466,20 +469,6 @@
         CKAsset *asset = [[CKAsset alloc] initWithFileURL:imageURL];
         dbMessage[@"Image"] = asset;
     }
-    
-    /*
-    // BUGBUG: Need to figure out the right JPEG size
-    CGSize size = [image size];
-    float aspectRatio = size.width/size.height;
-    CGRect rect = CGRectMake(0.0, 0.0, 320.0, 320.0/aspectRatio);
-    UIGraphicsBeginImageContext(rect.size);
-    [image drawInRect:rect];
-    UIImage* newImage = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-
-    NSData *imageData = UIImageJPEGRepresentation(newImage, 0.8);
-    dbMessage[@"Image"] = imageData;
-    */
     
     [publicDB saveRecord:dbMessage completionHandler:^(CKRecord *savedPlace, NSError *error) {
         // handle errors here

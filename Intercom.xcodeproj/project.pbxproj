@@ -25,6 +25,7 @@
 		B6B584711C3E31E8007B8AB4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B6B584701C3E31E8007B8AB4 /* Assets.xcassets */; };
 		B6B584741C3E31E8007B8AB4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B6B584721C3E31E8007B8AB4 /* LaunchScreen.storyboard */; };
 		B6BB18211C57E48C00AB5E6F /* Purr.aiff in Resources */ = {isa = PBXBuildFile; fileRef = B6BB18201C57E48C00AB5E6F /* Purr.aiff */; };
+		B6BB18241C57FAAE00AB5E6F /* APLCloudManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B6BB18231C57FAAE00AB5E6F /* APLCloudManager.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -61,6 +62,8 @@
 		B6B584731C3E31E8007B8AB4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		B6B584751C3E31E8007B8AB4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B6BB18201C57E48C00AB5E6F /* Purr.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = Purr.aiff; sourceTree = "<group>"; };
+		B6BB18221C57FAAE00AB5E6F /* APLCloudManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = APLCloudManager.h; sourceTree = "<group>"; };
+		B6BB18231C57FAAE00AB5E6F /* APLCloudManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = APLCloudManager.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -145,6 +148,8 @@
 				B6657BB51C446AEE006DE461 /* MessagesViewController.m */,
 				B6785EEE1C55908C0078D903 /* APLViewController.h */,
 				B6785EEF1C55908C0078D903 /* APLViewController.m */,
+				B6BB18221C57FAAE00AB5E6F /* APLCloudManager.h */,
+				B6BB18231C57FAAE00AB5E6F /* APLCloudManager.m */,
 				B637DA781C446D9600072F0C /* Images.xcassets */,
 				B6B584701C3E31E8007B8AB4 /* Assets.xcassets */,
 				B69D81691C456C0000866BC9 /* Old */,
@@ -305,6 +310,7 @@
 				B69513411C45D4A200546E64 /* MessageFile.m in Sources */,
 				B6B584691C3E31E8007B8AB4 /* MasterViewController.m in Sources */,
 				B6B584631C3E31E8007B8AB4 /* main.m in Sources */,
+				B6BB18241C57FAAE00AB5E6F /* APLCloudManager.m in Sources */,
 				B6B5846C1C3E31E8007B8AB4 /* DetailViewController.m in Sources */,
 				B6657BB81C446AEE006DE461 /* MessagesViewController.m in Sources */,
 				B63D78B51C3F198300B0401E /* Model.m in Sources */,

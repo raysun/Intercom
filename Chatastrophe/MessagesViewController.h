@@ -45,7 +45,6 @@
 
 - (void)closePressed:(UIBarButtonItem *)sender;
 
-- (void) addMessage:(NSString *)text;
 - (void)didDismissPhotoPicker;
     
 @end
