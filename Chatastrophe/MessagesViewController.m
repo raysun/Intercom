@@ -48,6 +48,12 @@
 
 #pragma mark - View lifecycle
 
+-(void)didSelectEmoticon:(UIBarButtonItem*)sender {
+//    self.selectedEmoticon = sender.title;
+//    [self performSegueWithIdentifier:@"PhotoPickerDismissed" sender:self];
+           [self didPressSendButton:nil withMessageText:sender.title senderId:appDelegate.myID senderDisplayName:appDelegate.myName date:[NSDate date]];
+}
+
 /**
  *  Override point for customization.
  *
@@ -75,12 +81,11 @@
     
     appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     deviceList = [[NSMutableArray alloc] initWithArray:appDelegate.deviceList];
-    allMessages = appDelegate.allMessages;
 
     /**
      *  You MUST set your senderId and display name
      */
-//    self.senderId = kJSQDemoAvatarIdSquires;
+ //   self.senderId = kJSQDemoAvatarIdSquires;
     
     if (!(self.senderId = appDelegate.myID)) {
         self.senderId = @"";
@@ -89,6 +94,21 @@
     self.senderDisplayName = appDelegate.myName;
     
     self.inputToolbar.contentView.textView.pasteDelegate = self;
+    self.inputToolbar.preferredDefaultHeight = 88.0f;
+    allMessages = appDelegate.allMessages;
+    
+    /*
+    NSLog(@"%@",self.inputToolbar.contentView);
+    NSMutableArray *toolbarItems = [NSMutableArray new];
+    NSArray *emoticons = @[@"📚",@"😴",@"🍴",@"🍎",@"🏈",@"🚗",@"❤️"];
+    for (NSString *emoticon in emoticons) {
+        UIBarButtonItem *emotiButton = [[UIBarButtonItem alloc] initWithTitle:emoticon style:UIBarButtonItemStylePlain target:self action:@selector(didSelectEmoticon:)];
+        [toolbarItems addObject:emotiButton];
+    }
+    [toolbarItems addObjectsFromArray:(NSArray *)self.inputToolbar.items];
+    [self.inputToolbar setItems:toolbarItems animated:NO];
+     */
+
     
     // Set the title
     // no longer checking selectedindex - all messages to ALL
@@ -414,10 +434,31 @@
     */
     
     [self.inputToolbar.contentView.textView resignFirstResponder];
-
-    [self performSegueWithIdentifier:@"ShowPhotoPicker" sender:self];
     
+    [self performSegueWithIdentifier:@"ShowPhotoPicker" sender:self];
+    /*
+    // grab the view controller we want to show
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    UIViewController *controller = [storyboard instantiateViewControllerWithIdentifier:@"PhotoPicker"];
+
+    // present the controller
+    // on iPad, this will be a Popover
+    // on iPhone, this will be an action sheet
+    controller.modalPresentationStyle = UIModalPresentationCustom;
+    controller.preferredContentSize = CGSizeMake(600.0,300.0);
+    [self presentViewController:controller animated:YES completion:nil];
+    
+    // configure the Popover presentation controller
+    UIPopoverPresentationController *popController = [controller popoverPresentationController];
+    popController.permittedArrowDirections = UIPopoverArrowDirectionUp;
+    popController.delegate = self;
+    
+    // in case we don't have a bar button as reference
+    popController.sourceView = self.view;
+    popController.sourceRect = CGRectMake(30, 50, 10, 10);
+    */
 }
+
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {

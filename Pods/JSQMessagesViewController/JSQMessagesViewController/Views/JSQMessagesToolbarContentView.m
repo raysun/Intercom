@@ -35,6 +35,7 @@ const CGFloat kJSQMessagesToolbarContentViewHorizontalSpacingDefault = 8.0f;
 
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *leftHorizontalSpacingConstraint;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *rightHorizontalSpacingConstraint;
+@property (unsafe_unretained, nonatomic) IBOutlet UIToolbar *buttonBar;
 
 @end
 
@@ -62,6 +63,15 @@ const CGFloat kJSQMessagesToolbarContentViewHorizontalSpacingDefault = 8.0f;
     self.rightHorizontalSpacingConstraint.constant = kJSQMessagesToolbarContentViewHorizontalSpacingDefault;
 
     self.backgroundColor = [UIColor clearColor];
+    
+    NSMutableArray *toolbarItems = [NSMutableArray new];
+    NSArray *emoticons = @[@"📚",@"😴",@"🍴",@"🍎",@"🏈",@"🚗",@"❤️"];
+    for (NSString *emoticon in emoticons) {
+        UIBarButtonItem *emotiButton = [[UIBarButtonItem alloc] initWithTitle:emoticon style:UIBarButtonItemStylePlain target:self action:@selector(didSelectEmoticon:)];
+        [toolbarItems addObject:emotiButton];
+    }
+    [toolbarItems addObjectsFromArray:(NSArray *)self.buttonBar.items];
+    [self.buttonBar setItems:toolbarItems animated:NO];
 }
 
 - (void)dealloc

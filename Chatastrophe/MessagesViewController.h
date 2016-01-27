@@ -34,17 +34,18 @@
 
 
 
-@interface MessagesViewController : JSQMessagesViewController <UIActionSheetDelegate, JSQMessagesComposerTextViewPasteDelegate>
+@interface MessagesViewController : JSQMessagesViewController <UIActionSheetDelegate, JSQMessagesComposerTextViewPasteDelegate, UIPopoverPresentationControllerDelegate>
 
 @property (weak, nonatomic) id<JSQDemoViewControllerDelegate> delegateModal;
 
 @property (strong, nonatomic) DemoModelData *demoData;
 @property (strong, nonatomic) NSIndexPath *selectedIndex;
-
+@property (strong, nonatomic) NSString *selectedEmoticon;
 - (void)receiveMessagePressed:(UIBarButtonItem *)sender;
 
 - (void)closePressed:(UIBarButtonItem *)sender;
 
 - (void)didDismissPhotoPicker;
-    
+
+
 @end

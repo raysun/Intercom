@@ -251,6 +251,10 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     predicate = [NSPredicate predicateWithFormat:@"Body='🍴'"];
     info = [self createNotificationInfoWithSound:@"DinnerTime.wav"];
     [self addSubscriptionForPredicate:predicate andInfo:info];
+    
+    predicate = [NSPredicate predicateWithFormat:@"Body='😴'"];
+    info = [self createNotificationInfoWithSound:@"GoToBed.wav"];
+    [self addSubscriptionForPredicate:predicate andInfo:info];
 //    }
     /*
     // Create the Notification to ALL and to ME, but do not duplicate else cloudkit will send multiple notifications

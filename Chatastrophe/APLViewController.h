@@ -47,7 +47,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface APLViewController : UIViewController <UINavigationControllerDelegate, UIImagePickerControllerDelegate>
+@interface APLViewController : UIViewController <UIImagePickerControllerDelegate, UIAdaptivePresentationControllerDelegate>
 
 @property (nonatomic, retain) UIImage *selectedImage;
 @property (nonatomic, retain) NSString *selectedEmoticon;

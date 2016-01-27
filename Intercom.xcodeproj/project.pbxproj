@@ -29,6 +29,7 @@
 		B6BB18261C58248E00AB5E6F /* ChirpToolbarContentView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B6BB18251C58248E00AB5E6F /* ChirpToolbarContentView.xib */; };
 		B6BB182B1C584AE600AB5E6F /* DoYourHomework.wav in Resources */ = {isa = PBXBuildFile; fileRef = B6BB18291C584AE600AB5E6F /* DoYourHomework.wav */; };
 		B6BB182C1C584AE600AB5E6F /* DinnerTime.wav in Resources */ = {isa = PBXBuildFile; fileRef = B6BB182A1C584AE600AB5E6F /* DinnerTime.wav */; };
+		B6C27FE31C589C6000377AE4 /* GoToBed.wav in Resources */ = {isa = PBXBuildFile; fileRef = B6C27FE21C589C6000377AE4 /* GoToBed.wav */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -70,6 +71,7 @@
 		B6BB18251C58248E00AB5E6F /* ChirpToolbarContentView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ChirpToolbarContentView.xib; sourceTree = "<group>"; };
 		B6BB18291C584AE600AB5E6F /* DoYourHomework.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = DoYourHomework.wav; sourceTree = "<group>"; };
 		B6BB182A1C584AE600AB5E6F /* DinnerTime.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = DinnerTime.wav; sourceTree = "<group>"; };
+		B6C27FE21C589C6000377AE4 /* GoToBed.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = GoToBed.wav; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -172,6 +174,7 @@
 				B6BB18201C57E48C00AB5E6F /* Purr.aiff */,
 				B6B584621C3E31E8007B8AB4 /* main.m */,
 				B6BB18291C584AE600AB5E6F /* DoYourHomework.wav */,
+				B6C27FE21C589C6000377AE4 /* GoToBed.wav */,
 				B6BB182A1C584AE600AB5E6F /* DinnerTime.wav */,
 			);
 			name = "Supporting Files";
@@ -251,6 +254,7 @@
 			files = (
 				B6B584741C3E31E8007B8AB4 /* LaunchScreen.storyboard in Resources */,
 				B6BB182C1C584AE600AB5E6F /* DinnerTime.wav in Resources */,
+				B6C27FE31C589C6000377AE4 /* GoToBed.wav in Resources */,
 				B6BB18261C58248E00AB5E6F /* ChirpToolbarContentView.xib in Resources */,
 				B637DA791C446D9600072F0C /* Images.xcassets in Resources */,
 				B6BB18211C57E48C00AB5E6F /* Purr.aiff in Resources */,

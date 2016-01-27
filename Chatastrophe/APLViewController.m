@@ -71,6 +71,9 @@
 
 @implementation APLViewController
 
+- (UIModalPresentationStyle)adaptivePresentationStyleForPresentationController:(UIPresentationController *)controller traitCollection:(UITraitCollection *)traitCollection {
+    return UIModalPresentationNone;
+}
 
 - (void)viewDidLoad
 {
