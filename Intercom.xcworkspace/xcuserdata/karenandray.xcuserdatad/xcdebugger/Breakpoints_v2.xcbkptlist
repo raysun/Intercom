@@ -36,11 +36,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Chatastrophe/MessagesViewController.m"
-            timestampString = "475528247.39259"
+            timestampString = "475538893.167138"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "390"
-            endingLineNumber = "390"
+            startingLineNumber = "377"
+            endingLineNumber = "377"
             landmarkName = "-didPressSendButton:withMessageText:senderId:senderDisplayName:date:"
             landmarkType = "5">
          </BreakpointContent>
@@ -68,11 +68,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Chatastrophe/MessagesViewController.m"
-            timestampString = "475528247.39259"
+            timestampString = "475538893.167138"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "195"
-            endingLineNumber = "195"
+            startingLineNumber = "182"
+            endingLineNumber = "182"
             landmarkName = "-viewDidAppear:"
             landmarkType = "5">
          </BreakpointContent>
@@ -84,12 +84,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Chatastrophe/MessagesViewController.m"
-            timestampString = "475528247.39259"
+            timestampString = "475541733.413814"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "88"
-            endingLineNumber = "88"
-            landmarkName = "-viewDidLoad"
+            startingLineNumber = "435"
+            endingLineNumber = "435"
+            landmarkName = "-unwindAction:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

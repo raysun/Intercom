@@ -54,10 +54,12 @@
     // CloudKit Public Database
     publicDB = [[CKContainer defaultContainer] publicCloudDatabase];
 
+    /* TODO: turning off unless I want to make the app multi-iCloud-friendly
     // Request making this iCloud account discoverable by other users. Other users still need my email address in their contacts.
     [[CKContainer defaultContainer] requestApplicationPermission:CKApplicationPermissionUserDiscoverability completionHandler:^(CKApplicationPermissionStatus applicationPermissionStatus, NSError * _Nullable error) {
         
     }];
+     */
 
     // Register for CloudKit push notifications (based on the subscription server queries)
     UIUserNotificationSettings *notificationSettings = [UIUserNotificationSettings settingsForTypes:(UIUserNotificationTypeAlert | UIUserNotificationTypeBadge | UIUserNotificationTypeSound) categories:nil];
@@ -74,6 +76,8 @@
     if (![store arrayForKey:@"deviceList"]) {
         [store setArray:[NSMutableArray new] forKey:@"deviceList"];
     }
+    // BUGBUG: Message schema must be created before this call or else subscription will fail
+    // Also set up index on Message's RecordID to make sure queries are OK
     // Set up CloudKit server queries (subscriptions) - only needs to be run once
     [self createCloudKitSubscriptions];
 
@@ -236,7 +240,17 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
      MUST BE FIXED before going to production - user's devicelist count is 0, then set up ALL query. */
 //    if (self.deviceList.count == 0) {
         NSPredicate *predicate = [NSPredicate predicateWithValue:YES];
-        [self addSubscriptionForPredicate:predicate];
+        CKNotificationInfo *info = [self createNotificationInfoWithSound:nil];
+    [self addSubscriptionForPredicate:predicate andInfo:info];
+    
+//    info = [self createNotificationInfoWithSound:@"DinnerTime.wav"];
+        predicate = [NSPredicate predicateWithFormat:@"Body='📚'"];
+            info = [self createNotificationInfoWithSound:@"DoYourHomework.wav"];
+    [self addSubscriptionForPredicate:predicate andInfo:info];
+    
+    predicate = [NSPredicate predicateWithFormat:@"Body='🍴'"];
+    info = [self createNotificationInfoWithSound:@"DinnerTime.wav"];
+    [self addSubscriptionForPredicate:predicate andInfo:info];
 //    }
     /*
     // Create the Notification to ALL and to ME, but do not duplicate else cloudkit will send multiple notifications
@@ -271,21 +285,32 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
 }
 
 #pragma mark - Define Notification content for subscription
-- (void)addSubscriptionForPredicate:(NSPredicate *)predicate {
+
+- (CKNotificationInfo *)createNotificationInfoWithSound:(NSString *)soundName {
     CKNotificationInfo *info = [CKNotificationInfo new];
     info.shouldBadge = YES;
-//    info.shouldSendContentAvailable = YES;
+    //    info.shouldSendContentAvailable = YES;
     info.alertBody = @" ";
-    info.soundName = @"Purr.aiff";
-//    info.soundName = UILocalNotificationDefaultSoundName;
-    info.alertLocalizationKey = @"%@: %@";
+    info.soundName = soundName ? soundName : UILocalNotificationDefaultSoundName;
+    //    info.soundName = UILocalNotificationDefaultSoundName;
+    /* BUGBUG: Temporarily disabling the From field
+     info.alertLocalizationKey = @"%@: %@";
+     info.alertLocalizationArgs = @[
+     @"FromFriendlyName",
+     @"Body"
+     ];
+     */
+    
+    info.alertLocalizationKey = @"%@";
     info.alertLocalizationArgs = @[
-                                   @"FromFriendlyName",
                                    @"Body"
                                    ];
     
     info.desiredKeys = @[@"FromFriendlyName"];
-    
+    return info;
+}
+
+- (void)addSubscriptionForPredicate:(NSPredicate *)predicate andInfo:(CKNotificationInfo*)info {
     CKSubscription *subscription = [[CKSubscription alloc] initWithRecordType:@"Message" predicate:predicate options:CKSubscriptionOptionsFiresOnRecordCreation];
     subscription.notificationInfo = info;
     

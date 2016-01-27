@@ -50,4 +50,5 @@
 @interface APLViewController : UIViewController <UINavigationControllerDelegate, UIImagePickerControllerDelegate>
 
 @property (nonatomic, retain) UIImage *selectedImage;
+@property (nonatomic, retain) NSString *selectedEmoticon;
 @end

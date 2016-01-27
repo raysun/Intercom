@@ -43,7 +43,7 @@
             </objects>
             <point key="canvasLocation" x="1419" y="129"/>
         </scene>
-        <!--Chirp-->
+        <!--Mom Says-->
         <scene sceneID="zaH-no-mzE">
             <objects>
                 <viewController id="Anz-hd-hQM" customClass="MessagesViewController" sceneMemberID="viewController">
@@ -56,7 +56,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Chirp" id="ifC-lW-LFH"/>
+                    <navigationItem key="navigationItem" title="Mom Says" id="ifC-lW-LFH"/>
                     <connections>
                         <segue destination="eQw-kk-g98" kind="presentation" identifier="ShowPhotoPicker" id="9WW-K0-sMX"/>
                     </connections>
@@ -151,18 +151,18 @@
                         <viewControllerLayoutGuide type="bottom" id="dWT-yf-oLO"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="Odr-Jk-dwW">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="300"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="J5P-kF-BHL">
-                                <rect key="frame" x="0.0" y="556" width="600" height="44"/>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="J5P-kF-BHL">
+                                <rect key="frame" x="0.0" y="256" width="600" height="44"/>
                                 <items>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="18g-wy-H4J"/>
                                     <barButtonItem title="Photo Library" id="8Z2-S3-ziD">
                                         <connections>
                                             <action selector="showImagePickerForPhotoPicker:" destination="eQw-kk-g98" id="L1f-ul-k0O"/>
                                         </connections>
                                     </barButtonItem>
-                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="18g-wy-H4J"/>
                                     <barButtonItem systemItem="camera" id="NLO-EN-GGb">
                                         <connections>
                                             <action selector="showImagePickerForCamera:" destination="eQw-kk-g98" id="04a-R0-MYL"/>
@@ -170,24 +170,14 @@
                                     </barButtonItem>
                                 </items>
                             </toolbar>
-                            <imageView clearsContextBeforeDrawing="NO" userInteractionEnabled="NO" contentMode="scaleAspectFit" translatesAutoresizingMaskIntoConstraints="NO" id="MFr-xb-ymt">
-                                <rect key="frame" x="0.0" y="0.0" width="600" height="556"/>
-                            </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                        <constraints>
-                            <constraint firstItem="J5P-kF-BHL" firstAttribute="top" secondItem="MFr-xb-ymt" secondAttribute="bottom" id="1zG-3x-ikp"/>
-                            <constraint firstItem="MFr-xb-ymt" firstAttribute="top" secondItem="Odr-Jk-dwW" secondAttribute="top" id="2bK-fY-HVQ"/>
-                            <constraint firstItem="MFr-xb-ymt" firstAttribute="trailing" secondItem="Odr-Jk-dwW" secondAttribute="trailing" id="CO1-Tx-3ZI"/>
-                            <constraint firstItem="J5P-kF-BHL" firstAttribute="leading" secondItem="Odr-Jk-dwW" secondAttribute="leading" id="bMV-DE-dbL"/>
-                            <constraint firstItem="MFr-xb-ymt" firstAttribute="leading" secondItem="Odr-Jk-dwW" secondAttribute="leading" id="mS6-NR-TLN"/>
-                            <constraint firstItem="J5P-kF-BHL" firstAttribute="bottom" secondItem="Odr-Jk-dwW" secondAttribute="bottom" id="nWA-vv-eNi"/>
-                            <constraint firstItem="J5P-kF-BHL" firstAttribute="trailing" secondItem="Odr-Jk-dwW" secondAttribute="trailing" id="y6r-oj-j1d"/>
-                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="PhotoPicker" id="4fT-Eq-Occ"/>
+                    <value key="contentSizeForViewInPopover" type="size" width="600" height="300"/>
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <size key="freeformSize" width="600" height="300"/>
                     <connections>
-                        <outlet property="imageView" destination="MFr-xb-ymt" id="xKl-Yt-Fzi"/>
                         <outlet property="toolBar" destination="J5P-kF-BHL" id="O4j-ra-hSI"/>
                         <segue destination="mFY-7u-AgC" kind="unwind" identifier="PhotoPickerDismissed" unwindAction="unwindAction:" id="dlw-95-m2O"/>
                     </connections>

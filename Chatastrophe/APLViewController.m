@@ -85,8 +85,21 @@
         [toolbarItems removeObjectAtIndex:2];
         [self.toolBar setItems:toolbarItems animated:NO];
     }
+    NSMutableArray *toolbarItems = [NSMutableArray new];
+    NSArray *emoticons = @[@"📚",@"😴",@"🍴",@"🍎",@"🏈",@"🚗",@"❤️"];
+    for (NSString *emoticon in emoticons) {
+        UIBarButtonItem *emotiButton = [[UIBarButtonItem alloc] initWithTitle:emoticon style:UIBarButtonItemStylePlain target:self action:@selector(didSelectEmoticon:)];
+        [toolbarItems addObject:emotiButton];
+    }
+    [toolbarItems addObjectsFromArray:self.toolBar.items];
+    [self.toolBar setItems:toolbarItems animated:NO];
+
 }
 
+-(void)didSelectEmoticon:(UIBarButtonItem*)sender {
+    self.selectedEmoticon = sender.title;
+    [self performSegueWithIdentifier:@"PhotoPickerDismissed" sender:self];
+}
 
 - (IBAction)showImagePickerForCamera:(id)sender
 {
@@ -206,6 +219,7 @@
     [self finishAndUpdate];
 }
 
+#pragma mark - New Segue to dismiss this popup controller
 
 - (void)finishAndUpdate
 {

@@ -26,6 +26,9 @@
 		B6B584741C3E31E8007B8AB4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B6B584721C3E31E8007B8AB4 /* LaunchScreen.storyboard */; };
 		B6BB18211C57E48C00AB5E6F /* Purr.aiff in Resources */ = {isa = PBXBuildFile; fileRef = B6BB18201C57E48C00AB5E6F /* Purr.aiff */; };
 		B6BB18241C57FAAE00AB5E6F /* APLCloudManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B6BB18231C57FAAE00AB5E6F /* APLCloudManager.m */; };
+		B6BB18261C58248E00AB5E6F /* ChirpToolbarContentView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B6BB18251C58248E00AB5E6F /* ChirpToolbarContentView.xib */; };
+		B6BB182B1C584AE600AB5E6F /* DoYourHomework.wav in Resources */ = {isa = PBXBuildFile; fileRef = B6BB18291C584AE600AB5E6F /* DoYourHomework.wav */; };
+		B6BB182C1C584AE600AB5E6F /* DinnerTime.wav in Resources */ = {isa = PBXBuildFile; fileRef = B6BB182A1C584AE600AB5E6F /* DinnerTime.wav */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -49,7 +52,7 @@
 		B68D86C21C4891B00007F64E /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		B695133F1C45D4A200546E64 /* MessageFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageFile.h; sourceTree = "<group>"; };
 		B69513401C45D4A200546E64 /* MessageFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageFile.m; sourceTree = "<group>"; };
-		B6B5845E1C3E31E8007B8AB4 /* Chirp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Chirp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B6B5845E1C3E31E8007B8AB4 /* Mom Says.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Mom Says.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B6B584621C3E31E8007B8AB4 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		B6B584641C3E31E8007B8AB4 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		B6B584651C3E31E8007B8AB4 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = AppDelegate.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
@@ -64,6 +67,9 @@
 		B6BB18201C57E48C00AB5E6F /* Purr.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = Purr.aiff; sourceTree = "<group>"; };
 		B6BB18221C57FAAE00AB5E6F /* APLCloudManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = APLCloudManager.h; sourceTree = "<group>"; };
 		B6BB18231C57FAAE00AB5E6F /* APLCloudManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = APLCloudManager.m; sourceTree = "<group>"; };
+		B6BB18251C58248E00AB5E6F /* ChirpToolbarContentView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ChirpToolbarContentView.xib; sourceTree = "<group>"; };
+		B6BB18291C584AE600AB5E6F /* DoYourHomework.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = DoYourHomework.wav; sourceTree = "<group>"; };
+		B6BB182A1C584AE600AB5E6F /* DinnerTime.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = DinnerTime.wav; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -129,7 +135,7 @@
 		B6B5845F1C3E31E8007B8AB4 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				B6B5845E1C3E31E8007B8AB4 /* Chirp.app */,
+				B6B5845E1C3E31E8007B8AB4 /* Mom Says.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -138,14 +144,12 @@
 			isa = PBXGroup;
 			children = (
 				B6B5846D1C3E31E8007B8AB4 /* Main.storyboard */,
-				B6657BB61C446AEE006DE461 /* DemoModelData.h */,
-				B6657BB71C446AEE006DE461 /* DemoModelData.m */,
 				B6B584641C3E31E8007B8AB4 /* AppDelegate.h */,
 				B6B584651C3E31E8007B8AB4 /* AppDelegate.m */,
-				B6B584671C3E31E8007B8AB4 /* MasterViewController.h */,
-				B6B584681C3E31E8007B8AB4 /* MasterViewController.m */,
 				B6657BB41C446AEE006DE461 /* MessagesViewController.h */,
 				B6657BB51C446AEE006DE461 /* MessagesViewController.m */,
+				B6657BB61C446AEE006DE461 /* DemoModelData.h */,
+				B6657BB71C446AEE006DE461 /* DemoModelData.m */,
 				B6785EEE1C55908C0078D903 /* APLViewController.h */,
 				B6785EEF1C55908C0078D903 /* APLViewController.m */,
 				B6BB18221C57FAAE00AB5E6F /* APLCloudManager.h */,
@@ -161,9 +165,14 @@
 		B6B584611C3E31E8007B8AB4 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				B6B584671C3E31E8007B8AB4 /* MasterViewController.h */,
+				B6B584681C3E31E8007B8AB4 /* MasterViewController.m */,
+				B6BB18251C58248E00AB5E6F /* ChirpToolbarContentView.xib */,
 				B6B584751C3E31E8007B8AB4 /* Info.plist */,
 				B6BB18201C57E48C00AB5E6F /* Purr.aiff */,
 				B6B584621C3E31E8007B8AB4 /* main.m */,
+				B6BB18291C584AE600AB5E6F /* DoYourHomework.wav */,
+				B6BB182A1C584AE600AB5E6F /* DinnerTime.wav */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -188,7 +197,7 @@
 			);
 			name = Intercom;
 			productName = Chatastrophe;
-			productReference = B6B5845E1C3E31E8007B8AB4 /* Chirp.app */;
+			productReference = B6B5845E1C3E31E8007B8AB4 /* Mom Says.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -241,10 +250,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				B6B584741C3E31E8007B8AB4 /* LaunchScreen.storyboard in Resources */,
+				B6BB182C1C584AE600AB5E6F /* DinnerTime.wav in Resources */,
+				B6BB18261C58248E00AB5E6F /* ChirpToolbarContentView.xib in Resources */,
 				B637DA791C446D9600072F0C /* Images.xcassets in Resources */,
 				B6BB18211C57E48C00AB5E6F /* Purr.aiff in Resources */,
 				B6B584711C3E31E8007B8AB4 /* Assets.xcassets in Resources */,
 				B6B5846F1C3E31E8007B8AB4 /* Main.storyboard in Resources */,
+				B6BB182B1C584AE600AB5E6F /* DoYourHomework.wav in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -434,7 +446,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.raysun.Chatastrophe;
-				PRODUCT_NAME = Chirp;
+				PRODUCT_NAME = "Mom Says";
 				PROVISIONING_PROFILE = "";
 			};
 			name = Debug;
@@ -451,7 +463,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.raysun.Chatastrophe;
-				PRODUCT_NAME = Chirp;
+				PRODUCT_NAME = "Mom Says";
 				PROVISIONING_PROFILE = "";
 			};
 			name = Release;

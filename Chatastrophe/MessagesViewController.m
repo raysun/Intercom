@@ -86,31 +86,15 @@
         self.senderId = @"";
     }
     
-//    self.senderDisplayName = appDelegate.myName;
-    self.senderDisplayName = kJSQDemoAvatarDisplayNameSquires;
+    self.senderDisplayName = appDelegate.myName;
     
     self.inputToolbar.contentView.textView.pasteDelegate = self;
-    
-    /**
-     *  Load up our fake data for the demo
-     */
-//    self.demoData = [[DemoModelData alloc] init];
-//    self.demoData = model;
     
     // Set the title
     // no longer checking selectedindex - all messages to ALL
 //    if (self.selectedIndex.section == 0) {
         deviceName = @"All devices";
         deviceID = @"All";
-
-    // Format the title
-    /*
-    NSMutableDictionary *titleBarAttributes = [NSMutableDictionary dictionaryWithDictionary: [[UINavigationBar appearance] titleTextAttributes]];
-    [titleBarAttributes setValue:[UIFont fontWithName:@"Avenir Next" size:22] forKey:NSFontAttributeName];
-//    [titleBarAttributes setValue:[UIColor colorWithRed:124 green:23 blue:33 alpha:.5] forKey:NSFontAttributeName];
-    [[UINavigationBar appearance] setTitleTextAttributes:titleBarAttributes];
-    self.title = @"Intercom";
-     */
     
         self.demoData = allMessages[@"All"];
     /*
@@ -133,12 +117,15 @@
     }
     
   //  self.showLoadEarlierMessagesHeader = YES;
+
+    /*
     // BUGBUG: Plus button for add friend is not correct, will finalize later.
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd
                                                                              target:self
                                                                              action:@selector(receiveMessagePressed:)];
     self.navigationItem.rightBarButtonItem.tintColor = [UIColor whiteColor];
-
+     */
+    
     /**
      *  Register custom menu actions for cells.
      */
@@ -441,45 +428,52 @@
 - (IBAction)unwindAction:(UIStoryboardSegue*)unwindSegue {
     [JSQSystemSoundPlayer jsq_playMessageSentSound];
     
-    JSQPhotoMediaItem *photoItem = [[JSQPhotoMediaItem alloc] initWithImage:photoPickerVC.selectedImage];
-    JSQMessage *photoMessage = [JSQMessage messageWithSenderId:appDelegate.myID
-                                                   displayName:appDelegate.myName
-                                                         media:photoItem];
-    
+    // Emoticon button pressed, or image returned?
+    if (photoPickerVC.selectedEmoticon) {
+        [self didPressSendButton:nil withMessageText:photoPickerVC.selectedEmoticon senderId:appDelegate.myID senderDisplayName:appDelegate.myName date:[NSDate date]];
 
-    [self.demoData.messages addObject:photoMessage];
-    
-    CKDatabase *publicDB = [[CKContainer defaultContainer] publicCloudDatabase];
-    CKRecord *dbMessage = [[CKRecord alloc] initWithRecordType:@"Message"];
-    dbMessage[@"From"] = appDelegate.myID;  //mydeviceid
-    dbMessage[@"FromFriendlyName"] = appDelegate.myName;
-    dbMessage[@"To"] = deviceID;
-    dbMessage[@"ToFriendlyName"] = deviceName;
-    dbMessage[@"Body"] = @"Photo";
-    dbMessage[@"Date"] = [NSDate date];
-
-    UIImage *image = photoPickerVC.selectedImage;
-
-    // create a sized down/compressed cached image in the caches folder, to utilize CKAsset
-    //BUGBUG: doesn't handle portrait photos or selfies properly
-    const CGSize kImageSize = {504, 378};
-    NSURL *imageURL = [self createCachedImageFromImage:image size:kImageSize];
-    if (imageURL != nil)
-    {
-        CKAsset *asset = [[CKAsset alloc] initWithFileURL:imageURL];
-        dbMessage[@"Image"] = asset;
-    }
-    
-    [publicDB saveRecord:dbMessage completionHandler:^(CKRecord *savedPlace, NSError *error) {
-        // handle errors here
-        if (!error) {
-            NSLog(@"Saved record %@",savedPlace);
+    } else {
+        
+        JSQPhotoMediaItem *photoItem = [[JSQPhotoMediaItem alloc] initWithImage:photoPickerVC.selectedImage];
+        JSQMessage *photoMessage = [JSQMessage messageWithSenderId:appDelegate.myID
+                                                       displayName:appDelegate.myName
+                                                             media:photoItem];
+        
+        
+        [self.demoData.messages addObject:photoMessage];
+        
+        CKDatabase *publicDB = [[CKContainer defaultContainer] publicCloudDatabase];
+        CKRecord *dbMessage = [[CKRecord alloc] initWithRecordType:@"Message"];
+        dbMessage[@"From"] = appDelegate.myID;  //mydeviceid
+        dbMessage[@"FromFriendlyName"] = appDelegate.myName;
+        dbMessage[@"To"] = deviceID;
+        dbMessage[@"ToFriendlyName"] = deviceName;
+        dbMessage[@"Body"] = @"Photo";
+        dbMessage[@"Date"] = [NSDate date];
+        
+        UIImage *image = photoPickerVC.selectedImage;
+        
+        // create a sized down/compressed cached image in the caches folder, to utilize CKAsset
+        //BUGBUG: doesn't handle portrait photos or selfies properly
+        const CGSize kImageSize = {504, 378};
+        NSURL *imageURL = [self createCachedImageFromImage:image size:kImageSize];
+        if (imageURL != nil)
+        {
+            CKAsset *asset = [[CKAsset alloc] initWithFileURL:imageURL];
+            dbMessage[@"Image"] = asset;
         }
-    }];
-    
-    dispatch_async(dispatch_get_main_queue(), ^(void){
-        [self finishSendingMessageAnimated:YES];
-    });
+        
+        [publicDB saveRecord:dbMessage completionHandler:^(CKRecord *savedPlace, NSError *error) {
+            // handle errors here
+            if (!error) {
+                NSLog(@"Saved record %@",savedPlace);
+            }
+        }];
+        
+        dispatch_async(dispatch_get_main_queue(), ^(void){
+            [self finishSendingMessageAnimated:YES];
+        });
+    }
     
 }
 
