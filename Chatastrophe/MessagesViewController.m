@@ -97,10 +97,40 @@
     for (NSString *emoticon in emoticons) {
         UIBarButtonItem *emotiButton = [[UIBarButtonItem alloc] initWithTitle:emoticon style:UIBarButtonItemStylePlain target:self action:@selector(didSelectEmoticon:)];
         emotiButton.tag = 1;    // 1 is a special emoticon button
-        [toolbarItems addObject:emotiButton];
+//        [toolbarItems addObject:emotiButton];
+//        UIButton *emotiButt = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+  //      [emotiButt setTitle:@"📚📚📚📚" forState:UIControlStateNormal];
+
+//        self.inputToolbar.contentView.leftBarButtonItemWidth = 200.0f;
+    //    [self.inputToolbar.contentView.leftBarButtonContainerView addSubview:emotiButt];
     }
-    [toolbarItems addObjectsFromArray:(NSArray *)self.inputToolbar.contentView.buttonBar.items];
-    [self.inputToolbar.contentView.buttonBar setItems:toolbarItems animated:NO];
+    NSArray *mergedToolbarItems = [self.inputToolbar.contentView.buttonBar.items arrayByAddingObjectsFromArray:toolbarItems];
+    [self.inputToolbar.contentView.buttonBar setItems:mergedToolbarItems animated:NO];
+    
+    float height = self.inputToolbar.contentView.leftBarButtonContainerView.frame.size.height;
+    UIImage *image = [UIImage imageNamed:@"smileButton"];
+    UIButton* smileButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [smileButton setImage:image forState:UIControlStateNormal];
+    [smileButton addTarget:self action:@selector(smileButtonTouched:) forControlEvents:UIControlEventTouchUpInside];
+    [smileButton setFrame:CGRectMake(0, 0, 25, height)];
+    
+    image = [UIImage imageNamed:@"attachButton"];
+    UIButton* attachButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [attachButton setImage:image forState:UIControlStateNormal];
+    [attachButton addTarget:self action:@selector(attachButtonTouched:) forControlEvents:UIControlEventTouchUpInside];
+    [attachButton setFrame:CGRectMake(30, 0, 25, height)];
+    
+    self.inputToolbar.contentView.leftBarButtonItemWidth = 55;
+    self.inputToolbar.contentView.rightBarButtonItemWidth = 30;
+    [self.inputToolbar.contentView.leftBarButtonContainerView addSubview:smileButton];
+    [self.inputToolbar.contentView.leftBarButtonContainerView addSubview:attachButton];
+    [self.inputToolbar.contentView.rightBarButtonItem setImage:[UIImage imageNamed:@"sendButton"] forState:UIControlStateNormal];
+    [self.inputToolbar.contentView.rightBarButtonItem setTitle:@"" forState:UIControlStateNormal];
+//    self.inputToolbar.contentView.leftBarButtonItem.hidden = YES;
+    
+    
+    
+    
 
     
     // Set the title

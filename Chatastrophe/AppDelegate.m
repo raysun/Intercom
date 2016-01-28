@@ -42,7 +42,7 @@
     // Make sure user is signed in to iCloud before using CloudKit
     [[CKContainer defaultContainer] accountStatusWithCompletionHandler:^(CKAccountStatus accountStatus, NSError *error) {
         if (accountStatus == CKAccountStatusNoAccount) {
-            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Chirp requires iCloud"
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Mom Says requires iCloud"
                                                                            message:@"Please enable your account in Settings."
                                                                     preferredStyle:UIAlertControllerStyleAlert];
             [alert addAction:[UIAlertAction actionWithTitle:@"OK"
@@ -53,7 +53,7 @@
     
     // CloudKit Public Database
 //    publicDB = [[CKContainer defaultContainer] publicCloudDatabase];
-    // BUGBUG: Need to rename this variable - was public now private, but might change later?
+    // BUGBUG: Need to rename this variable - was public now private, but still considering using public if I do chats across multiple icloud accounts
     publicDB = [[CKContainer defaultContainer] privateCloudDatabase];
 
     /* TODO: turning off unless I want to make the app multi-iCloud-friendly

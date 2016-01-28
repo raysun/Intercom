@@ -64,6 +64,8 @@ const CGFloat kJSQMessagesToolbarContentViewHorizontalSpacingDefault = 8.0f;
 
     self.backgroundColor = [UIColor clearColor];
     
+    [self.buttonBar setClipsToBounds:YES];
+    
     /* BUGBUG: Going to do this in MessagesViewController for now. Should be done here though.
     NSMutableArray *toolbarItems = [NSMutableArray new];
     NSArray *emoticons = @[@"📚",@"😴",@"🍴",@"🍎",@"🏈",@"🚗",@"❤️"];
@@ -124,7 +126,7 @@ const CGFloat kJSQMessagesToolbarContentViewHorizontalSpacingDefault = 8.0f;
 
     _leftBarButtonItem = leftBarButtonItem;
     // RAYSUN: hide the leftbar button
-    self.leftBarButtonContainerView.hidden = YES;
+//    self.leftBarButtonContainerView.hidden = YES;
 }
 
 - (void)setLeftBarButtonItemWidth:(CGFloat)leftBarButtonItemWidth

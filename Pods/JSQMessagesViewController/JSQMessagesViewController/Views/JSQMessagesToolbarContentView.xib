@@ -8,55 +8,52 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <view contentMode="scaleToFill" id="1" customClass="JSQMessagesToolbarContentView">
-            <rect key="frame" x="0.0" y="0.0" width="410" height="88"/>
+            <rect key="frame" x="0.0" y="0.0" width="1060" height="88"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4eB-Id-RM9">
-                    <rect key="frame" x="8" y="43" width="329" height="44"/>
+                <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" horizontalHuggingPriority="249" verticalHuggingPriority="249" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4eB-Id-RM9">
+                    <rect key="frame" x="133" y="41" width="847" height="44"/>
                     <constraints>
-                        <constraint firstAttribute="width" constant="800" id="dhH-Ie-QAk"/>
+                        <constraint firstAttribute="width" relation="lessThanOrEqual" constant="972" id="7Ec-Qf-F1a"/>
                     </constraints>
                     <items>
-                        <barButtonItem title="L" id="RI9-wk-Jth"/>
                         <barButtonItem systemItem="camera" id="0hG-Wl-RoP"/>
                     </items>
                 </toolbar>
-                <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LEq-G7-jGt" userLabel="Left button container">
-                    <rect key="frame" x="8" y="49" width="34" height="32"/>
+                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dm4-NT-mvr" customClass="JSQMessagesComposerTextView">
+                    <rect key="frame" x="8" y="6" width="1044" height="30"/>
+                    <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                </textView>
+                <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Myo-1S-Vg1" userLabel="Right button container">
+                    <rect key="frame" x="997" y="49" width="55" height="32"/>
+                    <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LEq-G7-jGt" userLabel="Left button container">
+                    <rect key="frame" x="8" y="47" width="34" height="32"/>
                     <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="32" id="0sE-GV-joM"/>
                         <constraint firstAttribute="width" constant="34" id="eMy-Af-wwH"/>
                     </constraints>
                 </view>
-                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dm4-NT-mvr" customClass="JSQMessagesComposerTextView">
-                    <rect key="frame" x="8" y="6" width="394" height="32"/>
-                    <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
-                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                </textView>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Myo-1S-Vg1" userLabel="Right button container">
-                    <rect key="frame" x="347" y="49" width="55" height="32"/>
-                    <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
-                    <constraints>
-                        <constraint firstAttribute="width" constant="55" id="lqH-UI-Zfe"/>
-                    </constraints>
-                </view>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <constraints>
-                <constraint firstItem="Myo-1S-Vg1" firstAttribute="trailing" secondItem="1" secondAttribute="trailingMargin" id="7di-r4-sdU"/>
-                <constraint firstItem="4eB-Id-RM9" firstAttribute="leading" secondItem="1" secondAttribute="leadingMargin" id="DUg-0w-mwg"/>
-                <constraint firstItem="Myo-1S-Vg1" firstAttribute="leading" secondItem="4eB-Id-RM9" secondAttribute="trailing" constant="10" id="GzB-xL-fDg"/>
+                <constraint firstItem="Myo-1S-Vg1" firstAttribute="centerY" secondItem="4eB-Id-RM9" secondAttribute="centerY" id="6cg-j5-Wr0"/>
+                <constraint firstItem="dm4-NT-mvr" firstAttribute="trailing" secondItem="1" secondAttribute="trailingMargin" id="8LH-Kh-ZZf"/>
+                <constraint firstItem="4eB-Id-RM9" firstAttribute="leading" secondItem="dm4-NT-mvr" secondAttribute="leading" id="EnX-Jo-nTO"/>
+                <constraint firstItem="dm4-NT-mvr" firstAttribute="leading" secondItem="1" secondAttribute="leadingMargin" id="HtT-Yh-tBY"/>
                 <constraint firstItem="Myo-1S-Vg1" firstAttribute="bottom" secondItem="LEq-G7-jGt" secondAttribute="bottom" id="JQU-1N-5NM"/>
-                <constraint firstAttribute="bottom" secondItem="4eB-Id-RM9" secondAttribute="bottom" constant="1" id="LM2-L6-hfa"/>
-                <constraint firstItem="4eB-Id-RM9" firstAttribute="leading" secondItem="LEq-G7-jGt" secondAttribute="leading" id="WDw-BP-mR0"/>
-                <constraint firstItem="4eB-Id-RM9" firstAttribute="leading" secondItem="dm4-NT-mvr" secondAttribute="leading" id="XCX-TJ-XC8"/>
+                <constraint firstAttribute="bottom" secondItem="4eB-Id-RM9" secondAttribute="bottom" constant="3" id="LM2-L6-hfa"/>
                 <constraint firstItem="dm4-NT-mvr" firstAttribute="top" secondItem="1" secondAttribute="top" constant="6" id="ZKu-1D-C2I"/>
+                <constraint firstItem="dm4-NT-mvr" firstAttribute="leading" secondItem="LEq-G7-jGt" secondAttribute="leading" id="f7d-xf-5OT"/>
                 <constraint firstItem="4eB-Id-RM9" firstAttribute="top" secondItem="dm4-NT-mvr" secondAttribute="bottom" constant="5" id="jWc-RJ-suN"/>
-                <constraint firstItem="Myo-1S-Vg1" firstAttribute="top" secondItem="dm4-NT-mvr" secondAttribute="bottom" constant="11" id="k0X-Gk-bSW"/>
+                <constraint firstItem="Myo-1S-Vg1" firstAttribute="leading" secondItem="4eB-Id-RM9" secondAttribute="trailing" symbolic="YES" id="r1a-Df-shs"/>
                 <constraint firstItem="Myo-1S-Vg1" firstAttribute="trailing" secondItem="dm4-NT-mvr" secondAttribute="trailing" id="uLl-6f-wHd"/>
                 <constraint firstItem="Myo-1S-Vg1" firstAttribute="top" secondItem="LEq-G7-jGt" secondAttribute="top" id="vxZ-AP-frA"/>
+                <constraint firstItem="dm4-NT-mvr" firstAttribute="trailing" secondItem="Myo-1S-Vg1" secondAttribute="trailing" id="xgr-Wt-7bM"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
@@ -67,7 +64,7 @@
                 <outlet property="rightBarButtonContainerView" destination="Myo-1S-Vg1" id="0SR-cw-EkD"/>
                 <outlet property="textView" destination="dm4-NT-mvr" id="PFw-HO-oT8"/>
             </connections>
-            <point key="canvasLocation" x="313" y="531"/>
+            <point key="canvasLocation" x="563" y="540"/>
         </view>
     </objects>
 </document>
