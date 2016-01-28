@@ -62,7 +62,27 @@
         
     }];
      */
-
+    
+    /* Hack to create the schema just for testing, won't need in production */
+    /*
+    CKRecord *dbMessage = [[CKRecord alloc] initWithRecordType:@"Message"];
+    dbMessage[@"From"] = @"Mom Says";  //mydeviceid
+    dbMessage[@"FromFriendlyName"] = @"Mom Says";
+    dbMessage[@"To"] = @"";
+    dbMessage[@"ToFriendlyName"] = @"";
+    dbMessage[@"Body"] = @"";
+    dbMessage[@"Date"] = [NSDate date];
+    dbMessage[@"Special"] = @"NO";
+    
+    [publicDB saveRecord:dbMessage completionHandler:^(CKRecord *savedPlace, NSError *error) {
+        // handle errors here
+        if (!error) {
+            NSLog(@"Saved record %@",savedPlace);
+        }
+    }];
+    [NSThread sleepForTimeInterval:10.0f];
+    */
+    
     // Register for CloudKit push notifications (based on the subscription server queries)
     UIUserNotificationSettings *notificationSettings = [UIUserNotificationSettings settingsForTypes:(UIUserNotificationTypeAlert | UIUserNotificationTypeBadge | UIUserNotificationTypeSound) categories:nil];
     [application registerUserNotificationSettings:notificationSettings];
@@ -242,20 +262,21 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     /* BUGBUG - hack - i'm not checking for user right now, so all push notifications will go to all devices. 
      MUST BE FIXED before going to production - user's devicelist count is 0, then set up ALL query. */
 //    if (self.deviceList.count == 0) {
-        NSPredicate *predicate = [NSPredicate predicateWithValue:YES];
-        CKNotificationInfo *info = [self createNotificationInfoWithSound:nil];
+//        NSPredicate *predicate = [NSPredicate predicateWithValue:YES];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"Special = 'NO'"];
+    CKNotificationInfo *info = [self createNotificationInfoWithSound:nil];
     [self addSubscriptionForPredicate:predicate andInfo:info];
     
 //    info = [self createNotificationInfoWithSound:@"DinnerTime.wav"];
-        predicate = [NSPredicate predicateWithFormat:@"Body='📚'"];
+        predicate = [NSPredicate predicateWithFormat:@"Body = '📚'"];
             info = [self createNotificationInfoWithSound:@"DoYourHomework.wav"];
     [self addSubscriptionForPredicate:predicate andInfo:info];
     
-    predicate = [NSPredicate predicateWithFormat:@"Body='🍴'"];
+    predicate = [NSPredicate predicateWithFormat:@"Body = '🍴'"];
     info = [self createNotificationInfoWithSound:@"DinnerTime.wav"];
     [self addSubscriptionForPredicate:predicate andInfo:info];
     
-    predicate = [NSPredicate predicateWithFormat:@"Body='😴'"];
+    predicate = [NSPredicate predicateWithFormat:@"Body = '😴'"];
     info = [self createNotificationInfoWithSound:@"GoToBed.wav"];
     [self addSubscriptionForPredicate:predicate andInfo:info];
 //    }
@@ -313,7 +334,7 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
                                    @"Body"
                                    ];
     
-    info.desiredKeys = @[@"FromFriendlyName"];
+//    info.desiredKeys = @[@"FromFriendlyName"];
     return info;
 }
 
