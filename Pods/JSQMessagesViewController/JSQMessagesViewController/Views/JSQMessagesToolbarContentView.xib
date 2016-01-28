@@ -11,7 +11,14 @@
             <rect key="frame" x="0.0" y="0.0" width="320" height="88"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="LEq-G7-jGt" userLabel="Left button container">
+                <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4eB-Id-RM9">
+                    <rect key="frame" x="8" y="43" width="240" height="44"/>
+                    <items>
+                        <barButtonItem title="L" id="RI9-wk-Jth"/>
+                        <barButtonItem systemItem="camera" id="0hG-Wl-RoP"/>
+                    </items>
+                </toolbar>
+                <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LEq-G7-jGt" userLabel="Left button container">
                     <rect key="frame" x="8" y="49" width="34" height="32"/>
                     <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
@@ -19,46 +26,31 @@
                         <constraint firstAttribute="width" constant="34" id="eMy-Af-wwH"/>
                     </constraints>
                 </view>
-                <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Myo-1S-Vg1" userLabel="Right button container">
-                    <rect key="frame" x="262" y="49" width="50" height="32"/>
+                <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Myo-1S-Vg1" userLabel="Right button container">
+                    <rect key="frame" x="312" y="49" width="0.0" height="32"/>
                     <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                 </view>
-                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dm4-NT-mvr" customClass="JSQMessagesComposerTextView">
+                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dm4-NT-mvr" customClass="JSQMessagesComposerTextView">
                     <rect key="frame" x="8" y="6" width="304" height="32"/>
                     <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
-                    <constraints>
-                        <constraint firstAttribute="height" constant="32" id="7Hf-6r-sOa"/>
-                    </constraints>
                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                 </textView>
-                <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4eB-Id-RM9">
-                    <rect key="frame" x="0.0" y="43" width="262" height="44"/>
-                    <constraints>
-                        <constraint firstAttribute="width" constant="262" id="X48-9F-laN"/>
-                    </constraints>
-                    <items>
-                        <barButtonItem style="plain" systemItem="flexibleSpace" id="cmh-Lo-kpm"/>
-                        <barButtonItem title="Library" id="RI9-wk-Jth"/>
-                        <barButtonItem systemItem="camera" id="0hG-Wl-RoP"/>
-                    </items>
-                </toolbar>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <constraints>
-                <constraint firstItem="Myo-1S-Vg1" firstAttribute="top" secondItem="LEq-G7-jGt" secondAttribute="top" id="121-M4-uCT"/>
+                <constraint firstItem="Myo-1S-Vg1" firstAttribute="top" secondItem="LEq-G7-jGt" secondAttribute="top" id="3HH-GG-kHt"/>
+                <constraint firstItem="4eB-Id-RM9" firstAttribute="top" secondItem="dm4-NT-mvr" secondAttribute="bottom" constant="5" id="8fU-74-0vj"/>
                 <constraint firstItem="dm4-NT-mvr" firstAttribute="top" secondItem="1" secondAttribute="top" constant="6" id="8mk-Pq-ESj"/>
                 <constraint firstItem="dm4-NT-mvr" firstAttribute="leading" secondItem="LEq-G7-jGt" secondAttribute="leading" id="BJc-ps-o1T"/>
+                <constraint firstItem="Myo-1S-Vg1" firstAttribute="trailing" secondItem="1" secondAttribute="trailingMargin" id="Dwm-9Z-KLV"/>
+                <constraint firstItem="4eB-Id-RM9" firstAttribute="leading" secondItem="LEq-G7-jGt" secondAttribute="leading" id="EGQ-TB-aJZ"/>
+                <constraint firstItem="Myo-1S-Vg1" firstAttribute="leading" secondItem="4eB-Id-RM9" secondAttribute="trailing" constant="7" id="KLw-bY-jaB"/>
                 <constraint firstItem="LEq-G7-jGt" firstAttribute="leading" secondItem="1" secondAttribute="leading" constant="8" id="LAU-fo-GJJ"/>
-                <constraint firstItem="4eB-Id-RM9" firstAttribute="leading" secondItem="1" secondAttribute="leading" id="TsH-a9-cYg"/>
-                <constraint firstItem="Myo-1S-Vg1" firstAttribute="trailing" secondItem="dm4-NT-mvr" secondAttribute="trailing" id="UR8-Rd-ygB"/>
-                <constraint firstItem="4eB-Id-RM9" firstAttribute="top" secondItem="dm4-NT-mvr" secondAttribute="bottom" constant="5" id="a9u-f6-9OF"/>
-                <constraint firstAttribute="bottom" secondItem="4eB-Id-RM9" secondAttribute="bottom" constant="1" id="hAF-79-fpe"/>
-                <constraint firstItem="Myo-1S-Vg1" firstAttribute="leading" secondItem="4eB-Id-RM9" secondAttribute="trailing" id="hcH-c1-bIY"/>
-                <constraint firstItem="4eB-Id-RM9" firstAttribute="centerY" secondItem="LEq-G7-jGt" secondAttribute="centerY" id="miM-9f-Imb"/>
-                <constraint firstAttribute="bottom" secondItem="LEq-G7-jGt" secondAttribute="bottom" constant="6" id="oG2-YD-ZZI"/>
-                <constraint firstItem="Myo-1S-Vg1" firstAttribute="bottom" secondItem="LEq-G7-jGt" secondAttribute="bottom" id="uN2-EU-mC4"/>
-                <constraint firstItem="Myo-1S-Vg1" firstAttribute="trailing" secondItem="1" secondAttribute="trailingMargin" id="um3-zD-R5p"/>
+                <constraint firstItem="4eB-Id-RM9" firstAttribute="centerY" secondItem="LEq-G7-jGt" secondAttribute="centerY" id="RUv-dF-nxL"/>
+                <constraint firstItem="Myo-1S-Vg1" firstAttribute="bottom" secondItem="LEq-G7-jGt" secondAttribute="bottom" id="X3z-2A-q6m"/>
+                <constraint firstItem="Myo-1S-Vg1" firstAttribute="top" secondItem="1" secondAttribute="top" constant="49" id="dLd-ty-HKc"/>
+                <constraint firstItem="Myo-1S-Vg1" firstAttribute="trailing" secondItem="dm4-NT-mvr" secondAttribute="trailing" id="n7C-by-Hl4"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
@@ -72,11 +64,5 @@
             </connections>
             <point key="canvasLocation" x="268" y="531"/>
         </view>
-        <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="BVl-U3-JMF">
-            <rect key="frame" x="0.0" y="0.0" width="306" height="44"/>
-            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-            <items/>
-            <point key="canvasLocation" x="282" y="327"/>
-        </toolbar>
     </objects>
 </document>

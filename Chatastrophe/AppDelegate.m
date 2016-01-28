@@ -52,7 +52,9 @@
     }];
     
     // CloudKit Public Database
-    publicDB = [[CKContainer defaultContainer] publicCloudDatabase];
+//    publicDB = [[CKContainer defaultContainer] publicCloudDatabase];
+    // BUGBUG: Need to rename this variable - was public now private, but might change later?
+    publicDB = [[CKContainer defaultContainer] privateCloudDatabase];
 
     /* TODO: turning off unless I want to make the app multi-iCloud-friendly
     // Request making this iCloud account discoverable by other users. Other users still need my email address in their contacts.
@@ -148,6 +150,7 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     [publicDB performQuery:query inZoneWithID:nil completionHandler:^(NSArray *results, NSError *error) {
         for (CKRecord *record in results) {
             [self saveRecordToLocalMessages:record];
+            NSLog(@"%@",record);
         }
         NSLog(@"Query finished, messages loaded");
         [self notify:@"AllMessagesDownloadedFromCloud"];

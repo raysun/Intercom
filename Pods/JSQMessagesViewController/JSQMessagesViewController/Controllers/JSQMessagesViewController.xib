@@ -25,9 +25,9 @@
                     <cells/>
                 </collectionView>
                 <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BoD-Az-3DM" customClass="JSQMessagesInputToolbar">
-                    <rect key="frame" x="0.0" y="524" width="320" height="44"/>
+                    <rect key="frame" x="0.0" y="480" width="320" height="88"/>
                     <constraints>
-                        <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="44" id="HIk-02-qcW"/>
+                        <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="88" id="HIk-02-qcW"/>
                     </constraints>
                     <items/>
                 </toolbar>

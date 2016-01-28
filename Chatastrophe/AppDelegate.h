@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "DemoModelData.h"
-#import <OneSignal/OneSignal.h>
+//#import <OneSignal/OneSignal.h>
 
 #define NSLog(FORMAT, ...) printf("-- %s\n", [[NSString stringWithFormat:FORMAT, ##__VA_ARGS__] UTF8String]);
 
@@ -23,7 +23,7 @@
 @property (strong, retain) NSDictionary *myDevice;
 @property (strong, retain) NSString *myID;
 @property (strong, retain) NSString *myName;
-@property (strong, retain) OneSignal *oneSignal;
+//@property (strong, retain) OneSignal *oneSignal;
 
 @end
 

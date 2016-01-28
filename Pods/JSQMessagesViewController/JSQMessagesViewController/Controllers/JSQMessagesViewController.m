@@ -694,6 +694,21 @@ static void * kJSQMessagesKeyValueObservingContext = &kJSQMessagesKeyValueObserv
     }
 }
 
+/* TODO: RAYSUN: Marking code updates that will be overwritten by pod updates */
+- (void)messagesInputToolbar:(JSQMessagesInputToolbar *)toolbar didPressButtonBarButton:(UIButton *)sender
+{
+    if (toolbar.sendButtonOnRight) {
+        [self didPressAccessoryButton:sender];
+    }
+    else {
+        [self didPressSendButton:sender
+                 withMessageText:[self jsq_currentlyComposedMessageText]
+                        senderId:self.senderId
+               senderDisplayName:self.senderDisplayName
+                            date:[NSDate date]];
+    }
+}
+
 - (NSString *)jsq_currentlyComposedMessageText
 {
     //  auto-accept any auto-correct suggestions

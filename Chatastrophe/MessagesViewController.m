@@ -97,17 +97,15 @@
     self.inputToolbar.preferredDefaultHeight = 88.0f;
     allMessages = appDelegate.allMessages;
     
-    /*
-    NSLog(@"%@",self.inputToolbar.contentView);
+//    NSLog(@"%@",self.inputToolbar.contentView);
     NSMutableArray *toolbarItems = [NSMutableArray new];
     NSArray *emoticons = @[@"📚",@"😴",@"🍴",@"🍎",@"🏈",@"🚗",@"❤️"];
     for (NSString *emoticon in emoticons) {
         UIBarButtonItem *emotiButton = [[UIBarButtonItem alloc] initWithTitle:emoticon style:UIBarButtonItemStylePlain target:self action:@selector(didSelectEmoticon:)];
         [toolbarItems addObject:emotiButton];
     }
-    [toolbarItems addObjectsFromArray:(NSArray *)self.inputToolbar.items];
-    [self.inputToolbar setItems:toolbarItems animated:NO];
-     */
+    [toolbarItems addObjectsFromArray:(NSArray *)self.inputToolbar.contentView.buttonBar.items];
+    [self.inputToolbar.contentView.buttonBar setItems:toolbarItems animated:NO];
 
     
     // Set the title
@@ -401,7 +399,8 @@
     
     [self.demoData.messages addObject:message];
 
-    CKDatabase *publicDB = [[CKContainer defaultContainer] publicCloudDatabase];
+//    CKDatabase *publicDB = [[CKContainer defaultContainer] publicCloudDatabase];
+    CKDatabase *publicDB = [[CKContainer defaultContainer] privateCloudDatabase];
     CKRecord *dbMessage = [[CKRecord alloc] initWithRecordType:@"Message"];
     dbMessage[@"From"] = appDelegate.myID;  //mydeviceid
     dbMessage[@"FromFriendlyName"] = appDelegate.myName;
@@ -483,7 +482,8 @@
         
         [self.demoData.messages addObject:photoMessage];
         
-        CKDatabase *publicDB = [[CKContainer defaultContainer] publicCloudDatabase];
+        //    CKDatabase *publicDB = [[CKContainer defaultContainer] publicCloudDatabase];
+        CKDatabase *publicDB = [[CKContainer defaultContainer] privateCloudDatabase];
         CKRecord *dbMessage = [[CKRecord alloc] initWithRecordType:@"Message"];
         dbMessage[@"From"] = appDelegate.myID;  //mydeviceid
         dbMessage[@"FromFriendlyName"] = appDelegate.myName;

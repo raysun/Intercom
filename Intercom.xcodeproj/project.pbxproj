@@ -26,7 +26,6 @@
 		B6B584741C3E31E8007B8AB4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B6B584721C3E31E8007B8AB4 /* LaunchScreen.storyboard */; };
 		B6BB18211C57E48C00AB5E6F /* Purr.aiff in Resources */ = {isa = PBXBuildFile; fileRef = B6BB18201C57E48C00AB5E6F /* Purr.aiff */; };
 		B6BB18241C57FAAE00AB5E6F /* APLCloudManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B6BB18231C57FAAE00AB5E6F /* APLCloudManager.m */; };
-		B6BB18261C58248E00AB5E6F /* ChirpToolbarContentView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B6BB18251C58248E00AB5E6F /* ChirpToolbarContentView.xib */; };
 		B6BB182B1C584AE600AB5E6F /* DoYourHomework.wav in Resources */ = {isa = PBXBuildFile; fileRef = B6BB18291C584AE600AB5E6F /* DoYourHomework.wav */; };
 		B6BB182C1C584AE600AB5E6F /* DinnerTime.wav in Resources */ = {isa = PBXBuildFile; fileRef = B6BB182A1C584AE600AB5E6F /* DinnerTime.wav */; };
 		B6C27FE31C589C6000377AE4 /* GoToBed.wav in Resources */ = {isa = PBXBuildFile; fileRef = B6C27FE21C589C6000377AE4 /* GoToBed.wav */; };
@@ -68,7 +67,6 @@
 		B6BB18201C57E48C00AB5E6F /* Purr.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = Purr.aiff; sourceTree = "<group>"; };
 		B6BB18221C57FAAE00AB5E6F /* APLCloudManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = APLCloudManager.h; sourceTree = "<group>"; };
 		B6BB18231C57FAAE00AB5E6F /* APLCloudManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = APLCloudManager.m; sourceTree = "<group>"; };
-		B6BB18251C58248E00AB5E6F /* ChirpToolbarContentView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ChirpToolbarContentView.xib; sourceTree = "<group>"; };
 		B6BB18291C584AE600AB5E6F /* DoYourHomework.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = DoYourHomework.wav; sourceTree = "<group>"; };
 		B6BB182A1C584AE600AB5E6F /* DinnerTime.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = DinnerTime.wav; sourceTree = "<group>"; };
 		B6C27FE21C589C6000377AE4 /* GoToBed.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = GoToBed.wav; sourceTree = "<group>"; };
@@ -169,7 +167,6 @@
 			children = (
 				B6B584671C3E31E8007B8AB4 /* MasterViewController.h */,
 				B6B584681C3E31E8007B8AB4 /* MasterViewController.m */,
-				B6BB18251C58248E00AB5E6F /* ChirpToolbarContentView.xib */,
 				B6B584751C3E31E8007B8AB4 /* Info.plist */,
 				B6BB18201C57E48C00AB5E6F /* Purr.aiff */,
 				B6B584621C3E31E8007B8AB4 /* main.m */,
@@ -255,7 +252,6 @@
 				B6B584741C3E31E8007B8AB4 /* LaunchScreen.storyboard in Resources */,
 				B6BB182C1C584AE600AB5E6F /* DinnerTime.wav in Resources */,
 				B6C27FE31C589C6000377AE4 /* GoToBed.wav in Resources */,
-				B6BB18261C58248E00AB5E6F /* ChirpToolbarContentView.xib in Resources */,
 				B637DA791C446D9600072F0C /* Images.xcassets in Resources */,
 				B6BB18211C57E48C00AB5E6F /* Purr.aiff in Resources */,
 				B6B584711C3E31E8007B8AB4 /* Assets.xcassets in Resources */,

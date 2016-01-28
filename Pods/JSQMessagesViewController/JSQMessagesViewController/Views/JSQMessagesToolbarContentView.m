@@ -35,7 +35,7 @@ const CGFloat kJSQMessagesToolbarContentViewHorizontalSpacingDefault = 8.0f;
 
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *leftHorizontalSpacingConstraint;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *rightHorizontalSpacingConstraint;
-@property (unsafe_unretained, nonatomic) IBOutlet UIToolbar *buttonBar;
+
 
 @end
 
@@ -64,6 +64,7 @@ const CGFloat kJSQMessagesToolbarContentViewHorizontalSpacingDefault = 8.0f;
 
     self.backgroundColor = [UIColor clearColor];
     
+    /* BUGBUG: Going to do this in MessagesViewController for now. Should be done here though.
     NSMutableArray *toolbarItems = [NSMutableArray new];
     NSArray *emoticons = @[@"📚",@"😴",@"🍴",@"🍎",@"🏈",@"🚗",@"❤️"];
     for (NSString *emoticon in emoticons) {
@@ -72,6 +73,7 @@ const CGFloat kJSQMessagesToolbarContentViewHorizontalSpacingDefault = 8.0f;
     }
     [toolbarItems addObjectsFromArray:(NSArray *)self.buttonBar.items];
     [self.buttonBar setItems:toolbarItems animated:NO];
+     */
 }
 
 - (void)dealloc
@@ -121,6 +123,8 @@ const CGFloat kJSQMessagesToolbarContentViewHorizontalSpacingDefault = 8.0f;
     [self setNeedsUpdateConstraints];
 
     _leftBarButtonItem = leftBarButtonItem;
+    // RAYSUN: hide the leftbar button
+    self.leftBarButtonContainerView.hidden = YES;
 }
 
 - (void)setLeftBarButtonItemWidth:(CGFloat)leftBarButtonItemWidth
