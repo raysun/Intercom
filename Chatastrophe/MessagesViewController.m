@@ -97,7 +97,7 @@
     for (NSString *emoticon in emoticons) {
         UIBarButtonItem *emotiButton = [[UIBarButtonItem alloc] initWithTitle:emoticon style:UIBarButtonItemStylePlain target:self action:@selector(didSelectEmoticon:)];
         emotiButton.tag = 1;    // 1 is a special emoticon button
-//        [toolbarItems addObject:emotiButton];
+        [toolbarItems addObject:emotiButton];
 //        UIButton *emotiButt = [UIButton buttonWithType:UIButtonTypeRoundedRect];
   //      [emotiButt setTitle:@"📚📚📚📚" forState:UIControlStateNormal];
 
@@ -107,6 +107,7 @@
     NSArray *mergedToolbarItems = [self.inputToolbar.contentView.buttonBar.items arrayByAddingObjectsFromArray:toolbarItems];
     [self.inputToolbar.contentView.buttonBar setItems:mergedToolbarItems animated:NO];
     
+    /*
     float height = self.inputToolbar.contentView.leftBarButtonContainerView.frame.size.height;
     UIImage *image = [UIImage imageNamed:@"smileButton"];
     UIButton* smileButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -127,7 +128,7 @@
     [self.inputToolbar.contentView.rightBarButtonItem setImage:[UIImage imageNamed:@"sendButton"] forState:UIControlStateNormal];
     [self.inputToolbar.contentView.rightBarButtonItem setTitle:@"" forState:UIControlStateNormal];
 //    self.inputToolbar.contentView.leftBarButtonItem.hidden = YES;
-    
+    */
     
     
     

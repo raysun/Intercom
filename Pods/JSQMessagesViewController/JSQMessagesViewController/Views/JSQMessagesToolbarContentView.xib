@@ -12,7 +12,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" horizontalHuggingPriority="249" verticalHuggingPriority="249" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4eB-Id-RM9">
-                    <rect key="frame" x="133" y="41" width="847" height="44"/>
+                    <rect key="frame" x="0.0" y="41" width="980" height="44"/>
                     <constraints>
                         <constraint firstAttribute="width" relation="lessThanOrEqual" constant="972" id="7Ec-Qf-F1a"/>
                     </constraints>
@@ -30,7 +30,7 @@
                     <rect key="frame" x="997" y="49" width="55" height="32"/>
                     <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                 </view>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LEq-G7-jGt" userLabel="Left button container">
+                <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LEq-G7-jGt" userLabel="Left button container">
                     <rect key="frame" x="8" y="47" width="34" height="32"/>
                     <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
