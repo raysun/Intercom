@@ -10,6 +10,13 @@
 		9416A7CA7C370A1A97D96CF2 /* libPods-Intercom.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C60F4BE27A10E20A108B166 /* libPods-Intercom.a */; };
 		B637DA771C446C8A00072F0C /* NSUserDefaults+DemoSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = B637DA761C446C8A00072F0C /* NSUserDefaults+DemoSettings.m */; };
 		B637DA791C446D9600072F0C /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B637DA781C446D9600072F0C /* Images.xcassets */; };
+		B63D5D771C5BE86E007BFF5F /* Text to Speech 1.wav in Resources */ = {isa = PBXBuildFile; fileRef = B63D5D701C5BE86E007BFF5F /* Text to Speech 1.wav */; };
+		B63D5D781C5BE86E007BFF5F /* Text to Speech 2.wav in Resources */ = {isa = PBXBuildFile; fileRef = B63D5D711C5BE86E007BFF5F /* Text to Speech 2.wav */; };
+		B63D5D791C5BE86E007BFF5F /* Text to Speech 3.wav in Resources */ = {isa = PBXBuildFile; fileRef = B63D5D721C5BE86E007BFF5F /* Text to Speech 3.wav */; };
+		B63D5D7A1C5BE86E007BFF5F /* Text to Speech 4.wav in Resources */ = {isa = PBXBuildFile; fileRef = B63D5D731C5BE86E007BFF5F /* Text to Speech 4.wav */; };
+		B63D5D7B1C5BE86E007BFF5F /* Text to Speech 5.wav in Resources */ = {isa = PBXBuildFile; fileRef = B63D5D741C5BE86E007BFF5F /* Text to Speech 5.wav */; };
+		B63D5D7C1C5BE86E007BFF5F /* Text to Speech 6.wav in Resources */ = {isa = PBXBuildFile; fileRef = B63D5D751C5BE86E007BFF5F /* Text to Speech 6.wav */; };
+		B63D5D7D1C5BE86E007BFF5F /* Text to Speech 7.wav in Resources */ = {isa = PBXBuildFile; fileRef = B63D5D761C5BE86E007BFF5F /* Text to Speech 7.wav */; };
 		B63D78B51C3F198300B0401E /* Model.m in Sources */ = {isa = PBXBuildFile; fileRef = B63D78B41C3F198300B0401E /* Model.m */; };
 		B6657BB31C445CE2006DE461 /* Message.m in Sources */ = {isa = PBXBuildFile; fileRef = B6657BB21C445CE2006DE461 /* Message.m */; };
 		B6657BB81C446AEE006DE461 /* MessagesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B6657BB51C446AEE006DE461 /* MessagesViewController.m */; };
@@ -26,9 +33,6 @@
 		B6BABCC11C5AA1E2000B306F /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B6BABCC01C5AA1E2000B306F /* CloudKit.framework */; };
 		B6BB18211C57E48C00AB5E6F /* Purr.aiff in Resources */ = {isa = PBXBuildFile; fileRef = B6BB18201C57E48C00AB5E6F /* Purr.aiff */; };
 		B6BB18241C57FAAE00AB5E6F /* APLCloudManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B6BB18231C57FAAE00AB5E6F /* APLCloudManager.m */; };
-		B6BB182B1C584AE600AB5E6F /* DoYourHomework.wav in Resources */ = {isa = PBXBuildFile; fileRef = B6BB18291C584AE600AB5E6F /* DoYourHomework.wav */; };
-		B6BB182C1C584AE600AB5E6F /* DinnerTime.wav in Resources */ = {isa = PBXBuildFile; fileRef = B6BB182A1C584AE600AB5E6F /* DinnerTime.wav */; };
-		B6C27FE31C589C6000377AE4 /* GoToBed.wav in Resources */ = {isa = PBXBuildFile; fileRef = B6C27FE21C589C6000377AE4 /* GoToBed.wav */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,6 +42,13 @@
 		B637DA751C446C8A00072F0C /* NSUserDefaults+DemoSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSUserDefaults+DemoSettings.h"; sourceTree = "<group>"; };
 		B637DA761C446C8A00072F0C /* NSUserDefaults+DemoSettings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSUserDefaults+DemoSettings.m"; sourceTree = "<group>"; };
 		B637DA781C446D9600072F0C /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		B63D5D701C5BE86E007BFF5F /* Text to Speech 1.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "Text to Speech 1.wav"; sourceTree = "<group>"; };
+		B63D5D711C5BE86E007BFF5F /* Text to Speech 2.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "Text to Speech 2.wav"; sourceTree = "<group>"; };
+		B63D5D721C5BE86E007BFF5F /* Text to Speech 3.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "Text to Speech 3.wav"; sourceTree = "<group>"; };
+		B63D5D731C5BE86E007BFF5F /* Text to Speech 4.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "Text to Speech 4.wav"; sourceTree = "<group>"; };
+		B63D5D741C5BE86E007BFF5F /* Text to Speech 5.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "Text to Speech 5.wav"; sourceTree = "<group>"; };
+		B63D5D751C5BE86E007BFF5F /* Text to Speech 6.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "Text to Speech 6.wav"; sourceTree = "<group>"; };
+		B63D5D761C5BE86E007BFF5F /* Text to Speech 7.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "Text to Speech 7.wav"; sourceTree = "<group>"; };
 		B63D78B21C3EDBD200B0401E /* Chatastrophe.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Chatastrophe.entitlements; sourceTree = "<group>"; };
 		B63D78B31C3F198300B0401E /* Model.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Model.h; sourceTree = "<group>"; };
 		B63D78B41C3F198300B0401E /* Model.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Model.m; sourceTree = "<group>"; };
@@ -67,9 +78,6 @@
 		B6BB18201C57E48C00AB5E6F /* Purr.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = Purr.aiff; sourceTree = "<group>"; };
 		B6BB18221C57FAAE00AB5E6F /* APLCloudManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = APLCloudManager.h; sourceTree = "<group>"; };
 		B6BB18231C57FAAE00AB5E6F /* APLCloudManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = APLCloudManager.m; sourceTree = "<group>"; };
-		B6BB18291C584AE600AB5E6F /* DoYourHomework.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = DoYourHomework.wav; sourceTree = "<group>"; };
-		B6BB182A1C584AE600AB5E6F /* DinnerTime.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = DinnerTime.wav; sourceTree = "<group>"; };
-		B6C27FE21C589C6000377AE4 /* GoToBed.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = GoToBed.wav; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -101,6 +109,20 @@
 				7C60F4BE27A10E20A108B166 /* libPods-Intercom.a */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		B63D5D6F1C5BE7EF007BFF5F /* Notification Sounds */ = {
+			isa = PBXGroup;
+			children = (
+				B63D5D701C5BE86E007BFF5F /* Text to Speech 1.wav */,
+				B63D5D711C5BE86E007BFF5F /* Text to Speech 2.wav */,
+				B63D5D721C5BE86E007BFF5F /* Text to Speech 3.wav */,
+				B63D5D731C5BE86E007BFF5F /* Text to Speech 4.wav */,
+				B63D5D741C5BE86E007BFF5F /* Text to Speech 5.wav */,
+				B63D5D751C5BE86E007BFF5F /* Text to Speech 6.wav */,
+				B63D5D761C5BE86E007BFF5F /* Text to Speech 7.wav */,
+			);
+			name = "Notification Sounds";
 			sourceTree = "<group>";
 		};
 		B69D81691C456C0000866BC9 /* Old */ = {
@@ -165,14 +187,12 @@
 		B6B584611C3E31E8007B8AB4 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				B63D5D6F1C5BE7EF007BFF5F /* Notification Sounds */,
 				B6B584671C3E31E8007B8AB4 /* MasterViewController.h */,
 				B6B584681C3E31E8007B8AB4 /* MasterViewController.m */,
 				B6B584751C3E31E8007B8AB4 /* Info.plist */,
 				B6BB18201C57E48C00AB5E6F /* Purr.aiff */,
 				B6B584621C3E31E8007B8AB4 /* main.m */,
-				B6BB18291C584AE600AB5E6F /* DoYourHomework.wav */,
-				B6C27FE21C589C6000377AE4 /* GoToBed.wav */,
-				B6BB182A1C584AE600AB5E6F /* DinnerTime.wav */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -250,13 +270,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				B6B584741C3E31E8007B8AB4 /* LaunchScreen.storyboard in Resources */,
-				B6BB182C1C584AE600AB5E6F /* DinnerTime.wav in Resources */,
-				B6C27FE31C589C6000377AE4 /* GoToBed.wav in Resources */,
+				B63D5D7A1C5BE86E007BFF5F /* Text to Speech 4.wav in Resources */,
+				B63D5D7C1C5BE86E007BFF5F /* Text to Speech 6.wav in Resources */,
+				B63D5D771C5BE86E007BFF5F /* Text to Speech 1.wav in Resources */,
+				B63D5D7B1C5BE86E007BFF5F /* Text to Speech 5.wav in Resources */,
+				B63D5D781C5BE86E007BFF5F /* Text to Speech 2.wav in Resources */,
+				B63D5D791C5BE86E007BFF5F /* Text to Speech 3.wav in Resources */,
+				B63D5D7D1C5BE86E007BFF5F /* Text to Speech 7.wav in Resources */,
 				B637DA791C446D9600072F0C /* Images.xcassets in Resources */,
 				B6BB18211C57E48C00AB5E6F /* Purr.aiff in Resources */,
 				B6B584711C3E31E8007B8AB4 /* Assets.xcassets in Resources */,
 				B6B5846F1C3E31E8007B8AB4 /* Main.storyboard in Resources */,
-				B6BB182B1C584AE600AB5E6F /* DoYourHomework.wav in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

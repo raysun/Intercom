@@ -23,6 +23,7 @@
 @property (strong, retain) NSDictionary *myDevice;
 @property (strong, retain) NSString *myID;
 @property (strong, retain) NSString *myName;
+@property (strong, retain) NSArray *emoticons;
 //@property (strong, retain) OneSignal *oneSignal;
 
 @end

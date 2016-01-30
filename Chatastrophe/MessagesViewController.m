@@ -31,6 +31,8 @@
 
 - (void)useNotificationWithString:(NSNotification*)notification;
 
+@property (nonatomic) UIImagePickerController *imagePickerController;
+
 @end
 
 @implementation MessagesViewController {
@@ -44,7 +46,6 @@
     APLViewController *photoPickerVC;
     
 }
-
 
 #pragma mark - View lifecycle
 
@@ -93,10 +94,15 @@
     
 //    NSLog(@"%@",self.inputToolbar.contentView);
     NSMutableArray *toolbarItems = [NSMutableArray new];
-    NSArray *emoticons = @[@"📚",@"😴",@"🍴",@"🍎",@"🏈",@"🚗",@"❤️"];
+    NSArray *emoticons = appDelegate.emoticons;
+//    @[@"📚",@"😴",@"🍴",@"🍎",@"🏈",@"🚗",@"❤️"];
     for (NSString *emoticon in emoticons) {
         UIBarButtonItem *emotiButton = [[UIBarButtonItem alloc] initWithTitle:emoticon style:UIBarButtonItemStylePlain target:self action:@selector(didSelectEmoticon:)];
         emotiButton.tag = 1;    // 1 is a special emoticon button
+
+        //Trying to move the buttons up a bit
+    //[emotiButton setTitlePositionAdjustment:UIOffsetMake(0.0,40.0) forBarMetrics:UIBarMetricsCompact];
+        
         [toolbarItems addObject:emotiButton];
 //        UIButton *emotiButt = [UIButton buttonWithType:UIButtonTypeRoundedRect];
   //      [emotiButt setTitle:@"📚📚📚📚" forState:UIControlStateNormal];
@@ -104,8 +110,11 @@
 //        self.inputToolbar.contentView.leftBarButtonItemWidth = 200.0f;
     //    [self.inputToolbar.contentView.leftBarButtonContainerView addSubview:emotiButt];
     }
-    NSArray *mergedToolbarItems = [self.inputToolbar.contentView.buttonBar.items arrayByAddingObjectsFromArray:toolbarItems];
-    [self.inputToolbar.contentView.buttonBar setItems:mergedToolbarItems animated:NO];
+    UIBarButtonItem *cameraButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCamera target:self action:@selector(didSelectCamera:)];
+    cameraButton.tintColor = [UIColor blackColor];
+    [toolbarItems insertObject:cameraButton atIndex:0];
+//    NSArray *mergedToolbarItems = [self.inputToolbar.contentView.buttonBar.items arrayByAddingObjectsFromArray:toolbarItems];
+    [self.inputToolbar.contentView.buttonBar setItems:toolbarItems animated:NO];
     
     /*
     float height = self.inputToolbar.contentView.leftBarButtonContainerView.frame.size.height;
@@ -129,10 +138,6 @@
     [self.inputToolbar.contentView.rightBarButtonItem setTitle:@"" forState:UIControlStateNormal];
 //    self.inputToolbar.contentView.leftBarButtonItem.hidden = YES;
     */
-    
-    
-    
-
     
     // Set the title
     // no longer checking selectedindex - all messages to ALL
@@ -202,6 +207,16 @@
     [self didPressSendButton:(UIButton *)sender withMessageText:sender.title senderId:appDelegate.myID senderDisplayName:appDelegate.myName date:[NSDate date]];
 }
 
+-(void)didSelectCamera:(UIBarButtonItem*)sender {
+    UIImagePickerController *imagePickerController = [[UIImagePickerController alloc] init];
+    imagePickerController.modalPresentationStyle = UIModalPresentationCurrentContext;
+    imagePickerController.sourceType = UIImagePickerControllerSourceTypeCamera;
+    imagePickerController.delegate = self;
+    
+    self.imagePickerController = imagePickerController;
+    [self presentViewController:self.imagePickerController animated:YES completion:nil];
+
+}
 
 - (void)viewWillAppear:(BOOL)animated
 {
@@ -459,6 +474,90 @@
     
     [self finishSendingMessageAnimated:YES];
 }
+
+#pragma mark - UIImagePickerControllerDelegate
+
+// This method is called when an image has been chosen from the library or taken from the camera.
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
+{
+    UIImage *image = [info valueForKey:UIImagePickerControllerOriginalImage];
+    
+    self.selectedImage = image;
+    
+    [self finishAndUpdate];
+}
+
+- (void)finishAndUpdate
+{
+    [self dismissViewControllerAnimated:YES completion:NULL];
+    
+    self.imagePickerController = nil;
+    
+    //    [self dismissViewControllerAnimated:YES completion:NULL];
+    //    [self performSegueWithIdentifier:@"PhotoPickerDismissed" sender:self];
+    [JSQSystemSoundPlayer jsq_playMessageSentSound];
+    
+    // Emoticon button pressed, or image returned?
+    JSQPhotoMediaItem *photoItem = [[JSQPhotoMediaItem alloc] initWithImage:self.selectedImage];
+    JSQMessage *photoMessage = [JSQMessage messageWithSenderId:appDelegate.myID
+                                                   displayName:appDelegate.myName
+                                                         media:photoItem];
+    
+    
+    [self.demoData.messages addObject:photoMessage];
+    
+    //    CKDatabase *publicDB = [[CKContainer defaultContainer] publicCloudDatabase];
+    CKDatabase *publicDB = [[CKContainer defaultContainer] privateCloudDatabase];
+    CKRecord *dbMessage = [[CKRecord alloc] initWithRecordType:@"Message"];
+    dbMessage[@"From"] = appDelegate.myID;  //mydeviceid
+    dbMessage[@"FromFriendlyName"] = appDelegate.myName;
+    dbMessage[@"To"] = deviceID;
+    dbMessage[@"ToFriendlyName"] = deviceName;
+    dbMessage[@"Body"] = @"Photo";
+    dbMessage[@"Date"] = [NSDate date];
+    dbMessage[@"Special"] = @"NO";
+    
+    UIImage *image = self.selectedImage;
+    
+    // create a sized down/compressed cached image in the caches folder, to utilize CKAsset
+    //BUGBUG: doesn't handle portrait photos or selfies properly
+    const CGSize kImageSize = {504, 378};
+    NSURL *imageURL = [self createCachedImageFromImage:image size:kImageSize];
+    if (imageURL != nil)
+    {
+        CKAsset *asset = [[CKAsset alloc] initWithFileURL:imageURL];
+        dbMessage[@"Image"] = asset;
+    }
+    
+    [publicDB saveRecord:dbMessage completionHandler:^(CKRecord *savedPlace, NSError *error) {
+        // handle errors here
+        if (!error) {
+            NSLog(@"Saved record %@",savedPlace);
+        }
+    }];
+    
+    dispatch_async(dispatch_get_main_queue(), ^(void){
+        [self finishSendingMessageAnimated:YES];
+    });
+}
+
+
+
+- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
+{
+    [self dismissViewControllerAnimated:YES completion:NULL];
+}
+
+
+
+
+
+
+
+
+
+
+
 
 
 #pragma mark - Fake JSQ messages stuff
@@ -818,8 +917,6 @@
      show];
 }
 
-
-
 #pragma mark - JSQMessages collection view flow layout delegate
 
 #pragma mark - Adjusting cell label heights
@@ -910,7 +1007,6 @@
     }
     return YES;
 }
-
 
 
 @end

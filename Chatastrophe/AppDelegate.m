@@ -15,6 +15,7 @@
 @interface AppDelegate () <UISplitViewControllerDelegate> {
     CKDatabase *publicDB;
     NSUbiquitousKeyValueStore *store;
+    NSArray *notificationSoundFileNames;
 }
 
 @end
@@ -35,6 +36,25 @@
     self.myDevice = @{@"deviceID":self.myID,
                       @"deviceName":self.myName
                     };
+    self.emoticons = @[@"📚",@"😴",@"🍴",@"🍎",@"🏈",@"🚗",@"❤️"];
+    /*
+    notificationSoundFileNames = @[@"homework.wav",
+                                   @"bed.wav",
+                                   @"dinner.wav",
+                                   @"snack.wav",
+                                   @"play.wav",
+                                   @"go.wav",
+                                   @"love.wav"];
+     */
+    /* Strings used for sounds
+     Do your homework.
+     It's time for bed.
+     Dinner time!
+     Want a snack?
+     Go play outside.
+     We're leaving, let's go!
+     Love you!
+     */
     
     // local messages array init
     self.allMessages = [NSMutableDictionary new];
@@ -267,7 +287,16 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     CKNotificationInfo *info = [self createNotificationInfoWithSound:nil];
     [self addSubscriptionForPredicate:predicate andInfo:info];
     
+    NSUInteger soundNumber = 1;
+    for (NSString *emoticon in self.emoticons) {
+        predicate = [NSPredicate predicateWithFormat:@"Body = %@",emoticon];
+        info = [self createNotificationInfoWithSound:[NSString stringWithFormat:@"Text to Speech %ld.wav",soundNumber]];
+        [self addSubscriptionForPredicate:predicate andInfo:info];
+        
+        soundNumber++;
+    }
 //    info = [self createNotificationInfoWithSound:@"DinnerTime.wav"];
+    /*
         predicate = [NSPredicate predicateWithFormat:@"Body = '📚'"];
             info = [self createNotificationInfoWithSound:@"DoYourHomework.wav"];
     [self addSubscriptionForPredicate:predicate andInfo:info];
@@ -279,6 +308,7 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     predicate = [NSPredicate predicateWithFormat:@"Body = '😴'"];
     info = [self createNotificationInfoWithSound:@"GoToBed.wav"];
     [self addSubscriptionForPredicate:predicate andInfo:info];
+     */
 //    }
     /*
     // Create the Notification to ALL and to ME, but do not duplicate else cloudkit will send multiple notifications
