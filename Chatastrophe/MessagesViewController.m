@@ -33,6 +33,7 @@
 
 @property (nonatomic) UIImagePickerController *imagePickerController;
 
+@property (weak, nonatomic) IBOutlet UILabel *welcomeMessage;
 @end
 
 @implementation MessagesViewController {
@@ -44,6 +45,7 @@
     NSString *deviceID;
     NSString *deviceName;
     APLViewController *photoPickerVC;
+    UIAlertController *alert;
     
 }
 
@@ -73,10 +75,16 @@
      selector:@selector(useNotificationWithString:)
      name:@"AllMessagesDownloadedFromCloud"
      object:nil];
+
+    [[NSNotificationCenter defaultCenter]
+     addObserver:self
+     selector:@selector(useNotificationWithString:)
+     name:@"ShowWelcomeMessage"
+     object:nil];
     
     appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     deviceList = [[NSMutableArray alloc] initWithArray:appDelegate.deviceList];
-
+    
     /**
      *  You MUST set your senderId and display name
      */
@@ -95,7 +103,6 @@
 //    NSLog(@"%@",self.inputToolbar.contentView);
     NSMutableArray *toolbarItems = [NSMutableArray new];
     NSArray *emoticons = appDelegate.emoticons;
-//    @[@"📚",@"😴",@"🍴",@"🍎",@"🏈",@"🚗",@"❤️"];
     for (NSString *emoticon in emoticons) {
         UIBarButtonItem *emotiButton = [[UIBarButtonItem alloc] initWithTitle:emoticon style:UIBarButtonItemStylePlain target:self action:@selector(didSelectEmoticon:)];
         emotiButton.tag = 1;    // 1 is a special emoticon button
@@ -115,7 +122,7 @@
     [toolbarItems insertObject:cameraButton atIndex:0];
 //    NSArray *mergedToolbarItems = [self.inputToolbar.contentView.buttonBar.items arrayByAddingObjectsFromArray:toolbarItems];
     [self.inputToolbar.contentView.buttonBar setItems:toolbarItems animated:NO];
-    
+
     /*
     float height = self.inputToolbar.contentView.leftBarButtonContainerView.frame.size.height;
     UIImage *image = [UIImage imageNamed:@"smileButton"];
@@ -178,10 +185,12 @@
     /**
      *  Register custom menu actions for cells.
      */
+    /*
     [JSQMessagesCollectionViewCell registerMenuAction:@selector(customAction:)];
     [UIMenuController sharedMenuController].menuItems = @[ [[UIMenuItem alloc] initWithTitle:@"Custom Action"
                                                                                       action:@selector(customAction:)] ];
-
+*/
+    
     /**
      *  OPT-IN: allow cells to be deleted
      */
@@ -227,15 +236,24 @@
                                                                                               target:self
                                                                                               action:@selector(closePressed:)];
     }
+
+
 }
 
 - (void)useNotificationWithString:(NSNotification *)notification {
- 
+    
     NSLog(@"MessagesView received notification %@",notification.name);
-                dispatch_async(dispatch_get_main_queue(), ^(void){
-    [self finishReceivingMessageAnimated:YES];
-            });
 
+    dispatch_async(dispatch_get_main_queue(), ^(void){
+        [self finishReceivingMessageAnimated:YES];
+        /* Welcome message inline for no icloud or no messages
+        if ([notification.name isEqualToString:@"ShowWelcomeMessage"]) {
+            self.welcomeMessage.hidden = NO;
+            [self.view bringSubviewToFront:self.welcomeMessage];
+        }
+         */
+    });
+    
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -299,9 +317,9 @@
     
     [publicDB saveRecord:dbMessage completionHandler:^(CKRecord *savedPlace, NSError *error) {
             // handle errors here
-        if (!error) {
-            NSLog(@"Saved record %@",savedPlace);
-        }
+//        if (!error) {
+//            NSLog(@"Saved record %@",savedPlace);
+//        }
     }];
     
 //    [self sendPushNotification:message];

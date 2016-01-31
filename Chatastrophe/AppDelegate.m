@@ -16,6 +16,7 @@
     CKDatabase *publicDB;
     NSUbiquitousKeyValueStore *store;
     NSArray *notificationSoundFileNames;
+    UIAlertController *alert;
 }
 
 @end
@@ -36,7 +37,8 @@
     self.myDevice = @{@"deviceID":self.myID,
                       @"deviceName":self.myName
                     };
-    self.emoticons = @[@"📚",@"😴",@"🍴",@"🍎",@"🏈",@"🚗",@"❤️"];
+    self.emoticons = @[@"📚",@"😴",@"🍴",@"🏈",@"🚗",@"❤️"];
+    // other emoticons 💤😴🍎
     /*
     notificationSoundFileNames = @[@"homework.wav",
                                    @"bed.wav",
@@ -49,8 +51,7 @@
     /* Strings used for sounds
      Do your homework.
      It's time for bed.
-     Dinner time!
-     Want a snack?
+Time to eat.
      Go play outside.
      We're leaving, let's go!
      Love you!
@@ -58,24 +59,29 @@
     
     // local messages array init
     self.allMessages = [NSMutableDictionary new];
-
-    // Make sure user is signed in to iCloud before using CloudKit
-    [[CKContainer defaultContainer] accountStatusWithCompletionHandler:^(CKAccountStatus accountStatus, NSError *error) {
-        if (accountStatus == CKAccountStatusNoAccount) {
-            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Mom Says requires iCloud"
-                                                                           message:@"Please enable your account in Settings."
-                                                                    preferredStyle:UIAlertControllerStyleAlert];
-            [alert addAction:[UIAlertAction actionWithTitle:@"OK"
-                                                      style:UIAlertActionStyleCancel
-                                                    handler:nil]];
-        }
-    }];
     
     // CloudKit Public Database
 //    publicDB = [[CKContainer defaultContainer] publicCloudDatabase];
     // BUGBUG: Need to rename this variable - was public now private, but still considering using public if I do chats across multiple icloud accounts
     publicDB = [[CKContainer defaultContainer] privateCloudDatabase];
+    
+    /* TODO check for no iCloud account case
+    // Make sure user is signed in to iCloud before using CloudKit
+    [[CKContainer defaultContainer] accountStatusWithCompletionHandler:^(CKAccountStatus accountStatus, NSError *error) {
+        if (accountStatus == CKAccountStatusNoAccount) {
+                 [self notify:@"ShowWelcomeMessage"];
 
+            alert = [UIAlertController alertControllerWithTitle:@"Mom Says requires iCloud"
+                                                        message:@"Please enable your account in Settings."
+                                                 preferredStyle:UIAlertControllerStyleAlert];
+            [alert addAction:[UIAlertAction actionWithTitle:@"OK"
+                                                      style:UIAlertActionStyleCancel
+                                                    handler:nil]];
+            [self.window.rootViewController.navigationController presentViewController:alert animated:YES completion:nil];
+        }
+    }];
+    */
+    
     /* TODO: turning off unless I want to make the app multi-iCloud-friendly
     // Request making this iCloud account discoverable by other users. Other users still need my email address in their contacts.
     [[CKContainer defaultContainer] requestApplicationPermission:CKApplicationPermissionUserDiscoverability completionHandler:^(CKApplicationPermissionStatus applicationPermissionStatus, NSError * _Nullable error) {
@@ -118,9 +124,9 @@
     if (![store arrayForKey:@"deviceList"]) {
         [store setArray:[NSMutableArray new] forKey:@"deviceList"];
     }
-    // BUGBUG: Message schema must be created before this call or else subscription will fail
+    // BUGBUG: Message schema must be created before this call or else subscription will fail - will be ok in public db because schema is migrated from dev environment
     // Also set up index on Message's RecordID to make sure queries are OK
-    // Set up CloudKit server queries (subscriptions) - only needs to be run once
+    // Set up CloudKit server queries (subscriptions) - only needs to be run once per user
     [self createCloudKitSubscriptions];
 
     [[NSNotificationCenter defaultCenter]
@@ -129,11 +135,11 @@
      name: NSUbiquitousKeyValueStoreDidChangeExternallyNotification
      object: [NSUbiquitousKeyValueStore defaultStore]];
     [store synchronize];
-    NSLog(@"Cloud store: %@",[store objectForKey:@"deviceList"]);
+//    NSLog(@"Cloud store: %@",[store objectForKey:@"deviceList"]);
     
     [localStore setObject:[store objectForKey:@"deviceList"] forKey:@"deviceList"];
     self.deviceList = [localStore objectForKey:@"deviceList"];
-    NSLog(@"Local store: %@",[localStore objectForKey:@"deviceList"]);
+//    NSLog(@"Local store: %@",[localStore objectForKey:@"deviceList"]);
 
     // RESET SUBSCRIPTIONS
     // Shouldn't need to do this in production, the first user will set the subscription, and others will try & fail due to duplicate
@@ -194,6 +200,13 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
         }
         NSLog(@"Query finished, messages loaded");
         [self notify:@"AllMessagesDownloadedFromCloud"];
+        /*
+        if (results.count > 0) {
+            [self notify:@"AllMessagesDownloadedFromCloud"];
+        } else {
+            [self notify:@"ShowWelcomeMessage"];
+        }
+         */
 
     }];
     
@@ -287,6 +300,7 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     CKNotificationInfo *info = [self createNotificationInfoWithSound:nil];
     [self addSubscriptionForPredicate:predicate andInfo:info];
     
+    // BUGBUG: Football emoticon seems to fire twice sometimes - code bug or server bug or coincidence?
     NSUInteger soundNumber = 1;
     for (NSString *emoticon in self.emoticons) {
         predicate = [NSPredicate predicateWithFormat:@"Body = %@",emoticon];
