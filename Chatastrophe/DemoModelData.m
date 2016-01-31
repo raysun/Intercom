@@ -37,14 +37,8 @@
     if (self) {
             appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
         
-//        if ([NSUserDefaults emptyMessagesSetting]) {
             self.messages = [NSMutableArray new];
-            // BUGBUG: eventually when saving to icloud, should be decoding here instead of newing
-//        }
-//        else {
-          // [self loadFakeMessages];
-//        }
-        
+
         
         /**
          *  Create avatar images once.
@@ -96,6 +90,15 @@
     return self;
 }
 
+- (void)loadOOBEMessages {
+    self.messages = [[NSMutableArray alloc] initWithObjects:
+                     [[JSQMessage alloc] initWithSenderId:kJSQDemoAvatarIdSquires
+                                        senderDisplayName:kJSQDemoAvatarDisplayNameSquires
+                                                     date:[NSDate distantPast]
+                                                     text:@"Send a message to any of your devices."],
+                     nil];
+                     
+}
 
 - (void)loadFakeMessages
 {
@@ -118,8 +121,6 @@
                                                      text:@"<more text>"],
                      nil];
     
-    [self addPhotoMediaMessage];
-    
     /**
      *  Setting to load extra messages for testing/demo
      */
@@ -135,10 +136,6 @@
 // Add a new message to the store, which will then be read by message view & displayed
 - (void)add:(JSQMessage *)newMessage {
     [self.messages addObject:newMessage];
-//    NSLog(@"%@",newMessage);
-//    [[NSNotificationCenter defaultCenter] postNotificationName:@"Save" object:nil];
-//    NSUbiquitousKeyValueStore *store = [NSUbiquitousKeyValueStore new];
-    
 }
 
 - (void)addPhotoMediaMessage

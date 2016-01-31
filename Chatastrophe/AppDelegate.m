@@ -30,6 +30,8 @@
 //    navigationController.topViewController.navigationItem.leftBarButtonItem = splitViewController.displayModeButtonItem;
 //    splitViewController.delegate = self;
     
+    // Welcome message is a Message object in the Public Database like this: https://www.dropbox.com/s/mdyxx2fpw6oqkam/Screenshot%202016-01-30%2021.19.53.png?dl=0&preview=Screenshot+2016-01-30+21.19.53.png
+    
     // Get the device's name to use in the UI on other devices
     self.myName = [[UIDevice currentDevice] name];
     self.myID = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
@@ -165,21 +167,8 @@ Time to eat.
 
     CKQuery *query = [[CKQuery alloc] initWithRecordType:@"Message" predicate:[NSPredicate predicateWithValue:YES]];
     query.sortDescriptors = @[[[NSSortDescriptor alloc] initWithKey:@"Date" ascending:true]];
+    
     [self performQuery:query];
-
-    /*
-    [self.allMessages setValue:[DemoModelData new] forKey:@"All"];
-    CKQuery *query = [[CKQuery alloc] initWithRecordType:@"Message" predicate:[NSPredicate predicateWithFormat:@"To = 'All'"]];
-    query.sortDescriptors = @[[[NSSortDescriptor alloc] initWithKey:@"Date" ascending:false]];
-    [self performQuery:query];
-    for (device in self.deviceList) {
-        NSString *deviceID = device[@"deviceID"];
-        DemoModelData *demoModelData = [DemoModelData new];
-        [self.allMessages setValue:demoModelData forKey:deviceID];
-        query = [[CKQuery alloc] initWithRecordType:@"Message" predicate:[NSPredicate predicateWithFormat:@"To = %@",deviceID]];
-        query.sortDescriptors = @[[[NSSortDescriptor alloc] initWithKey:@"Date" ascending:false]];
-        [self performQuery:query];
-    } */
     
     return YES;
 }
@@ -193,6 +182,15 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
 }
 
 - (void)performQuery:(CKQuery *)query {
+    CKDatabase *db = [[CKContainer defaultContainer] publicCloudDatabase];
+    [db performQuery:query inZoneWithID:nil completionHandler:^(NSArray *results, NSError *error) {
+        for (CKRecord *record in results) {
+            [self saveRecordToLocalMessages:record];
+            NSLog(@"public message %@",record);
+                    [self notify:@"AllMessagesDownloadedFromCloud"];
+        }
+    }];
+    
     [publicDB performQuery:query inZoneWithID:nil completionHandler:^(NSArray *results, NSError *error) {
         for (CKRecord *record in results) {
             [self saveRecordToLocalMessages:record];
@@ -209,8 +207,9 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
          */
 
     }];
-    
 }
+
+
 
 #pragma mark - Received new message notification from CloudKit
 
