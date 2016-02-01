@@ -13,7 +13,7 @@
 #import "APLCloudManager.h"
 
 @interface AppDelegate () <UISplitViewControllerDelegate> {
-    CKDatabase *publicDB;
+    CKDatabase *privateDB;
     NSUbiquitousKeyValueStore *store;
     NSArray *notificationSoundFileNames;
     UIAlertController *alert;
@@ -65,7 +65,7 @@ Time to eat.
     // CloudKit Public Database
 //    publicDB = [[CKContainer defaultContainer] publicCloudDatabase];
     // BUGBUG: Need to rename this variable - was public now private, but still considering using public if I do chats across multiple icloud accounts
-    publicDB = [[CKContainer defaultContainer] privateCloudDatabase];
+    privateDB = [[CKContainer defaultContainer] privateCloudDatabase];
     
     /* TODO check for no iCloud account case
     // Make sure user is signed in to iCloud before using CloudKit
@@ -191,7 +191,7 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
         }
     }];
     
-    [publicDB performQuery:query inZoneWithID:nil completionHandler:^(NSArray *results, NSError *error) {
+    [privateDB performQuery:query inZoneWithID:nil completionHandler:^(NSArray *results, NSError *error) {
         for (CKRecord *record in results) {
             [self saveRecordToLocalMessages:record];
             NSLog(@"%@",record);
@@ -221,7 +221,7 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     
     if (cloudKitNotification.notificationType == CKNotificationTypeQuery) {
         CKRecordID *recordID = [cloudKitNotification recordID];
-        [publicDB fetchRecordWithID:recordID completionHandler:^(CKRecord * _Nullable record, NSError * _Nullable error) {
+        [privateDB fetchRecordWithID:recordID completionHandler:^(CKRecord * _Nullable record, NSError * _Nullable error) {
 //            NSLog(@"CloudKit Notification %@",record);
 
             NSLog(@"Body is %@",[record valueForKey:@"Body"]);
@@ -385,7 +385,7 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     CKSubscription *subscription = [[CKSubscription alloc] initWithRecordType:@"Message" predicate:predicate options:CKSubscriptionOptionsFiresOnRecordCreation];
     subscription.notificationInfo = info;
     
-    [publicDB saveSubscription:subscription
+    [privateDB saveSubscription:subscription
              completionHandler:^(CKSubscription *subscription, NSError *error) {
                  if (error) NSLog(@"ERROR: %@\nwhen subscribing to:%@",error,predicate) else
                      NSLog(@"CloudKit subscription saved %@",subscription);
@@ -394,11 +394,11 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
 }
 
 - (void)resetSubscriptions {
-    [publicDB fetchAllSubscriptionsWithCompletionHandler:^(NSArray<CKSubscription *> * _Nullable subscriptions, NSError * _Nullable error) {
+    [privateDB fetchAllSubscriptionsWithCompletionHandler:^(NSArray<CKSubscription *> * _Nullable subscriptions, NSError * _Nullable error) {
 //        [[CKModifySubscriptionsOperation alloc] initWithSubscriptionsToSave:nil subscriptionIDsToDelete:subscriptions];
         NSLog(@"All current subscriptions: %@",subscriptions);
         for (CKSubscription *subscription in subscriptions) {
-            [publicDB deleteSubscriptionWithID:subscription.subscriptionID completionHandler:^(NSString * _Nullable subscriptionID, NSError * _Nullable error) {
+            [privateDB deleteSubscriptionWithID:subscription.subscriptionID completionHandler:^(NSString * _Nullable subscriptionID, NSError * _Nullable error) {
                 //
             }];
         }

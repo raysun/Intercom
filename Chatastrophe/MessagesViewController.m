@@ -299,7 +299,6 @@
      */
     [JSQSystemSoundPlayer jsq_playMessageSentSound];
     
-    // BUGBUG: fake text for testing
     JSQMessage *message = [[JSQMessage alloc] initWithSenderId:appDelegate.myID
                                              senderDisplayName:appDelegate.myName
                                                           date:date
@@ -308,7 +307,7 @@
     [self.demoData.messages addObject:message];
 
 //    CKDatabase *publicDB = [[CKContainer defaultContainer] publicCloudDatabase];
-    CKDatabase *publicDB = [[CKContainer defaultContainer] privateCloudDatabase];
+    CKDatabase *privateDB = [[CKContainer defaultContainer] privateCloudDatabase];
     CKRecord *dbMessage = [[CKRecord alloc] initWithRecordType:@"Message"];
     dbMessage[@"From"] = appDelegate.myID;  //mydeviceid
     dbMessage[@"FromFriendlyName"] = appDelegate.myName;
@@ -318,18 +317,33 @@
     dbMessage[@"Date"] = [NSDate date];
     dbMessage[@"Special"] = button.tag == 1 ? @"YES" : @"NO";
     
-    [publicDB saveRecord:dbMessage completionHandler:^(CKRecord *savedPlace, NSError *error) {
+    [privateDB saveRecord:dbMessage completionHandler:^(CKRecord *savedPlace, NSError *error) {
             // handle errors here
 //        if (!error) {
 //            NSLog(@"Saved record %@",savedPlace);
 //        }
     }];
-    
-//    [self sendPushNotification:message];
 
     dispatch_async(dispatch_get_main_queue(), ^(void){
         [self finishSendingMessageAnimated:YES];
     });
+    
+    [self showWarningIfOnlyDevice];
+}
+
+- (void)showWarningIfOnlyDevice {
+    if (deviceList.count == 1) {
+        JSQMessage *message = [[JSQMessage alloc] initWithSenderId:@"WarningID"
+                                                 senderDisplayName:@"Warning"
+                                                              date:[NSDate date]
+                                                              text:@"No other iPhones or iPads found. Mom Says only sends messages to devices with your iCloud account (for now, sorry).  "];
+        
+        [self.demoData.messages addObject:message];
+        dispatch_async(dispatch_get_main_queue(), ^(void){
+            [self finishSendingMessageAnimated:YES];
+        });
+        
+    }
 }
 
 - (void)didPressAccessoryButton:(UIButton *)sender
@@ -423,6 +437,8 @@
         dispatch_async(dispatch_get_main_queue(), ^(void){
             [self finishSendingMessageAnimated:YES];
         });
+        
+        [self showWarningIfOnlyDevice];
     }
     
 }
