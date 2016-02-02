@@ -20,11 +20,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Chatastrophe/MessagesViewController.m"
-            timestampString = "475966073.617632"
+            timestampString = "476079281.742544"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "269"
-            endingLineNumber = "269"
+            startingLineNumber = "278"
+            endingLineNumber = "278"
             landmarkName = "-viewDidAppear:"
             landmarkType = "5">
          </BreakpointContent>
@@ -36,11 +36,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Chatastrophe/MessagesViewController.m"
-            timestampString = "475976917.153481"
+            timestampString = "476079281.742544"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "395"
-            endingLineNumber = "395"
+            startingLineNumber = "404"
+            endingLineNumber = "404"
             landmarkName = "-unwindAction:"
             landmarkType = "5">
          </BreakpointContent>
@@ -52,11 +52,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Chatastrophe/MessagesViewController.m"
-            timestampString = "475964688.792606"
+            timestampString = "476079281.742544"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "245"
-            endingLineNumber = "245"
+            startingLineNumber = "251"
+            endingLineNumber = "251"
             landmarkName = "-useNotificationWithString:"
             landmarkType = "5">
          </BreakpointContent>

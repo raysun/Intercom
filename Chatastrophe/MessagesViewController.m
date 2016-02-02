@@ -81,6 +81,12 @@
      selector:@selector(useNotificationWithString:)
      name:@"ShowWelcomeMessage"
      object:nil];
+
+    [[NSNotificationCenter defaultCenter]
+     addObserver:self
+     selector:@selector(useNotificationWithString:)
+     name:@"ActionSend"
+     object:nil];
     
     appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     deviceList = [[NSMutableArray alloc] initWithArray:appDelegate.deviceList];
@@ -246,16 +252,19 @@
 - (void)useNotificationWithString:(NSNotification *)notification {
     
     NSLog(@"MessagesView received notification %@",notification.name);
-
-    dispatch_async(dispatch_get_main_queue(), ^(void){
-        [self finishReceivingMessageAnimated:YES];
-        /* Welcome message inline for no icloud or no messages
-        if ([notification.name isEqualToString:@"ShowWelcomeMessage"]) {
-            self.welcomeMessage.hidden = NO;
-            [self.view bringSubviewToFront:self.welcomeMessage];
-        }
-         */
-    });
+    if ([notification.name isEqualToString:@"ActionSend"]) {
+        [self didPressSendButton:nil withMessageText:notification.userInfo[@"Body"] senderId:appDelegate.myID senderDisplayName:appDelegate.myName date:[NSDate date]];
+    } else {
+        dispatch_async(dispatch_get_main_queue(), ^(void){
+            [self finishReceivingMessageAnimated:YES];
+            /* Welcome message inline for no icloud or no messages
+             if ([notification.name isEqualToString:@"ShowWelcomeMessage"]) {
+             self.welcomeMessage.hidden = NO;
+             [self.view bringSubviewToFront:self.welcomeMessage];
+             }
+             */
+        });
+    }
     
 }
 

@@ -60,7 +60,7 @@
 		B6785EEF1C55908C0078D903 /* APLViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = APLViewController.m; sourceTree = "<group>"; };
 		B695133F1C45D4A200546E64 /* MessageFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageFile.h; sourceTree = "<group>"; };
 		B69513401C45D4A200546E64 /* MessageFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageFile.m; sourceTree = "<group>"; };
-		B6B5845E1C3E31E8007B8AB4 /* Mom Says.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Mom Says.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B6B5845E1C3E31E8007B8AB4 /* Intercom.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Intercom.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B6B584621C3E31E8007B8AB4 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		B6B584641C3E31E8007B8AB4 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		B6B584651C3E31E8007B8AB4 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = AppDelegate.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
@@ -154,7 +154,7 @@
 		B6B5845F1C3E31E8007B8AB4 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				B6B5845E1C3E31E8007B8AB4 /* Mom Says.app */,
+				B6B5845E1C3E31E8007B8AB4 /* Intercom.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -214,7 +214,7 @@
 			);
 			name = Intercom;
 			productName = Chatastrophe;
-			productReference = B6B5845E1C3E31E8007B8AB4 /* Mom Says.app */;
+			productReference = B6B5845E1C3E31E8007B8AB4 /* Intercom.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -466,7 +466,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.raysun.Chatastrophe;
-				PRODUCT_NAME = "Mom Says";
+				PRODUCT_NAME = Intercom;
 				PROVISIONING_PROFILE = "";
 			};
 			name = Debug;
@@ -483,7 +483,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.raysun.Chatastrophe;
-				PRODUCT_NAME = "Mom Says";
+				PRODUCT_NAME = Intercom;
 				PROVISIONING_PROFILE = "";
 			};
 			name = Release;

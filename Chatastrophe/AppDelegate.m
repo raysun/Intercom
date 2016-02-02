@@ -53,7 +53,7 @@
     /* Strings used for sounds
      Do your homework.
      It's time for bed.
-Time to eat.
+     Time to eat. 
      Go play outside.
      We're leaving, let's go!
      Love you!
@@ -112,7 +112,23 @@ Time to eat.
     */
     
     // Register for CloudKit push notifications (based on the subscription server queries)
-    UIUserNotificationSettings *notificationSettings = [UIUserNotificationSettings settingsForTypes:(UIUserNotificationTypeAlert | UIUserNotificationTypeBadge | UIUserNotificationTypeSound) categories:nil];
+    UIMutableUserNotificationAction *notificationAction1 = [[UIMutableUserNotificationAction alloc] init];
+    notificationAction1.identifier = @"reply";
+    notificationAction1.title = @"Send";
+    notificationAction1.activationMode = UIUserNotificationActivationModeBackground;
+    notificationAction1.destructive = NO;
+    notificationAction1.authenticationRequired = NO;
+    notificationAction1.behavior = UIUserNotificationActionBehaviorTextInput;
+    
+    UIMutableUserNotificationCategory *category = [UIMutableUserNotificationCategory new];
+    category.identifier = @"category";
+//    [category setActions:@[notificationAction1] forContext:UIUserNotificationActionContextDefault];
+    [category setActions:@[notificationAction1] forContext:UIUserNotificationActionContextMinimal];
+    
+    NSSet *categories = [NSSet setWithObjects:category, nil];
+    
+    UIUserNotificationSettings *notificationSettings = [UIUserNotificationSettings settingsForTypes:(UIUserNotificationTypeAlert | UIUserNotificationTypeBadge | UIUserNotificationTypeSound) categories:categories];
+    
     [application registerUserNotificationSettings:notificationSettings];
     [application registerForRemoteNotifications];
     
@@ -187,7 +203,7 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
         for (CKRecord *record in results) {
             [self saveRecordToLocalMessages:record];
             NSLog(@"public message %@",record);
-                    [self notify:@"AllMessagesDownloadedFromCloud"];
+            [self notify:@"AllMessagesDownloadedFromCloud"];
         }
     }];
     
@@ -235,6 +251,35 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
         }];
     }
     completionHandler(UIBackgroundFetchResultNewData);
+}
+
+- (void)application:(UIApplication *)application handleActionWithIdentifier:(NSString *)identifier forRemoteNotification:(NSDictionary *)userInfo completionHandler:(void(^)())completionHandler {
+
+    // Handle actions of remote notifications here. You can identify the action by using "identifier" and perform appropriate operations
+    if ([identifier isEqualToString:@"reply"]) {
+        //handle the text
+        NSLog(@"%@",UIUserNotificationActionResponseTypedTextKey);
+        NSString *text = [userInfo objectForKey:UIUserNotificationActionResponseTypedTextKey];
+//        JSQMessage *message = [[JSQMessage alloc] initWithSenderId:self.myID senderDisplayName:self.myName date:[NSDate date] text:text];
+        NSDictionary *textDictionary = @{@"Body":text};
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"ActionSend" object:nil userInfo:textDictionary];
+        
+        // TODO: I can't set the TO right now
+        /*
+        // Messages to ALL always go to ALL. Then messages NOT FROM ME go to OTHERS' mailboxes. Then messages from ME TO OTHERS go to OTHERS.
+        if ([to isEqualToString:@"All"]) {
+            [((DemoModelData*) self.allMessages[@"All"]) add:message];
+        } else if (![from isEqualToString:self.myID]) {
+            [((DemoModelData*) self.allMessages[from]) add:message];
+        } else {
+            [((DemoModelData*) self.allMessages[to]) add:message];
+        }
+         */
+
+    }
+    
+    if(completionHandler != nil)    //Finally call completion handler if its not nil
+        completionHandler();
 }
 
 - (void)notify:(NSString *)notificationName {
@@ -376,8 +421,10 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     info.alertLocalizationArgs = @[
                                    @"Body"
                                    ];
-    
+    info.category = @"category";
+    info.alertActionLocalizationKey = @"Send";
 //    info.desiredKeys = @[@"FromFriendlyName"];
+    
     return info;
 }
 

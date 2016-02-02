@@ -284,7 +284,7 @@ void CloudKitErrorLog(int lineNumber, NSString *functionName, NSError *error)
     } copy];
     
     block_self = myCompletionBlock;
-    
+
     recentsQueryOperation.queryCompletionBlock = block_self;
     [self.publicDatabase addOperation:recentsQueryOperation];
 }
