@@ -122,7 +122,7 @@
     
     UIMutableUserNotificationCategory *category = [UIMutableUserNotificationCategory new];
     category.identifier = @"category";
-//    [category setActions:@[notificationAction1] forContext:UIUserNotificationActionContextDefault];
+    [category setActions:@[notificationAction1] forContext:UIUserNotificationActionContextDefault];
     [category setActions:@[notificationAction1] forContext:UIUserNotificationActionContextMinimal];
     
     NSSet *categories = [NSSet setWithObjects:category, nil];
@@ -197,6 +197,7 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     NSLog(@"Notifications enabled: %@",[application currentUserNotificationSettings]);
 }
 
+// Load all messages
 - (void)performQuery:(CKQuery *)query {
     CKDatabase *db = [[CKContainer defaultContainer] publicCloudDatabase];
     [db performQuery:query inZoneWithID:nil completionHandler:^(NSArray *results, NSError *error) {
@@ -225,8 +226,6 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     }];
 }
 
-
-
 #pragma mark - Received new message notification from CloudKit
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(nonnull NSDictionary *)userInfo fetchCompletionHandler:(nonnull void (^)(UIBackgroundFetchResult))completionHandler {
@@ -253,14 +252,19 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     completionHandler(UIBackgroundFetchResultNewData);
 }
 
+// Special handler for quick action - replying via the notification
 - (void)application:(UIApplication *)application handleActionWithIdentifier:(NSString *)identifier forRemoteNotification:(NSDictionary *)userInfo completionHandler:(void(^)())completionHandler {
 
+    CKQueryNotification *cloudKitNotification = (CKQueryNotification *)[CKNotification notificationFromRemoteNotificationDictionary:userInfo];
+    UILocalNotification *notification = (UILocalNotification *)userInfo;
+    UIUserNotificationAction *a = (UIUserNotificationAction*)userInfo;
+    
     // Handle actions of remote notifications here. You can identify the action by using "identifier" and perform appropriate operations
-    if ([identifier isEqualToString:@"reply"]) {
+    if (cloudKitNotification.notificationType == CKNotificationTypeQuery && [cloudKitNotification.category isEqualToString:@"category"] && [identifier isEqualToString:@"reply"]) {
         //handle the text
-        NSLog(@"%@",UIUserNotificationActionResponseTypedTextKey);
-        NSString *text = [userInfo objectForKey:UIUserNotificationActionResponseTypedTextKey];
+        NSString *text = (NSString *)[a valueForKey:UIUserNotificationActionResponseTypedTextKey];
 //        JSQMessage *message = [[JSQMessage alloc] initWithSenderId:self.myID senderDisplayName:self.myName date:[NSDate date] text:text];
+        
         NSDictionary *textDictionary = @{@"Body":text};
         [[NSNotificationCenter defaultCenter] postNotificationName:@"ActionSend" object:nil userInfo:textDictionary];
         
@@ -279,7 +283,7 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     }
     
     if(completionHandler != nil)    //Finally call completion handler if its not nil
-        completionHandler();
+        completionHandler(UIBackgroundFetchResultNewData);
 }
 
 - (void)notify:(NSString *)notificationName {
