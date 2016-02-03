@@ -25,6 +25,7 @@
 @property (strong, retain) NSString *myName;
 @property (strong, retain) NSArray *emoticons;
 //@property (strong, retain) OneSignal *oneSignal;
+@property BOOL atLeastOneMessageReceived; // Extra check to hide the warning when I've already received a message, even if devicelist is just me
 
 @end
 

@@ -90,7 +90,6 @@
     
     appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     deviceList = [[NSMutableArray alloc] initWithArray:appDelegate.deviceList];
-    
     /**
      *  You MUST set your senderId and display name
      */
@@ -341,11 +340,11 @@
 }
 
 - (void)showWarningIfOnlyDevice {
-    if (deviceList.count == 1) {
+    if (deviceList.count == 1 && appDelegate.atLeastOneMessageReceived == NO) {
         JSQMessage *message = [[JSQMessage alloc] initWithSenderId:@"WarningID"
                                                  senderDisplayName:@"Warning"
                                                               date:[NSDate date]
-                                                              text:@"No other iPhones or iPads found. Mom Says only sends messages to devices with your iCloud account (for now, sorry).  "];
+                                                              text:@"No other iPhones or iPads found. Intercom only sends messages to devices with your iCloud account (for now, sorry)."];
         
         [self.demoData.messages addObject:message];
         dispatch_async(dispatch_get_main_queue(), ^(void){

@@ -32,6 +32,8 @@
     
     // Welcome message is a Message object in the Public Database like this: https://www.dropbox.com/s/mdyxx2fpw6oqkam/Screenshot%202016-01-30%2021.19.53.png?dl=0&preview=Screenshot+2016-01-30+21.19.53.png
     
+    self.atLeastOneMessageReceived = NO;
+    
     // Get the device's name to use in the UI on other devices
     self.myName = [[UIDevice currentDevice] name];
     self.myID = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
@@ -41,15 +43,6 @@
                     };
     self.emoticons = @[@"📚",@"😴",@"🍴",@"🏈",@"🚗",@"❤️"];
     // other emoticons 💤😴🍎
-    /*
-    notificationSoundFileNames = @[@"homework.wav",
-                                   @"bed.wav",
-                                   @"dinner.wav",
-                                   @"snack.wav",
-                                   @"play.wav",
-                                   @"go.wav",
-                                   @"love.wav"];
-     */
     /* Strings used for sounds
      Do your homework.
      It's time for bed.
@@ -112,13 +105,14 @@
     */
     
     // Register for CloudKit push notifications (based on the subscription server queries)
-    UIMutableUserNotificationAction *notificationAction1 = [[UIMutableUserNotificationAction alloc] init];
+    UIMutableUserNotificationAction *notificationAction1 = [UIMutableUserNotificationAction new];
     notificationAction1.identifier = @"reply";
     notificationAction1.title = @"Send";
     notificationAction1.activationMode = UIUserNotificationActivationModeBackground;
     notificationAction1.destructive = NO;
     notificationAction1.authenticationRequired = NO;
     notificationAction1.behavior = UIUserNotificationActionBehaviorTextInput;
+//    notificationAction1.parameters = @{UIUserNotificationTextInputActionButtonTitleKey:@"Yo"};
     
     UIMutableUserNotificationCategory *category = [UIMutableUserNotificationCategory new];
     category.identifier = @"category";
@@ -211,11 +205,10 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     [privateDB performQuery:query inZoneWithID:nil completionHandler:^(NSArray *results, NSError *error) {
         for (CKRecord *record in results) {
             [self saveRecordToLocalMessages:record];
-            NSLog(@"%@",record);
         }
         NSLog(@"Query finished, messages loaded");
         [self notify:@"AllMessagesDownloadedFromCloud"];
-        /*
+        /* If I want to show a welcome message when there are no messages. Instead showing error if there are no other devices when you send.
         if (results.count > 0) {
             [self notify:@"AllMessagesDownloadedFromCloud"];
         } else {
@@ -230,15 +223,13 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(nonnull NSDictionary *)userInfo fetchCompletionHandler:(nonnull void (^)(UIBackgroundFetchResult))completionHandler {
     
+    self.atLeastOneMessageReceived = YES;
+    
     CKQueryNotification *cloudKitNotification = (CKQueryNotification *)[CKNotification notificationFromRemoteNotificationDictionary:userInfo];
-//    NSString *alertBody = cloudKitNotification.alertBody;
-//    NSLog(@"Awake - even in background");
     
     if (cloudKitNotification.notificationType == CKNotificationTypeQuery) {
         CKRecordID *recordID = [cloudKitNotification recordID];
         [privateDB fetchRecordWithID:recordID completionHandler:^(CKRecord * _Nullable record, NSError * _Nullable error) {
-//            NSLog(@"CloudKit Notification %@",record);
-
             NSLog(@"Body is %@",[record valueForKey:@"Body"]);
             NSLog(@"FromFriendlyName is %@", cloudKitNotification.recordFields[@"FromFriendlyName"]);
             
@@ -249,41 +240,29 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
         
         }];
     }
-    completionHandler(UIBackgroundFetchResultNewData);
+    if(completionHandler != nil)
+        completionHandler(UIBackgroundFetchResultNewData);
 }
 
-// Special handler for quick action - replying via the notification
-- (void)application:(UIApplication *)application handleActionWithIdentifier:(NSString *)identifier forRemoteNotification:(NSDictionary *)userInfo completionHandler:(void(^)())completionHandler {
+// Instead of the usual didReceiveRemoteNotification, this is called if the quick action is used.
+- (void)application:(UIApplication *)application handleActionWithIdentifier:(NSString *)identifier forRemoteNotification:(NSDictionary *)userInfo withResponseInfo:(nonnull NSDictionary *)responseInfo completionHandler:(nonnull void (^)())completionHandler {
+
+    // Save the incoming message like usual
+    [self application:application didReceiveRemoteNotification:userInfo fetchCompletionHandler:completionHandler];
 
     CKQueryNotification *cloudKitNotification = (CKQueryNotification *)[CKNotification notificationFromRemoteNotificationDictionary:userInfo];
-    UILocalNotification *notification = (UILocalNotification *)userInfo;
-    UIUserNotificationAction *a = (UIUserNotificationAction*)userInfo;
     
-    // Handle actions of remote notifications here. You can identify the action by using "identifier" and perform appropriate operations
     if (cloudKitNotification.notificationType == CKNotificationTypeQuery && [cloudKitNotification.category isEqualToString:@"category"] && [identifier isEqualToString:@"reply"]) {
-        //handle the text
-        NSString *text = (NSString *)[a valueForKey:UIUserNotificationActionResponseTypedTextKey];
-//        JSQMessage *message = [[JSQMessage alloc] initWithSenderId:self.myID senderDisplayName:self.myName date:[NSDate date] text:text];
-        
+
+        NSString *text = responseInfo[UIUserNotificationActionResponseTypedTextKey];
         NSDictionary *textDictionary = @{@"Body":text};
         [[NSNotificationCenter defaultCenter] postNotificationName:@"ActionSend" object:nil userInfo:textDictionary];
-        
-        // TODO: I can't set the TO right now
-        /*
-        // Messages to ALL always go to ALL. Then messages NOT FROM ME go to OTHERS' mailboxes. Then messages from ME TO OTHERS go to OTHERS.
-        if ([to isEqualToString:@"All"]) {
-            [((DemoModelData*) self.allMessages[@"All"]) add:message];
-        } else if (![from isEqualToString:self.myID]) {
-            [((DemoModelData*) self.allMessages[from]) add:message];
-        } else {
-            [((DemoModelData*) self.allMessages[to]) add:message];
-        }
-         */
-
     }
     
-    if(completionHandler != nil)    //Finally call completion handler if its not nil
+    /* Don't need to call completionHandler again, it was done by calling didReceiveRemoteNotification above
+    if(completionHandler != nil)
         completionHandler(UIBackgroundFetchResultNewData);
+     */
 }
 
 - (void)notify:(NSString *)notificationName {
@@ -357,25 +336,10 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
         
         soundNumber++;
     }
-//    info = [self createNotificationInfoWithSound:@"DinnerTime.wav"];
-    /*
-        predicate = [NSPredicate predicateWithFormat:@"Body = '📚'"];
-            info = [self createNotificationInfoWithSound:@"DoYourHomework.wav"];
-    [self addSubscriptionForPredicate:predicate andInfo:info];
-    
-    predicate = [NSPredicate predicateWithFormat:@"Body = '🍴'"];
-    info = [self createNotificationInfoWithSound:@"DinnerTime.wav"];
-    [self addSubscriptionForPredicate:predicate andInfo:info];
-    
-    predicate = [NSPredicate predicateWithFormat:@"Body = '😴'"];
-    info = [self createNotificationInfoWithSound:@"GoToBed.wav"];
-    [self addSubscriptionForPredicate:predicate andInfo:info];
-     */
-//    }
+
     /*
     // Create the Notification to ALL and to ME, but do not duplicate else cloudkit will send multiple notifications
     [publicDB fetchAllSubscriptionsWithCompletionHandler:^(NSArray<CKSubscription *> * _Nullable subscriptions, NSError * _Nullable error) {
-
     
         NSPredicate *predicateAll = [NSPredicate predicateWithFormat:@"To = 'All'"];
         NSPredicate *predicate = [NSPredicate predicateWithFormat:@"To = %@",self.myID];
@@ -400,7 +364,6 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
         }];
         NSLog(@"%lu",(unsigned long)i);
          */
-
 
 }
 
@@ -517,6 +480,18 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+
+    // When app opens, mark unread count back to 0
+    application.applicationIconBadgeNumber = 0;
+    CKModifyBadgeOperation *clearBadge = [[CKModifyBadgeOperation alloc] initWithBadgeValue:0];
+    [clearBadge setModifyBadgeCompletionBlock:^(NSError *error) {
+        NSLog(@"%@", error);
+    }];
+        [clearBadge start];
+    
+//    [privateDB addOperation:clearBadge];
+//    [[[CKContainer defaultContainer] publicCloudDatabase] addOperation:clearBadge];
+    
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application {
