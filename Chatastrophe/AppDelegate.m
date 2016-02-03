@@ -112,13 +112,14 @@
     */
     
     // Register for CloudKit push notifications (based on the subscription server queries)
-    UIMutableUserNotificationAction *notificationAction1 = [[UIMutableUserNotificationAction alloc] init];
+    UIMutableUserNotificationAction *notificationAction1 = [UIMutableUserNotificationAction new];
     notificationAction1.identifier = @"reply";
-    notificationAction1.title = @"Send";
+    notificationAction1.title = @"whenRegistering";
     notificationAction1.activationMode = UIUserNotificationActivationModeBackground;
     notificationAction1.destructive = NO;
     notificationAction1.authenticationRequired = NO;
     notificationAction1.behavior = UIUserNotificationActionBehaviorTextInput;
+    notificationAction1.parameters = @{UIUserNotificationTextInputActionButtonTitleKey:@"Yo"};
     
     UIMutableUserNotificationCategory *category = [UIMutableUserNotificationCategory new];
     category.identifier = @"category";
@@ -253,33 +254,30 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     completionHandler(UIBackgroundFetchResultNewData);
 }
 
-- (void)application:(UIApplication *)application handleActionWithIdentifier:(NSString *)identifier forRemoteNotification:(NSDictionary *)userInfo completionHandler:(void(^)())completionHandler {
-
+- (void)application:(UIApplication *)application handleActionWithIdentifier:(NSString *)identifier forRemoteNotification:(NSDictionary *)userInfo withResponseInfo:(nonnull NSDictionary *)responseInfo completionHandler:(nonnull void (^)())completionHandler {
     // Handle actions of remote notifications here. You can identify the action by using "identifier" and perform appropriate operations
     if ([identifier isEqualToString:@"reply"]) {
         //handle the text
-        NSLog(@"%@",UIUserNotificationActionResponseTypedTextKey);
-        NSString *text = [userInfo objectForKey:UIUserNotificationActionResponseTypedTextKey];
-//        JSQMessage *message = [[JSQMessage alloc] initWithSenderId:self.myID senderDisplayName:self.myName date:[NSDate date] text:text];
+        NSString *text = responseInfo[UIUserNotificationActionResponseTypedTextKey];
+        //        JSQMessage *message = [[JSQMessage alloc] initWithSenderId:self.myID senderDisplayName:self.myName date:[NSDate date] text:text];
         NSDictionary *textDictionary = @{@"Body":text};
         [[NSNotificationCenter defaultCenter] postNotificationName:@"ActionSend" object:nil userInfo:textDictionary];
         
+            completionHandler(UIBackgroundFetchResultNewData);
         // TODO: I can't set the TO right now
         /*
-        // Messages to ALL always go to ALL. Then messages NOT FROM ME go to OTHERS' mailboxes. Then messages from ME TO OTHERS go to OTHERS.
-        if ([to isEqualToString:@"All"]) {
-            [((DemoModelData*) self.allMessages[@"All"]) add:message];
-        } else if (![from isEqualToString:self.myID]) {
-            [((DemoModelData*) self.allMessages[from]) add:message];
-        } else {
-            [((DemoModelData*) self.allMessages[to]) add:message];
-        }
+         // Messages to ALL always go to ALL. Then messages NOT FROM ME go to OTHERS' mailboxes. Then messages from ME TO OTHERS go to OTHERS.
+         if ([to isEqualToString:@"All"]) {
+         [((DemoModelData*) self.allMessages[@"All"]) add:message];
+         } else if (![from isEqualToString:self.myID]) {
+         [((DemoModelData*) self.allMessages[from]) add:message];
+         } else {
+         [((DemoModelData*) self.allMessages[to]) add:message];
+         }
          */
 
     }
-    
-    if(completionHandler != nil)    //Finally call completion handler if its not nil
-        completionHandler();
+
 }
 
 - (void)notify:(NSString *)notificationName {
@@ -422,7 +420,7 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
                                    @"Body"
                                    ];
     info.category = @"category";
-    info.alertActionLocalizationKey = @"Send";
+    info.alertActionLocalizationKey = @"RegisterCloudkit";
 //    info.desiredKeys = @[@"FromFriendlyName"];
     
     return info;
