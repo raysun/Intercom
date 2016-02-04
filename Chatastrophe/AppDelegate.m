@@ -11,12 +11,14 @@
 #import "JSQMessage.h"
 @import CloudKit;
 #import "APLCloudManager.h"
+@import AudioToolbox;
 
 @interface AppDelegate () <UISplitViewControllerDelegate> {
     CKDatabase *privateDB;
     NSUbiquitousKeyValueStore *store;
     NSArray *notificationSoundFileNames;
     UIAlertController *alert;
+    SystemSoundID inAppSound;
 }
 
 @end
@@ -131,6 +133,10 @@
 
     // RESET APP - uncomment next line
 //    [store removeObjectForKey:@"deviceList"];
+    // RESET SUBSCRIPTIONS
+    // Shouldn't need to do this in production, the first user will set the subscription, and others will try & fail due to duplicate
+//    [self resetSubscriptions];
+//    [NSThread sleepForTimeInterval: 20.0];
     
     // DeviceList is completely empty - first device for this user
     if (![store arrayForKey:@"deviceList"]) {
@@ -152,10 +158,6 @@
     [localStore setObject:[store objectForKey:@"deviceList"] forKey:@"deviceList"];
     self.deviceList = [localStore objectForKey:@"deviceList"];
 //    NSLog(@"Local store: %@",[localStore objectForKey:@"deviceList"]);
-
-    // RESET SUBSCRIPTIONS
-    // Shouldn't need to do this in production, the first user will set the subscription, and others will try & fail due to duplicate
-//    [self resetSubscriptions];
     
     // Add this device if it's new
     if (![[localStore objectForKey:@"deviceList"] containsObject:self.myDevice]) {
@@ -230,14 +232,30 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     if (cloudKitNotification.notificationType == CKNotificationTypeQuery) {
         CKRecordID *recordID = [cloudKitNotification recordID];
         [privateDB fetchRecordWithID:recordID completionHandler:^(CKRecord * _Nullable record, NSError * _Nullable error) {
-            NSLog(@"Body is %@",[record valueForKey:@"Body"]);
+            
+            NSString *body = [record valueForKey:@"Body"];
+            NSLog(@"Body is %@",body);
             NSLog(@"FromFriendlyName is %@", cloudKitNotification.recordFields[@"FromFriendlyName"]);
+            
+            UIApplicationState state = [application applicationState];
+            if (state == UIApplicationStateActive) {
+                NSUInteger i = [self.emoticons indexOfObject:body];
+                if (i != NSNotFound) {
+                    //playsound
+                    NSString *soundFileName = [NSString stringWithFormat:@"Text to Speech %ld",i+1];
+                    NSString *soundFilePath = [[NSBundle mainBundle]
+                                               pathForResource:soundFileName ofType:@"wav"];
+                    NSURL *soundURL = [NSURL fileURLWithPath:soundFilePath];
+                    AudioServicesCreateSystemSoundID((__bridge CFURLRef)soundURL, &inAppSound);
+                    AudioServicesPlaySystemSound(inAppSound);
+                }
+            }
             
             [self saveRecordToLocalMessages:record];
             
             // Tell message view controller to refresh views
             [self notify:@"NewMessages"];
-        
+            
         }];
     }
     if(completionHandler != nil)
