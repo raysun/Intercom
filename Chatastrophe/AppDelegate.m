@@ -58,7 +58,8 @@
     self.allMessages = [NSMutableDictionary new];
     
     // Messages are per iCloud account
-    privateDB = [[CKContainer defaultContainer] privateCloudDatabase];
+    privateDB = [[CKContainer containerWithIdentifier:@"iCloud.com.raysun.Intercom"] privateCloudDatabase];
+//    privateDB = [[CKContainer defaultContainer] privateCloudDatabase];
     
     /* TODO check for no iCloud account case - might be ok, though, you should just get the "no other account found" error
     // Make sure user is signed in to iCloud before using CloudKit
@@ -192,7 +193,7 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
 // Load all messages
 - (void)performQuery:(CKQuery *)query {
     // Special failsafe - lets me show a message on everyone's device by manually creating a public message - depending on the date of the message, I can show it at the top or at the end.
-    CKDatabase *db = [[CKContainer defaultContainer] publicCloudDatabase];
+    CKDatabase *db = [[CKContainer containerWithIdentifier:@"iCloud.com.raysun.Intercom"] publicCloudDatabase];
     [db performQuery:query inZoneWithID:nil completionHandler:^(NSArray *results, NSError *error) {
         for (CKRecord *record in results) {
             [self saveRecordToLocalMessages:record];

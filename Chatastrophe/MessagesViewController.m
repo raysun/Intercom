@@ -315,7 +315,7 @@
     [self.demoData.messages addObject:message];
 
 //    CKDatabase *publicDB = [[CKContainer defaultContainer] publicCloudDatabase];
-    CKDatabase *privateDB = [[CKContainer defaultContainer] privateCloudDatabase];
+    CKDatabase *privateDB = [[CKContainer containerWithIdentifier:@"iCloud.com.raysun.Intercom"] privateCloudDatabase];
     CKRecord *dbMessage = [[CKRecord alloc] initWithRecordType:@"Message"];
     dbMessage[@"From"] = appDelegate.myID;  //mydeviceid
     dbMessage[@"FromFriendlyName"] = appDelegate.myName;
@@ -416,7 +416,7 @@
         [self.demoData.messages addObject:photoMessage];
         
         //    CKDatabase *publicDB = [[CKContainer defaultContainer] publicCloudDatabase];
-        CKDatabase *publicDB = [[CKContainer defaultContainer] privateCloudDatabase];
+        CKDatabase *publicDB = [[CKContainer containerWithIdentifier:@"iCloud.com.raysun.Intercom"] privateCloudDatabase];
         CKRecord *dbMessage = [[CKRecord alloc] initWithRecordType:@"Message"];
         dbMessage[@"From"] = appDelegate.myID;  //mydeviceid
         dbMessage[@"FromFriendlyName"] = appDelegate.myName;
@@ -554,7 +554,7 @@
     [self.demoData.messages addObject:photoMessage];
     
     //    CKDatabase *publicDB = [[CKContainer defaultContainer] publicCloudDatabase];
-    CKDatabase *publicDB = [[CKContainer defaultContainer] privateCloudDatabase];
+    CKDatabase *publicDB = [[CKContainer containerWithIdentifier:@"iCloud.com.raysun.Intercom"] privateCloudDatabase];
     CKRecord *dbMessage = [[CKRecord alloc] initWithRecordType:@"Message"];
     dbMessage[@"From"] = appDelegate.myID;  //mydeviceid
     dbMessage[@"FromFriendlyName"] = appDelegate.myName;
