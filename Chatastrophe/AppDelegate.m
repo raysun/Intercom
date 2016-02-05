@@ -26,13 +26,13 @@
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    /* Don't need this, unless I go back to the master/detail UI
     // Override point for customization after application launch.
 //    UISplitViewController *splitViewController = (UISplitViewController *)self.window.rootViewController;
  //   UINavigationController *navigationController = [splitViewController.viewControllers lastObject];
 //    navigationController.topViewController.navigationItem.leftBarButtonItem = splitViewController.displayModeButtonItem;
 //    splitViewController.delegate = self;
-    
-    // Welcome message is a Message object in the Public Database like this: https://www.dropbox.com/s/mdyxx2fpw6oqkam/Screenshot%202016-01-30%2021.19.53.png?dl=0&preview=Screenshot+2016-01-30+21.19.53.png
+     */
     
     self.atLeastOneMessageReceived = NO;
     
@@ -57,12 +57,10 @@
     // local messages array init
     self.allMessages = [NSMutableDictionary new];
     
-    // CloudKit Public Database
-//    publicDB = [[CKContainer defaultContainer] publicCloudDatabase];
-    // BUGBUG: Need to rename this variable - was public now private, but still considering using public if I do chats across multiple icloud accounts
+    // Messages are per iCloud account
     privateDB = [[CKContainer defaultContainer] privateCloudDatabase];
     
-    /* TODO check for no iCloud account case
+    /* TODO check for no iCloud account case - might be ok, though, you should just get the "no other account found" error
     // Make sure user is signed in to iCloud before using CloudKit
     [[CKContainer defaultContainer] accountStatusWithCompletionHandler:^(CKAccountStatus accountStatus, NSError *error) {
         if (accountStatus == CKAccountStatusNoAccount) {
@@ -133,8 +131,9 @@
 
     // RESET APP - uncomment next line
 //    [store removeObjectForKey:@"deviceList"];
+    
     // RESET SUBSCRIPTIONS
-    // Shouldn't need to do this in production, the first user will set the subscription, and others will try & fail due to duplicate
+    // Can't be done in production - for development testing only
 //    [self resetSubscriptions];
 //    [NSThread sleepForTimeInterval: 20.0];
     
@@ -142,10 +141,9 @@
     if (![store arrayForKey:@"deviceList"]) {
         [store setArray:[NSMutableArray new] forKey:@"deviceList"];
     }
-    // BUGBUG: Message schema must be created before this call or else subscription will fail - will be ok in public db because schema is migrated from dev environment
-    // Also set up index on Message's RecordID to make sure queries are OK
-    // Set up CloudKit server queries (subscriptions) - only needs to be run once per user
-    [self createCloudKitSubscriptions];
+
+    // Shouldn't need to create the subscriptions - it is done Just-in-time in development, then pushed to production.
+//    [self createCloudKitSubscriptions];
 
     [[NSNotificationCenter defaultCenter]
      addObserver: self
@@ -185,8 +183,6 @@
     return YES;
 }
 
-#pragma mark - Callback after registering for CloudKit notifications - now that cloudkit is ready, we load messages
-
 - (void)application:(UIApplication *)application
 didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     // TODO: handle case where user has disabled (or not accepted) notifications
@@ -195,6 +191,7 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
 
 // Load all messages
 - (void)performQuery:(CKQuery *)query {
+    // Special failsafe - lets me show a message on everyone's device by manually creating a public message - depending on the date of the message, I can show it at the top or at the end.
     CKDatabase *db = [[CKContainer defaultContainer] publicCloudDatabase];
     [db performQuery:query inZoneWithID:nil completionHandler:^(NSArray *results, NSError *error) {
         for (CKRecord *record in results) {
@@ -258,8 +255,7 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
             
         }];
     }
-    if(completionHandler != nil)
-        completionHandler(UIBackgroundFetchResultNewData);
+    if (completionHandler != nil) completionHandler(UIBackgroundFetchResultNewData);
 }
 
 // Instead of the usual didReceiveRemoteNotification, this is called if the quick action is used.
@@ -332,7 +328,7 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     
 }
 
-#pragma mark - Set up CloudKit subscriptions (only need to be called once in app lifetime)
+#pragma mark - Set up CloudKit subscriptions (only called once in development)
 
 // Listen for changes to CloudKit objects (message and device)
 - (void)createCloudKitSubscriptions {
@@ -348,7 +344,7 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     // BUGBUG: Football emoticon seems to fire twice sometimes - code bug or server bug or coincidence?
     NSUInteger soundNumber = 1;
     for (NSString *emoticon in self.emoticons) {
-        predicate = [NSPredicate predicateWithFormat:@"Body = %@",emoticon];
+        predicate = [NSPredicate predicateWithFormat:@"Special = %@",emoticon];
         info = [self createNotificationInfoWithSound:[NSString stringWithFormat:@"Text to Speech %ld.wav",soundNumber]];
         [self addSubscriptionForPredicate:predicate andInfo:info];
         
@@ -503,9 +499,9 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     application.applicationIconBadgeNumber = 0;
     CKModifyBadgeOperation *clearBadge = [[CKModifyBadgeOperation alloc] initWithBadgeValue:0];
     [clearBadge setModifyBadgeCompletionBlock:^(NSError *error) {
-        NSLog(@"%@", error);
+        NSLog(@"Error clearing badge: %@", error);
     }];
-        [clearBadge start];
+    [clearBadge start];
     
 //    [privateDB addOperation:clearBadge];
 //    [[[CKContainer defaultContainer] publicCloudDatabase] addOperation:clearBadge];

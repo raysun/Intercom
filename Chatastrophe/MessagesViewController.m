@@ -115,7 +115,7 @@
         //Trying to move the buttons up a bit
     //[emotiButton setTitlePositionAdjustment:UIOffsetMake(0.0,40.0) forBarMetrics:UIBarMetricsCompact];
         
-        [toolbarItems addObject:emotiButton];
+    [toolbarItems addObject:emotiButton];
 //        UIButton *emotiButt = [UIButton buttonWithType:UIButtonTypeRoundedRect];
   //      [emotiButt setTitle:@"📚📚📚📚" forState:UIControlStateNormal];
 
@@ -323,7 +323,8 @@
     dbMessage[@"ToFriendlyName"] = deviceName;
     dbMessage[@"Body"] = text;
     dbMessage[@"Date"] = [NSDate date];
-    dbMessage[@"Special"] = button.tag == 1 ? @"YES" : @"NO";
+//    dbMessage[@"Special"] = button.tag == 1 ? @"YES" : @"NO";
+    dbMessage[@"Special"] = button.tag == 1 ? text : @"NO";
     
     [privateDB saveRecord:dbMessage completionHandler:^(CKRecord *savedPlace, NSError *error) {
             // handle errors here
@@ -344,7 +345,7 @@
         JSQMessage *message = [[JSQMessage alloc] initWithSenderId:@"WarningID"
                                                  senderDisplayName:@"Warning"
                                                               date:[NSDate date]
-                                                              text:@"No other iPhones or iPads found. Intercom only sends messages to devices with your iCloud account (for now, sorry)."];
+                                                              text:@"No other iPhones or iPads found. Intercom only sends messages to devices with your iCloud account."];
         
         [self.demoData.messages addObject:message];
         dispatch_async(dispatch_get_main_queue(), ^(void){
@@ -396,6 +397,7 @@
 }
 
 // Coming back from photo picker, we call unwindAction on the segue
+// TODO: delete this, I'm no longer unwinding a separate view controller; I'm calling the image picker directly from here.
 - (IBAction)unwindAction:(UIStoryboardSegue*)unwindSegue {
     [JSQSystemSoundPlayer jsq_playMessageSentSound];
     
