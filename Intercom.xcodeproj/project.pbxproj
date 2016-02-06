@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		9416A7CA7C370A1A97D96CF2 /* libPods-Intercom.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C60F4BE27A10E20A108B166 /* libPods-Intercom.a */; };
+		B620CA8E1C6678FB007AF523 /* InfoPList.strings in Resources */ = {isa = PBXBuildFile; fileRef = B620CA901C6678FB007AF523 /* InfoPList.strings */; };
 		B637DA771C446C8A00072F0C /* NSUserDefaults+DemoSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = B637DA761C446C8A00072F0C /* NSUserDefaults+DemoSettings.m */; };
 		B637DA791C446D9600072F0C /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B637DA781C446D9600072F0C /* Images.xcassets */; };
 		B63D5D771C5BE86E007BFF5F /* Text to Speech 1.wav in Resources */ = {isa = PBXBuildFile; fileRef = B63D5D701C5BE86E007BFF5F /* Text to Speech 1.wav */; };
@@ -38,6 +39,8 @@
 		7178E6F393CE110B53531A42 /* Pods-Intercom.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Intercom.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Intercom/Pods-Intercom.debug.xcconfig"; sourceTree = "<group>"; };
 		7C60F4BE27A10E20A108B166 /* libPods-Intercom.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Intercom.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		968E0FBE578EF07C74128882 /* Pods-Intercom.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Intercom.release.xcconfig"; path = "Pods/Target Support Files/Pods-Intercom/Pods-Intercom.release.xcconfig"; sourceTree = "<group>"; };
+		B620CA8F1C6678FB007AF523 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/InfoPList.strings; sourceTree = "<group>"; };
+		B620CA911C6678FE007AF523 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPList.strings; sourceTree = "<group>"; };
 		B637DA751C446C8A00072F0C /* NSUserDefaults+DemoSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSUserDefaults+DemoSettings.h"; sourceTree = "<group>"; };
 		B637DA761C446C8A00072F0C /* NSUserDefaults+DemoSettings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSUserDefaults+DemoSettings.m"; sourceTree = "<group>"; };
 		B637DA781C446D9600072F0C /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
@@ -188,6 +191,7 @@
 				B6B584671C3E31E8007B8AB4 /* MasterViewController.h */,
 				B6B584681C3E31E8007B8AB4 /* MasterViewController.m */,
 				B6B584751C3E31E8007B8AB4 /* Info.plist */,
+				B620CA901C6678FB007AF523 /* InfoPList.strings */,
 				B6BB18201C57E48C00AB5E6F /* Purr.aiff */,
 				B6B584621C3E31E8007B8AB4 /* main.m */,
 			);
@@ -267,6 +271,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B6B584741C3E31E8007B8AB4 /* LaunchScreen.storyboard in Resources */,
+				B620CA8E1C6678FB007AF523 /* InfoPList.strings in Resources */,
 				B63D5D7A1C5BE86E007BFF5F /* Text to Speech 4.wav in Resources */,
 				B63D5D7C1C5BE86E007BFF5F /* Text to Speech 6.wav in Resources */,
 				B63D5D771C5BE86E007BFF5F /* Text to Speech 1.wav in Resources */,
@@ -353,6 +358,15 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
+		B620CA901C6678FB007AF523 /* InfoPList.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				B620CA8F1C6678FB007AF523 /* Base */,
+				B620CA911C6678FE007AF523 /* en */,
+			);
+			name = InfoPList.strings;
+			sourceTree = "<group>";
+		};
 		B6B5846D1C3E31E8007B8AB4 /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
