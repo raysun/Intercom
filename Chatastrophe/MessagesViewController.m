@@ -123,7 +123,7 @@
     //    [self.inputToolbar.contentView.leftBarButtonContainerView addSubview:emotiButt];
     }
     UIBarButtonItem *cameraButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCamera target:self action:@selector(didSelectCamera:)];
-    cameraButton.tintColor = [UIColor blackColor];
+    cameraButton.tintColor = [UIColor darkGrayColor];
     [toolbarItems insertObject:cameraButton atIndex:0];
 //    NSArray *mergedToolbarItems = [self.inputToolbar.contentView.buttonBar.items arrayByAddingObjectsFromArray:toolbarItems];
     [self.inputToolbar.contentView.buttonBar setItems:toolbarItems animated:NO];

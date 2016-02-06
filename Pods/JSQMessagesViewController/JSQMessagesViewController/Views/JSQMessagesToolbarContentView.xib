@@ -15,20 +15,27 @@
                     <rect key="frame" x="0.0" y="41" width="980" height="44"/>
                     <constraints>
                         <constraint firstAttribute="width" relation="lessThanOrEqual" constant="972" id="7Ec-Qf-F1a"/>
+                        <constraint firstAttribute="height" constant="44" id="Eoa-Bx-2SF"/>
                     </constraints>
                     <items/>
                 </toolbar>
-                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dm4-NT-mvr" customClass="JSQMessagesComposerTextView">
+                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" verticalHuggingPriority="248" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dm4-NT-mvr" customClass="JSQMessagesComposerTextView">
                     <rect key="frame" x="8" y="6" width="1044" height="30"/>
                     <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="30" id="XJC-GP-oOJ"/>
+                    </constraints>
                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                 </textView>
                 <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Myo-1S-Vg1" userLabel="Right button container">
                     <rect key="frame" x="997" y="49" width="55" height="32"/>
                     <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="32" id="PJu-SC-9YT"/>
+                    </constraints>
                 </view>
-                <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LEq-G7-jGt" userLabel="Left button container">
+                <view hidden="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="LEq-G7-jGt" userLabel="Left button container">
                     <rect key="frame" x="8" y="47" width="34" height="32"/>
                     <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
@@ -43,14 +50,10 @@
                 <constraint firstItem="dm4-NT-mvr" firstAttribute="trailing" secondItem="1" secondAttribute="trailingMargin" id="8LH-Kh-ZZf"/>
                 <constraint firstItem="4eB-Id-RM9" firstAttribute="leading" secondItem="dm4-NT-mvr" secondAttribute="leading" id="EnX-Jo-nTO"/>
                 <constraint firstItem="dm4-NT-mvr" firstAttribute="leading" secondItem="1" secondAttribute="leadingMargin" id="HtT-Yh-tBY"/>
-                <constraint firstItem="Myo-1S-Vg1" firstAttribute="bottom" secondItem="LEq-G7-jGt" secondAttribute="bottom" id="JQU-1N-5NM"/>
-                <constraint firstAttribute="bottom" secondItem="4eB-Id-RM9" secondAttribute="bottom" constant="3" id="LM2-L6-hfa"/>
-                <constraint firstItem="dm4-NT-mvr" firstAttribute="top" secondItem="1" secondAttribute="top" constant="6" id="ZKu-1D-C2I"/>
-                <constraint firstItem="dm4-NT-mvr" firstAttribute="leading" secondItem="LEq-G7-jGt" secondAttribute="leading" id="f7d-xf-5OT"/>
-                <constraint firstItem="4eB-Id-RM9" firstAttribute="top" secondItem="dm4-NT-mvr" secondAttribute="bottom" constant="5" id="jWc-RJ-suN"/>
+                <constraint firstAttribute="bottom" secondItem="4eB-Id-RM9" secondAttribute="bottom" id="OZk-q7-1ao"/>
+                <constraint firstItem="dm4-NT-mvr" firstAttribute="top" secondItem="1" secondAttribute="top" constant="7" id="ZKu-1D-C2I"/>
+                <constraint firstItem="4eB-Id-RM9" firstAttribute="top" secondItem="dm4-NT-mvr" secondAttribute="bottom" constant="7" id="e8J-jZ-aEC"/>
                 <constraint firstItem="Myo-1S-Vg1" firstAttribute="leading" secondItem="4eB-Id-RM9" secondAttribute="trailing" symbolic="YES" id="r1a-Df-shs"/>
-                <constraint firstItem="Myo-1S-Vg1" firstAttribute="trailing" secondItem="dm4-NT-mvr" secondAttribute="trailing" id="uLl-6f-wHd"/>
-                <constraint firstItem="Myo-1S-Vg1" firstAttribute="top" secondItem="LEq-G7-jGt" secondAttribute="top" id="vxZ-AP-frA"/>
                 <constraint firstItem="dm4-NT-mvr" firstAttribute="trailing" secondItem="Myo-1S-Vg1" secondAttribute="trailing" id="xgr-Wt-7bM"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
