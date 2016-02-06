@@ -143,8 +143,8 @@
         [store setArray:[NSMutableArray new] forKey:@"deviceList"];
     }
 
-    // Shouldn't need to create the subscriptions - it is done Just-in-time in development, then pushed to production.
-//    [self createCloudKitSubscriptions];
+    // BUGBUG: Should really be done only once per user, but iCloud fails sometimes so redoing it doesn't hurt. If it's a dupe, it doesn't cause any problems. Note that the Subscription Type is created upon CloudKit Dashboard deployment, but no actual subscriptions are created.
+    [self createCloudKitSubscriptions];
 
     [[NSNotificationCenter defaultCenter]
      addObserver: self
@@ -233,7 +233,7 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
             
             NSString *body = [record valueForKey:@"Body"];
             NSLog(@"Body is %@",body);
-            NSLog(@"FromFriendlyName is %@", cloudKitNotification.recordFields[@"FromFriendlyName"]);
+//            NSLog(@"FromFriendlyName is %@", cloudKitNotification.recordFields[@"FromFriendlyName"]);
             
             UIApplicationState state = [application applicationState];
             if (state == UIApplicationStateActive) {
