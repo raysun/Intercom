@@ -1,5 +1,5 @@
 /* 
-  InfoPList.strings
+  InfoPlist.strings
   Intercom
 
   Created by Karen and Ray Sun on 2/6/16.
@@ -7,4 +7,4 @@
 */
 
 "SHORTCUT_TITLE_HOMEWORK" = "Do your homework";
-"SHORTCUT_TITLE_FAVORITES" = "Favorites";
+"SHORTCUT_TITLE_GOTOBED" = "Go to bed";

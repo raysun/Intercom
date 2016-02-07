@@ -215,26 +215,6 @@
      */
 }
 
--(void)didSelectEmoticon:(UIBarButtonItem*)sender {
-    //    self.selectedEmoticon = sender.title;
-    //    [self performSegueWithIdentifier:@"PhotoPickerDismissed" sender:self];
-    [self didPressSendButton:(UIButton *)sender withMessageText:sender.title senderId:appDelegate.myID senderDisplayName:appDelegate.myName date:[NSDate date]];
-}
-
--(void)didSelectCamera:(UIBarButtonItem*)sender {
-    if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera])
-    {
-        UIImagePickerController *imagePickerController = [[UIImagePickerController alloc] init];
-        imagePickerController.modalPresentationStyle = UIModalPresentationCurrentContext;
-        imagePickerController.sourceType = UIImagePickerControllerSourceTypeCamera;
-        imagePickerController.delegate = self;
-        
-        self.imagePickerController = imagePickerController;
-        [self presentViewController:self.imagePickerController animated:YES completion:nil];
-    }
-    
-}
-
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
@@ -252,7 +232,11 @@
     
     NSLog(@"MessagesView received notification %@",notification.name);
     if ([notification.name isEqualToString:@"ActionSend"]) {
-        [self didPressSendButton:nil withMessageText:notification.userInfo[@"Body"] senderId:appDelegate.myID senderDisplayName:appDelegate.myName date:[NSDate date]];
+        if (notification.userInfo[@"EmoticonIndex"]) {
+            [self didSelectEmoticon:self.inputToolbar.contentView.buttonBar.items[[notification.userInfo[@"EmoticonIndex"] intValue] + 1]];
+        } else {
+            [self didPressSendButton:nil withMessageText:notification.userInfo[@"Body"] senderId:appDelegate.myID senderDisplayName:appDelegate.myName date:[NSDate date]];
+        }
     } else {
         dispatch_async(dispatch_get_main_queue(), ^(void){
             [self finishReceivingMessageAnimated:YES];
@@ -355,103 +339,26 @@
     }
 }
 
-- (void)didPressAccessoryButton:(UIButton *)sender
-{
-    /*
-    // BUGBUG: For testing, reusing the attachment button to send test text
-    int randomNumber = arc4random_uniform(10);
-    NSString *testMessage = [NSString stringWithFormat:@"Yo %d",randomNumber];
-    [self didPressSendButton:nil withMessageText:testMessage senderId:appDelegate.myID senderDisplayName:appDelegate.myName date:[NSDate date]];
-    */
-    
-    [self.inputToolbar.contentView.textView resignFirstResponder];
-    
-    [self performSegueWithIdentifier:@"ShowPhotoPicker" sender:self];
-    /*
-    // grab the view controller we want to show
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-    UIViewController *controller = [storyboard instantiateViewControllerWithIdentifier:@"PhotoPicker"];
-
-    // present the controller
-    // on iPad, this will be a Popover
-    // on iPhone, this will be an action sheet
-    controller.modalPresentationStyle = UIModalPresentationCustom;
-    controller.preferredContentSize = CGSizeMake(600.0,300.0);
-    [self presentViewController:controller animated:YES completion:nil];
-    
-    // configure the Popover presentation controller
-    UIPopoverPresentationController *popController = [controller popoverPresentationController];
-    popController.permittedArrowDirections = UIPopoverArrowDirectionUp;
-    popController.delegate = self;
-    
-    // in case we don't have a bar button as reference
-    popController.sourceView = self.view;
-    popController.sourceRect = CGRectMake(30, 50, 10, 10);
-    */
+-(void)didSelectEmoticon:(UIBarButtonItem*)sender {
+    //    self.selectedEmoticon = sender.title;
+    //    [self performSegueWithIdentifier:@"PhotoPickerDismissed" sender:self];
+    [self didPressSendButton:(UIButton *)sender withMessageText:sender.title senderId:appDelegate.myID senderDisplayName:appDelegate.myName date:[NSDate date]];
 }
 
-
--(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    photoPickerVC = [segue destinationViewController];
-}
-
-// Coming back from photo picker, we call unwindAction on the segue
-// TODO: delete this, I'm no longer unwinding a separate view controller; I'm calling the image picker directly from here.
-- (IBAction)unwindAction:(UIStoryboardSegue*)unwindSegue {
-    [JSQSystemSoundPlayer jsq_playMessageSentSound];
-    
-    // Emoticon button pressed, or image returned?
-    if (photoPickerVC.selectedEmoticon) {
-        [self didPressSendButton:nil withMessageText:photoPickerVC.selectedEmoticon senderId:appDelegate.myID senderDisplayName:appDelegate.myName date:[NSDate date]];
-
-    } else {
+-(void)didSelectCamera:(UIBarButtonItem*)sender {
+    if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera])
+    {
+        UIImagePickerController *imagePickerController = [[UIImagePickerController alloc] init];
+        imagePickerController.modalPresentationStyle = UIModalPresentationCurrentContext;
+        imagePickerController.sourceType = UIImagePickerControllerSourceTypeCamera;
+        imagePickerController.delegate = self;
         
-        JSQPhotoMediaItem *photoItem = [[JSQPhotoMediaItem alloc] initWithImage:photoPickerVC.selectedImage];
-        JSQMessage *photoMessage = [JSQMessage messageWithSenderId:appDelegate.myID
-                                                       displayName:appDelegate.myName
-                                                             media:photoItem];
-        
-        
-        [self.demoData.messages addObject:photoMessage];
-        
-        //    CKDatabase *publicDB = [[CKContainer defaultContainer] publicCloudDatabase];
-        CKDatabase *publicDB = [[CKContainer containerWithIdentifier:@"iCloud.com.raysun.Intercom"] privateCloudDatabase];
-        CKRecord *dbMessage = [[CKRecord alloc] initWithRecordType:@"Message"];
-        dbMessage[@"From"] = appDelegate.myID;  //mydeviceid
-        dbMessage[@"FromFriendlyName"] = appDelegate.myName;
-        dbMessage[@"To"] = deviceID;
-        dbMessage[@"ToFriendlyName"] = deviceName;
-        dbMessage[@"Body"] = @"Photo";
-        dbMessage[@"Date"] = [NSDate date];
-        
-        UIImage *image = photoPickerVC.selectedImage;
-        
-        // create a sized down/compressed cached image in the caches folder, to utilize CKAsset
-        //BUGBUG: doesn't handle portrait photos or selfies properly
-        const CGSize kImageSize = {504, 378};
-        NSURL *imageURL = [self createCachedImageFromImage:image size:kImageSize];
-        if (imageURL != nil)
-        {
-            CKAsset *asset = [[CKAsset alloc] initWithFileURL:imageURL];
-            dbMessage[@"Image"] = asset;
-        }
-        
-        [publicDB saveRecord:dbMessage completionHandler:^(CKRecord *savedPlace, NSError *error) {
-            // handle errors here
-            if (!error) {
-                NSLog(@"Saved record %@",savedPlace);
-            }
-        }];
-        
-        dispatch_async(dispatch_get_main_queue(), ^(void){
-            [self finishSendingMessageAnimated:YES];
-        });
-        
-        [self showWarningIfOnlyDevice];
+        self.imagePickerController = imagePickerController;
+        [self presentViewController:self.imagePickerController animated:YES completion:nil];
     }
-    
 }
+
+
 
 // this will create a sized down/compressed cached image in the caches folder
 - (NSURL *)createCachedImageFromImage:(UIImage *)image size:(CGSize)size
@@ -487,39 +394,6 @@
     }
     
     return resultURL;
-}
-
-
-- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex
-{
-    if (buttonIndex == actionSheet.cancelButtonIndex) {
-        [self.inputToolbar.contentView.textView becomeFirstResponder];
-        return;
-    }
-    
-    switch (buttonIndex) {
-        case 0:
-            [self.demoData addPhotoMediaMessage];
-            break;
-            
-        case 1:
-        {
-            __weak UICollectionView *weakView = self.collectionView;
-            
-            [self.demoData addLocationMediaMessageCompletion:^{
-                [weakView reloadData];
-            }];
-        }
-            break;
-            
-        case 2:
-            [self.demoData addVideoMediaMessage];
-            break;
-    }
-    
-    [JSQSystemSoundPlayer jsq_playMessageSentSound];
-    
-    [self finishSendingMessageAnimated:YES];
 }
 
 #pragma mark - UIImagePickerControllerDelegate
@@ -606,8 +480,144 @@
 
 
 
+#pragma mark - Old code - // TODO: delete this method if we're not going back to the "select photo or take picture" controller
+
+- (void)didPressAccessoryButton:(UIButton *)sender
+{
+    /*
+     // BUGBUG: For testing, reusing the attachment button to send test text
+     int randomNumber = arc4random_uniform(10);
+     NSString *testMessage = [NSString stringWithFormat:@"Yo %d",randomNumber];
+     [self didPressSendButton:nil withMessageText:testMessage senderId:appDelegate.myID senderDisplayName:appDelegate.myName date:[NSDate date]];
+     */
+    
+    [self.inputToolbar.contentView.textView resignFirstResponder];
+    
+    [self performSegueWithIdentifier:@"ShowPhotoPicker" sender:self];
+    /*
+     // grab the view controller we want to show
+     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+     UIViewController *controller = [storyboard instantiateViewControllerWithIdentifier:@"PhotoPicker"];
+     
+     // present the controller
+     // on iPad, this will be a Popover
+     // on iPhone, this will be an action sheet
+     controller.modalPresentationStyle = UIModalPresentationCustom;
+     controller.preferredContentSize = CGSizeMake(600.0,300.0);
+     [self presentViewController:controller animated:YES completion:nil];
+     
+     // configure the Popover presentation controller
+     UIPopoverPresentationController *popController = [controller popoverPresentationController];
+     popController.permittedArrowDirections = UIPopoverArrowDirectionUp;
+     popController.delegate = self;
+     
+     // in case we don't have a bar button as reference
+     popController.sourceView = self.view;
+     popController.sourceRect = CGRectMake(30, 50, 10, 10);
+     */
+}
+
+
+-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    photoPickerVC = [segue destinationViewController];
+}
+
+// Coming back from photo picker, we call unwindAction on the segue
+// TODO: delete this, I'm no longer unwinding a separate view controller; I'm calling the image picker directly from here.
+- (IBAction)unwindAction:(UIStoryboardSegue*)unwindSegue {
+    [JSQSystemSoundPlayer jsq_playMessageSentSound];
+    
+    // Emoticon button pressed, or image returned?
+    if (photoPickerVC.selectedEmoticon) {
+        [self didPressSendButton:nil withMessageText:photoPickerVC.selectedEmoticon senderId:appDelegate.myID senderDisplayName:appDelegate.myName date:[NSDate date]];
+        
+    } else {
+        
+        JSQPhotoMediaItem *photoItem = [[JSQPhotoMediaItem alloc] initWithImage:photoPickerVC.selectedImage];
+        JSQMessage *photoMessage = [JSQMessage messageWithSenderId:appDelegate.myID
+                                                       displayName:appDelegate.myName
+                                                             media:photoItem];
+        
+        // Was saving the full size image to the local db, but moved it to after the scale down. No point wasting space, it's a TODO: to let you view the full size image anyway. Also, this prevents another bug where the JSQMessage bubble shows a portrait photo squished, since it doesn't crop properly until UI refresh. The createCachedImageFromImage call below does the right cropping.
+        //        [self.demoData.messages addObject:photoMessage];
+        
+        //    CKDatabase *publicDB = [[CKContainer defaultContainer] publicCloudDatabase];
+        CKDatabase *publicDB = [[CKContainer containerWithIdentifier:@"iCloud.com.raysun.Intercom"] privateCloudDatabase];
+        CKRecord *dbMessage = [[CKRecord alloc] initWithRecordType:@"Message"];
+        dbMessage[@"From"] = appDelegate.myID;  //mydeviceid
+        dbMessage[@"FromFriendlyName"] = appDelegate.myName;
+        dbMessage[@"To"] = deviceID;
+        dbMessage[@"ToFriendlyName"] = deviceName;
+        dbMessage[@"Body"] = @"Photo";
+        dbMessage[@"Date"] = [NSDate date];
+        
+        UIImage *image = photoPickerVC.selectedImage;
+        
+        // create a sized down/compressed cached image in the caches folder, to utilize CKAsset
+        //BUGBUG: doesn't handle portrait photos or selfies properly
+        const CGSize kImageSize = {504, 378};
+        NSURL *imageURL = [self createCachedImageFromImage:image size:kImageSize];
+        if (imageURL != nil)
+        {
+            CKAsset *asset = [[CKAsset alloc] initWithFileURL:imageURL];
+            dbMessage[@"Image"] = asset;
+        }
+        
+        [self.demoData.messages addObject:photoMessage];
+        
+        [publicDB saveRecord:dbMessage completionHandler:^(CKRecord *savedPlace, NSError *error) {
+            // handle errors here
+            if (!error) {
+                NSLog(@"Saved record %@",savedPlace);
+            }
+        }];
+        
+        dispatch_async(dispatch_get_main_queue(), ^(void){
+            [self finishSendingMessageAnimated:YES];
+        });
+        
+        [self showWarningIfOnlyDevice];
+    }
+    
+}
+
+
+
 
 #pragma mark - Fake JSQ messages stuff
+
+- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == actionSheet.cancelButtonIndex) {
+        [self.inputToolbar.contentView.textView becomeFirstResponder];
+        return;
+    }
+    
+    switch (buttonIndex) {
+        case 0:
+            [self.demoData addPhotoMediaMessage];
+            break;
+            
+        case 1:
+        {
+            __weak UICollectionView *weakView = self.collectionView;
+            
+            [self.demoData addLocationMediaMessageCompletion:^{
+                [weakView reloadData];
+            }];
+        }
+            break;
+            
+        case 2:
+            [self.demoData addVideoMediaMessage];
+            break;
+    }
+    
+    [JSQSystemSoundPlayer jsq_playMessageSentSound];
+    
+    [self finishSendingMessageAnimated:YES];
+}
 
 - (void)receiveMessagePressed:(UIBarButtonItem *)sender
 {

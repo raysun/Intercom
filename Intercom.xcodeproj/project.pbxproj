@@ -22,6 +22,7 @@
 		B6657BB81C446AEE006DE461 /* MessagesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B6657BB51C446AEE006DE461 /* MessagesViewController.m */; };
 		B6657BB91C446AEE006DE461 /* DemoModelData.m in Sources */ = {isa = PBXBuildFile; fileRef = B6657BB71C446AEE006DE461 /* DemoModelData.m */; };
 		B6785EF01C55908C0078D903 /* APLViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B6785EEF1C55908C0078D903 /* APLViewController.m */; };
+		B683452C1C66C4B200437FBB /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = B683452E1C66C4B200437FBB /* InfoPlist.strings */; };
 		B69513411C45D4A200546E64 /* MessageFile.m in Sources */ = {isa = PBXBuildFile; fileRef = B69513401C45D4A200546E64 /* MessageFile.m */; };
 		B6B584631C3E31E8007B8AB4 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B6B584621C3E31E8007B8AB4 /* main.m */; };
 		B6B584661C3E31E8007B8AB4 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B6B584651C3E31E8007B8AB4 /* AppDelegate.m */; };
@@ -60,6 +61,8 @@
 		B6657BB71C446AEE006DE461 /* DemoModelData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DemoModelData.m; sourceTree = "<group>"; };
 		B6785EEE1C55908C0078D903 /* APLViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = APLViewController.h; sourceTree = "<group>"; };
 		B6785EEF1C55908C0078D903 /* APLViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = APLViewController.m; sourceTree = "<group>"; };
+		B683452D1C66C4B200437FBB /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		B683452F1C66C4B400437FBB /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		B695133F1C45D4A200546E64 /* MessageFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageFile.h; sourceTree = "<group>"; };
 		B69513401C45D4A200546E64 /* MessageFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageFile.m; sourceTree = "<group>"; };
 		B6B5845E1C3E31E8007B8AB4 /* Intercom.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Intercom.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -190,7 +193,7 @@
 				B6B584671C3E31E8007B8AB4 /* MasterViewController.h */,
 				B6B584681C3E31E8007B8AB4 /* MasterViewController.m */,
 				B6B584751C3E31E8007B8AB4 /* Info.plist */,
-				B620CA901C6678FB007AF523 /* InfoPList.strings */,
+				B683452E1C66C4B200437FBB /* InfoPlist.strings */,
 				B6BB18201C57E48C00AB5E6F /* Purr.aiff */,
 				B6B584621C3E31E8007B8AB4 /* main.m */,
 			);
@@ -270,7 +273,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B6B584741C3E31E8007B8AB4 /* LaunchScreen.storyboard in Resources */,
-				B620CA8E1C6678FB007AF523 /* InfoPList.strings in Resources */,
+				B683452C1C66C4B200437FBB /* InfoPlist.strings in Resources */,
 				B63D5D7A1C5BE86E007BFF5F /* Text to Speech 4.wav in Resources */,
 				B63D5D7C1C5BE86E007BFF5F /* Text to Speech 6.wav in Resources */,
 				B63D5D771C5BE86E007BFF5F /* Text to Speech 1.wav in Resources */,
@@ -357,13 +360,13 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		B620CA901C6678FB007AF523 /* InfoPList.strings */ = {
+		B683452E1C66C4B200437FBB /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
-				B620CA8F1C6678FB007AF523 /* Base */,
-				B620CA911C6678FE007AF523 /* en */,
+				B683452D1C66C4B200437FBB /* Base */,
+				B683452F1C66C4B400437FBB /* en */,
 			);
-			name = InfoPList.strings;
+			name = InfoPlist.strings;
 			sourceTree = "<group>";
 		};
 		B6B5846D1C3E31E8007B8AB4 /* Main.storyboard */ = {

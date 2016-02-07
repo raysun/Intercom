@@ -280,6 +280,14 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
      */
 }
 
+- (void)application:(UIApplication *)application performActionForShortcutItem:(nonnull UIApplicationShortcutItem *)shortcutItem completionHandler:(nonnull void (^)(BOOL))completionHandler {
+    
+    NSDictionary *textDictionary = @{@"EmoticonIndex":shortcutItem.type};
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"ActionSend" object:nil userInfo:textDictionary];
+    
+    if (completionHandler != nil) completionHandler(UIBackgroundFetchResultNewData);
+}
+
 - (void)notify:(NSString *)notificationName {
     [[NSNotificationCenter defaultCenter] postNotificationName:notificationName object:nil userInfo:nil];
 }
@@ -498,15 +506,21 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
 
     // When app opens, mark unread count back to 0
     application.applicationIconBadgeNumber = 0;
-    CKModifyBadgeOperation *clearBadge = [[CKModifyBadgeOperation alloc] initWithBadgeValue:0];
-    [clearBadge setModifyBadgeCompletionBlock:^(NSError *error) {
-        NSLog(@"Error clearing badge: %@", error);
-    }];
-    [clearBadge start];
+//    [self setCloudBadgeToValue:1];
+    [self setCloudBadgeToValue:0];
     
 //    [privateDB addOperation:clearBadge];
 //    [[[CKContainer defaultContainer] publicCloudDatabase] addOperation:clearBadge];
     
+}
+
+- (void)setCloudBadgeToValue:(NSUInteger)badgeValue {
+    CKModifyBadgeOperation *clearBadge = [[CKModifyBadgeOperation alloc] initWithBadgeValue:badgeValue];
+    [clearBadge setModifyBadgeCompletionBlock:^(NSError *error) {
+        NSLog(@"Set Cloud Badge: %@", error);
+    }];
+    [clearBadge start];
+
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application {
