@@ -44,15 +44,6 @@
                       @"deviceName":self.myName
                     };
     self.emoticons = @[@"📚",@"😴",@"🍴",@"🏈",@"🚗",@"❤️"];
-    // other emoticons 💤😴🍎
-    /* Strings used for sounds
-     Do your homework.
-     It's time for bed.
-     Time to eat. 
-     Go play outside.
-     We're leaving, let's go!
-     Love you!
-     */
     
     // local messages array init
     self.allMessages = [NSMutableDictionary new];
