@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		9416A7CA7C370A1A97D96CF2 /* libPods-Intercom.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C60F4BE27A10E20A108B166 /* libPods-Intercom.a */; };
-		B60ED9FB1C64391E00E9A8F2 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B60ED9FA1C64391E00E9A8F2 /* CloudKit.framework */; };
 		B637DA771C446C8A00072F0C /* NSUserDefaults+DemoSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = B637DA761C446C8A00072F0C /* NSUserDefaults+DemoSettings.m */; };
 		B637DA791C446D9600072F0C /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B637DA781C446D9600072F0C /* Images.xcassets */; };
 		B63D5D771C5BE86E007BFF5F /* Text to Speech 1.wav in Resources */ = {isa = PBXBuildFile; fileRef = B63D5D701C5BE86E007BFF5F /* Text to Speech 1.wav */; };
@@ -23,6 +22,7 @@
 		B6657BB91C446AEE006DE461 /* DemoModelData.m in Sources */ = {isa = PBXBuildFile; fileRef = B6657BB71C446AEE006DE461 /* DemoModelData.m */; };
 		B6785EF01C55908C0078D903 /* APLViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B6785EEF1C55908C0078D903 /* APLViewController.m */; };
 		B683452C1C66C4B200437FBB /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = B683452E1C66C4B200437FBB /* InfoPlist.strings */; };
+		B68345311C66E1B700437FBB /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B68345301C66E1B700437FBB /* CloudKit.framework */; };
 		B69513411C45D4A200546E64 /* MessageFile.m in Sources */ = {isa = PBXBuildFile; fileRef = B69513401C45D4A200546E64 /* MessageFile.m */; };
 		B6B584631C3E31E8007B8AB4 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B6B584621C3E31E8007B8AB4 /* main.m */; };
 		B6B584661C3E31E8007B8AB4 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B6B584651C3E31E8007B8AB4 /* AppDelegate.m */; };
@@ -40,7 +40,6 @@
 		7C60F4BE27A10E20A108B166 /* libPods-Intercom.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Intercom.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		968E0FBE578EF07C74128882 /* Pods-Intercom.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Intercom.release.xcconfig"; path = "Pods/Target Support Files/Pods-Intercom/Pods-Intercom.release.xcconfig"; sourceTree = "<group>"; };
 		B60ED9F91C64391A00E9A8F2 /* Intercom.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Intercom.entitlements; sourceTree = "<group>"; };
-		B60ED9FA1C64391E00E9A8F2 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		B637DA751C446C8A00072F0C /* NSUserDefaults+DemoSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSUserDefaults+DemoSettings.h"; sourceTree = "<group>"; };
 		B637DA761C446C8A00072F0C /* NSUserDefaults+DemoSettings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSUserDefaults+DemoSettings.m"; sourceTree = "<group>"; };
 		B637DA781C446D9600072F0C /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
@@ -63,6 +62,7 @@
 		B6785EEF1C55908C0078D903 /* APLViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = APLViewController.m; sourceTree = "<group>"; };
 		B683452D1C66C4B200437FBB /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		B683452F1C66C4B400437FBB /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		B68345301C66E1B700437FBB /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		B695133F1C45D4A200546E64 /* MessageFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageFile.h; sourceTree = "<group>"; };
 		B69513401C45D4A200546E64 /* MessageFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageFile.m; sourceTree = "<group>"; };
 		B6B5845E1C3E31E8007B8AB4 /* Intercom.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Intercom.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -88,7 +88,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9416A7CA7C370A1A97D96CF2 /* libPods-Intercom.a in Frameworks */,
-				B60ED9FB1C64391E00E9A8F2 /* CloudKit.framework in Frameworks */,
+				B68345311C66E1B700437FBB /* CloudKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -107,7 +107,7 @@
 		8515E7C8190A4AE1741491C2 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				B60ED9FA1C64391E00E9A8F2 /* CloudKit.framework */,
+				B68345301C66E1B700437FBB /* CloudKit.framework */,
 				7C60F4BE27A10E20A108B166 /* libPods-Intercom.a */,
 			);
 			name = Frameworks;
