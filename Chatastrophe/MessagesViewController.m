@@ -789,6 +789,15 @@
 - (void)collectionView:(JSQMessagesCollectionView *)collectionView didDeleteMessageAtIndexPath:(NSIndexPath *)indexPath
 {
     [self.demoData.messages removeObjectAtIndex:indexPath.item];
+    
+    CKDatabase *privateDB = [[CKContainer containerWithIdentifier:@"iCloud.com.raysun.Intercom"] privateCloudDatabase];
+    
+    [privateDB deleteRecordWithID:appDelegate.messageIDs[indexPath.row] completionHandler:^(CKRecordID * _Nullable recordID, NSError * _Nullable error) {
+        if (!error) {
+            NSLog(@"Deleted recordID %@",recordID);
+        }
+    }];
+    
 }
 
 - (id<JSQMessageBubbleImageDataSource>)collectionView:(JSQMessagesCollectionView *)collectionView messageBubbleImageDataForItemAtIndexPath:(NSIndexPath *)indexPath

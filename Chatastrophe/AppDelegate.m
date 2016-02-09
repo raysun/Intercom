@@ -39,7 +39,7 @@
     // Get the device's name to use in the UI on other devices
     self.myName = [[UIDevice currentDevice] name];
     self.myID = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
-    
+
     self.myDevice = @{@"deviceID":self.myID,
                       @"deviceName":self.myName
                     };
@@ -166,6 +166,7 @@
         [self.allMessages setValue:demoModelData forKey:deviceID];
     }
     [self.allMessages setValue:[DemoModelData new] forKey:@"All"];
+    self.messageIDs = [NSMutableArray new];
 
     CKQuery *query = [[CKQuery alloc] initWithRecordType:@"Message" predicate:[NSPredicate predicateWithValue:YES]];
     query.sortDescriptors = @[[[NSSortDescriptor alloc] initWithKey:@"Date" ascending:true]];
@@ -284,6 +285,7 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
 }
 
 - (void)saveRecordToLocalMessages:(CKRecord *)record {
+    CKRecordID *recordID = record.recordID;
     NSString *from = [record objectForKey:@"From"];
     NSString *fromFriendlyName = [record objectForKey:@"FromFriendlyName"];
     NSString *to = [record objectForKey:@"To"];
@@ -291,7 +293,10 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     NSDate *date = [record objectForKey:@"Date"];
     CKAsset *imageAsset = [record objectForKey:@"Image"];
     UIImage *image = [UIImage imageWithContentsOfFile:imageAsset.fileURL.path];
-    if (!fromFriendlyName) fromFriendlyName = @"iPhone";
+    if (!fromFriendlyName) fromFriendlyName = @"Unknown name";
+    
+    // BUGBUG: logging recordIDs that map 1-1 with the index in the message view. Very hacky way to do this; should be storing in overridden JSQMessage object
+    [self.messageIDs addObject:recordID];
     
     JSQMessage *message;
     if (image) {
@@ -341,7 +346,6 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     CKNotificationInfo *info = [self createNotificationInfoWithSound:nil];
     [self addSubscriptionForPredicate:predicate andInfo:info];
     
-    // BUGBUG: Football emoticon seems to fire twice sometimes - code bug or server bug or coincidence?
     NSUInteger soundNumber = 1;
     for (NSString *emoticon in self.emoticons) {
         predicate = [NSPredicate predicateWithFormat:@"Special = %@",emoticon];
@@ -350,6 +354,8 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
         
         soundNumber++;
     }
+    
+    
 
     /*
     // Create the Notification to ALL and to ME, but do not duplicate else cloudkit will send multiple notifications

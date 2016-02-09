@@ -32,13 +32,13 @@
 }
 
 - (id)init {
-//- (id)initWithCoder:(NSCoder *)decoder {
     self = [super init];
     if (self) {
-            appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+        appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
         
-            self.messages = [NSMutableArray new];
-
+        self.messages = [NSMutableArray new];
+        // [self loadFakeMessages]; // Used only for the App Store screenshot
+        
         
         /**
          *  Create avatar images once.
@@ -61,7 +61,7 @@
         
         JSQMessagesAvatarImage *wozImage = [JSQMessagesAvatarImageFactory avatarImageWithImage:[UIImage imageNamed:@"demo_avatar_woz"]
                                                                                       diameter:kJSQMessagesCollectionViewAvatarSizeDefault];
-
+        
         
         self.avatars = @{ kJSQDemoAvatarIdSquires : jsqImage,
                           kJSQDemoAvatarIdCook : cookImage,
@@ -97,39 +97,47 @@
                                                      date:[NSDate distantPast]
                                                      text:@"Send a message to any of your devices."],
                      nil];
-                     
+    
 }
 
 - (void)loadFakeMessages
 {
     /**
-     *  Load some fake messages for demo.
-     *
-     *  You should have a mutable array or orderedSet, or something.
+     *  Load some fake messages for screenshot
      */
     self.messages = [[NSMutableArray alloc] initWithObjects:
-                     [[JSQMessage alloc] initWithSenderId:kJSQDemoAvatarIdSquires
-                                        senderDisplayName:kJSQDemoAvatarDisplayNameSquires
-                                                     date:[NSDate distantPast]
-                                                     text:@"Send a message to any of your devices."],
-                     
+                     [[JSQMessage alloc] initWithSenderId:@"Karen's iPhone"
+                                        senderDisplayName:@"Karen's iPhone"
+                                                     date:[NSDate dateWithTimeInterval:-600 sinceDate:[NSDate date]]
+                                                     text:@"🍴"],
 
+                     [[JSQMessage alloc] initWithSenderId:@"Karen's iPhone"
+                                        senderDisplayName:@"Karen's iPhone"
+                                                     date:[NSDate dateWithTimeInterval:-600 sinceDate:[NSDate date]]
+                                                     text:@"Time to eat"],
                      
-                     [[JSQMessage alloc] initWithSenderId:kJSQDemoAvatarIdSquires
-                                        senderDisplayName:kJSQDemoAvatarDisplayNameSquires
+                     [[JSQMessage alloc] initWithSenderId:appDelegate.myID
+                                        senderDisplayName:appDelegate.myID
+                                                     date:[NSDate dateWithTimeInterval:-600 sinceDate:[NSDate date]]
+                                                     text:@"5 minutes mom"],
+                     
+                     [[JSQMessage alloc] initWithSenderId:@"Karen's iPhone"
+                                        senderDisplayName:@"Karen's iPhone"
                                                      date:[NSDate date]
-                                                     text:@"<more text>"],
+                                                     text:@"🍴"],
+                     
+                     [[JSQMessage alloc] initWithSenderId:@"Karen's iPhone"
+                                        senderDisplayName:@"Karen's iPhone"
+                                                     date:[NSDate date]
+                                                     text:@"Are you coming? Dinner's on the table"],
+                     
+                     [[JSQMessage alloc] initWithSenderId:appDelegate.myID
+                                        senderDisplayName:appDelegate.myID
+                                                     date:[NSDate date]
+                                                     text:@"sorry mom on the way! 😀"],
                      nil];
     
-    /**
-     *  Setting to load extra messages for testing/demo
-     */
-    if ([NSUserDefaults extraMessagesSetting]) {
-        NSArray *copyOfMessages = [self.messages copy];
-        for (NSUInteger i = 0; i < 4; i++) {
-            [self.messages addObjectsFromArray:copyOfMessages];
-        }
-    }
+//        self.emoticons = @[@"📚",@"😴",@"🍴",@"🏈",@"🚗",@"❤️"];
     
 }
 
