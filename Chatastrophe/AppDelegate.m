@@ -14,6 +14,7 @@
 @import AudioToolbox;
 
 @interface AppDelegate () <UISplitViewControllerDelegate> {
+    CKContainer *container;
     CKDatabase *privateDB;
     NSUbiquitousKeyValueStore *store;
     NSArray *notificationSoundFileNames;
@@ -33,8 +34,10 @@
 //    navigationController.topViewController.navigationItem.leftBarButtonItem = splitViewController.displayModeButtonItem;
 //    splitViewController.delegate = self;
      */
+//    NSLog(@"App launching, notifications missed: %@",launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey]);
     
     self.atLeastOneMessageReceived = NO;
+    self.notificationIDs = [NSMutableArray new];
     
     // Get the device's name to use in the UI on other devices
     self.myName = [[UIDevice currentDevice] name];
@@ -49,8 +52,8 @@
     self.allMessages = [NSMutableDictionary new];
     
     // Messages are per iCloud account
-    privateDB = [[CKContainer containerWithIdentifier:@"iCloud.com.raysun.Intercom"] privateCloudDatabase];
-//    privateDB = [[CKContainer defaultContainer] privateCloudDatabase];
+    container = [CKContainer containerWithIdentifier:@"iCloud.com.raysun.Intercom"];
+    privateDB = [container privateCloudDatabase];
     
     /* TODO check for no iCloud account case - might be ok, though, you should just get the "no other account found" error
     // Make sure user is signed in to iCloud before using CloudKit
@@ -185,7 +188,7 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
 // Load all messages
 - (void)performQuery:(CKQuery *)query {
     // Special failsafe - lets me show a message on everyone's device by manually creating a public message - depending on the date of the message, I can show it at the top or at the end.
-    CKDatabase *db = [[CKContainer containerWithIdentifier:@"iCloud.com.raysun.Intercom"] publicCloudDatabase];
+    CKDatabase *db = [container publicCloudDatabase];
     [db performQuery:query inZoneWithID:nil completionHandler:^(NSArray *results, NSError *error) {
         for (CKRecord *record in results) {
             [self saveRecordToLocalMessages:record];
@@ -215,11 +218,20 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(nonnull NSDictionary *)userInfo fetchCompletionHandler:(nonnull void (^)(UIBackgroundFetchResult))completionHandler {
     
+//    application.applicationIconBadgeNumber = 0;
+    
     self.atLeastOneMessageReceived = YES;
     
     CKQueryNotification *cloudKitNotification = (CKQueryNotification *)[CKNotification notificationFromRemoteNotificationDictionary:userInfo];
     
-    if (cloudKitNotification.notificationType == CKNotificationTypeQuery) {
+    UIApplicationState appState = [[UIApplication sharedApplication] applicationState];
+    NSLog(@"%ld",(long)appState);
+    
+    // Must check for UIAppStateInactive - means user tapped on notification, and we need to not save the message twice - it was saved in background already
+    if (cloudKitNotification.notificationType == CKNotificationTypeQuery && appState != UIApplicationStateInactive) {
+        [self.notificationIDs addObject:cloudKitNotification.notificationID];
+        NSLog(@"received Cloud notification ID: %@",cloudKitNotification);
+        
         CKRecordID *recordID = [cloudKitNotification recordID];
         [privateDB fetchRecordWithID:recordID completionHandler:^(CKRecord * _Nullable record, NSError * _Nullable error) {
             
@@ -227,8 +239,7 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
             NSLog(@"Body is %@",body);
 //            NSLog(@"FromFriendlyName is %@", cloudKitNotification.recordFields[@"FromFriendlyName"]);
             
-            UIApplicationState state = [application applicationState];
-            if (state == UIApplicationStateActive) {
+            if (appState == UIApplicationStateActive) {
                 NSUInteger i = [self.emoticons indexOfObject:body];
                 if (i != NSNotFound) {
                     //playsound
@@ -248,14 +259,12 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
             
         }];
     }
+
     if (completionHandler != nil) completionHandler(UIBackgroundFetchResultNewData);
 }
 
-// Instead of the usual didReceiveRemoteNotification, this is called if the quick action is used.
+// didReceiveRemoteNotification will be called as usual, but in addition this is called if the quick reply is used
 - (void)application:(UIApplication *)application handleActionWithIdentifier:(NSString *)identifier forRemoteNotification:(NSDictionary *)userInfo withResponseInfo:(nonnull NSDictionary *)responseInfo completionHandler:(nonnull void (^)())completionHandler {
-
-    // Save the incoming message like usual
-    [self application:application didReceiveRemoteNotification:userInfo fetchCompletionHandler:completionHandler];
 
     CKQueryNotification *cloudKitNotification = (CKQueryNotification *)[CKNotification notificationFromRemoteNotificationDictionary:userInfo];
     
@@ -266,10 +275,9 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
         [[NSNotificationCenter defaultCenter] postNotificationName:@"ActionSend" object:nil userInfo:textDictionary];
     }
     
-    /* Don't need to call completionHandler again, it was done by calling didReceiveRemoteNotification above
     if(completionHandler != nil)
         completionHandler(UIBackgroundFetchResultNewData);
-     */
+
 }
 
 - (void)application:(UIApplication *)application performActionForShortcutItem:(nonnull UIApplicationShortcutItem *)shortcutItem completionHandler:(nonnull void (^)(BOOL))completionHandler {
@@ -392,7 +400,7 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
 - (CKNotificationInfo *)createNotificationInfoWithSound:(NSString *)soundName {
     CKNotificationInfo *info = [CKNotificationInfo new];
     info.shouldBadge = YES;
-    //    info.shouldSendContentAvailable = YES;
+    info.shouldSendContentAvailable = YES;
     info.alertBody = @" ";
     info.soundName = soundName ? soundName : UILocalNotificationDefaultSoundName;
     //    info.soundName = UILocalNotificationDefaultSoundName;
@@ -503,22 +511,63 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
 
     // When app opens, mark unread count back to 0
     application.applicationIconBadgeNumber = 0;
-//    [self setCloudBadgeToValue:1];
-    [self setCloudBadgeToValue:0];
+    CKModifyBadgeOperation *clearBadge = [[CKModifyBadgeOperation alloc] initWithBadgeValue:0];
+    [clearBadge setModifyBadgeCompletionBlock:^(NSError *error) {
+        if (error) {
+            NSLog(@"Set Cloud Badge Error: %@", error);
+        } else {
+            NSLog(@"Cloud Badge Cleared");
+        }
+    }];
+    [container addOperation:clearBadge];
+
+    /*
+    [self.notificationIDs removeAllObjects];
+    CKFetchNotificationChangesOperation *fetchNotificationOperation = [CKFetchNotificationChangesOperation new];
+    [fetchNotificationOperation setFetchNotificationChangesCompletionBlock:^(CKServerChangeToken *token, NSError *error) {
+        if (error) {
+            NSLog(@"Fetch Notifications Read Error: %@", error);
+        } else {
+//            NSLog(@"Fetch Notifications Read OK - count: %ld", .count);
+        }
+    }];
+    fetchNotificationOperation.notificationChangedBlock = ^(CKNotification *notification){
+        [self.notificationIDs addObject:notification.notificationID];
+
+        NSLog(@"fetched %@",notification.notificationID);
+                NSLog(@"of type %ld",notification.notificationType);
+    };
+
+    CKMarkNotificationsReadOperation *markReadOperation = [[CKMarkNotificationsReadOperation alloc] initWithNotificationIDsToMarkRead:(NSArray *)self.notificationIDs];
+    [markReadOperation setMarkNotificationsReadCompletionBlock:^(NSArray<CKNotificationID *> *ids, NSError *error) {
+        if (error) {
+            NSLog(@"Mark Notifications Read Error: %@", error);
+        } else {
+            NSLog(@"Mark Notifications Read OK - count: %ld", ids.count);
+            [self.notificationIDs removeAllObjects];
+        }
+    }];
+
+
+    [(CKOperation *)markReadOperation setContainer:container];
+    [(CKOperation *)fetchNotificationOperation setContainer:container];
+    [markReadOperation addDependency:fetchNotificationOperation];
     
+    NSOperationQueue *queue = [NSOperationQueue new];
+    [queue addOperations:@[fetchNotificationOperation, markReadOperation] waitUntilFinished:YES];
+
+
+//    [container   :@[fetchNotificationOperation, markReadOperation]];
+*/
+
+    
+
+
 //    [privateDB addOperation:clearBadge];
 //    [[[CKContainer defaultContainer] publicCloudDatabase] addOperation:clearBadge];
     
 }
 
-- (void)setCloudBadgeToValue:(NSUInteger)badgeValue {
-    CKModifyBadgeOperation *clearBadge = [[CKModifyBadgeOperation alloc] initWithBadgeValue:badgeValue];
-    [clearBadge setModifyBadgeCompletionBlock:^(NSError *error) {
-        NSLog(@"Set Cloud Badge: %@", error);
-    }];
-    [clearBadge start];
-
-}
 
 - (void)applicationWillTerminate:(UIApplication *)application {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.

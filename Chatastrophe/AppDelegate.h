@@ -18,6 +18,7 @@
 @property (strong, nonatomic) UIWindow *window;
 @property (strong, retain) NSMutableDictionary *allMessages;
 @property (strong, retain) NSMutableArray *messageIDs;
+@property (strong, retain) NSMutableArray *notificationIDs;
 @property (nonatomic, retain) NSArray *deviceList;
 @property (strong, retain) NSDictionary *myDevice;
 @property (strong, retain) NSString *myID;
