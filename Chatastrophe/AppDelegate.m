@@ -116,7 +116,7 @@
     
     NSSet *categories = [NSSet setWithObjects:category, nil];
     
-    UIUserNotificationSettings *notificationSettings = [UIUserNotificationSettings settingsForTypes:(UIUserNotificationTypeBadge | UIUserNotificationTypeSound) categories:categories];
+    UIUserNotificationSettings *notificationSettings = [UIUserNotificationSettings settingsForTypes:(UIUserNotificationTypeAlert |  UIUserNotificationTypeBadge | UIUserNotificationTypeSound) categories:categories];
     
     [application registerUserNotificationSettings:notificationSettings];
     [application registerForRemoteNotifications];
@@ -220,27 +220,24 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(nonnull NSDictionary *)userInfo fetchCompletionHandler:(nonnull void (^)(UIBackgroundFetchResult))completionHandler {
     
-//    application.applicationIconBadgeNumber = 0;
-
     CKQueryNotification *cloudKitNotification = (CKQueryNotification *)[CKNotification notificationFromRemoteNotificationDictionary:userInfo];
+    CKRecordID *recordID = [cloudKitNotification recordID];
     
     UIApplicationState appState = [[UIApplication sharedApplication] applicationState];
     NSLog(@"Notification received, appstate = %ld",(long)appState);
     
     // Must check for UIAppStateInactive - means user tapped on notification, and we need to not save the message twice - it was saved in background already
-    if (cloudKitNotification.notificationType == CKNotificationTypeQuery && appState != UIApplicationStateInactive) {
+    if (cloudKitNotification.notificationType == CKNotificationTypeQuery
+        && appState != UIApplicationStateInactive
+        && recordID) {
         self.atLeastOneMessageReceived = YES;
         NSInteger unreadCount = [[localStore valueForKey:@"unreadCount"] integerValue];
-        unreadCount++;
-        if (appState == UIApplicationStateActive) {
-            unreadCount = 0;
-        }
-        [localStore setValue:[NSString stringWithFormat:@"%ld",unreadCount] forKey:@"unreadCount"];
+        unreadCount = appState == UIApplicationStateActive ? 0 : unreadCount+1;
+        [localStore setValue:[NSString stringWithFormat:@"%ld", (long)unreadCount] forKey:@"unreadCount"];
         [localStore synchronize];
         application.applicationIconBadgeNumber = unreadCount;
         NSLog(@"received Cloud notification ID: %@",cloudKitNotification);
         
-        CKRecordID *recordID = [cloudKitNotification recordID];
         [privateDB fetchRecordWithID:recordID completionHandler:^(CKRecord * _Nullable record, NSError * _Nullable error) {
             
             NSString *body = [record valueForKey:@"Body"];
@@ -251,7 +248,7 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
                 NSUInteger i = [self.emoticons indexOfObject:body];
                 if (i != NSNotFound) {
                     //playsound
-                    NSString *soundFileName = [NSString stringWithFormat:@"Text to Speech %ld",i+1];
+                    NSString *soundFileName = [NSString stringWithFormat:@"Text to Speech %u",i+1];
                     NSString *soundFilePath = [[NSBundle mainBundle]
                                                pathForResource:soundFileName ofType:@"wav"];
                     NSURL *soundURL = [NSURL fileURLWithPath:soundFilePath];
@@ -317,10 +314,11 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     JSQMessage *message;
     if (image) {
         message = [[JSQMessage alloc] initWithSenderId:from senderDisplayName:fromFriendlyName date:date media:[[JSQPhotoMediaItem alloc] initWithImage:image]];
-//        NSLog(@"%@",message);
     } else {
         message = [[JSQMessage alloc] initWithSenderId:from senderDisplayName:fromFriendlyName date:date text:body];
     }
+    
+//    NSLog(@"%@",message);
     
     // Messages to ALL always go to ALL. Then messages NOT FROM ME go to OTHERS' mailboxes. Then messages from ME TO OTHERS go to OTHERS.
     if ([to isEqualToString:@"All"]) {
@@ -365,10 +363,10 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     NSUInteger soundNumber = 1;
     for (NSString *emoticon in self.emoticons) {
         predicate = [NSPredicate predicateWithFormat:@"Special = %@",emoticon];
-        info = [self createNotificationInfoWithSound:[NSString stringWithFormat:@"Text to Speech %ld.wav",soundNumber]];
+        info = [self createNotificationInfoWithSound:[NSString stringWithFormat:@"Text to Speech %ld.wav",(unsigned long)soundNumber]];
         [self addSubscriptionForPredicate:predicate andInfo:info];
         
-        soundNumber++;
+        soundNumber++;  
     }
     
     
