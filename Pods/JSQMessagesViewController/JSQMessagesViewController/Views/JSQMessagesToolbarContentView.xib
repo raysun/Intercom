@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9531" systemVersion="15D21" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9532" systemVersion="15D21" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9530"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <objects>
@@ -12,15 +12,15 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" horizontalHuggingPriority="249" verticalHuggingPriority="249" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4eB-Id-RM9">
-                    <rect key="frame" x="0.0" y="41" width="980" height="44"/>
+                    <rect key="frame" x="0.0" y="45" width="980" height="44"/>
                     <constraints>
                         <constraint firstAttribute="width" relation="lessThanOrEqual" constant="972" id="7Ec-Qf-F1a"/>
                         <constraint firstAttribute="height" constant="44" id="Eoa-Bx-2SF"/>
                     </constraints>
                     <items/>
                 </toolbar>
-                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" verticalHuggingPriority="248" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dm4-NT-mvr" customClass="JSQMessagesComposerTextView">
-                    <rect key="frame" x="8" y="6" width="1044" height="30"/>
+                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" verticalHuggingPriority="248" translatesAutoresizingMaskIntoConstraints="NO" id="dm4-NT-mvr" customClass="JSQMessagesComposerTextView">
+                    <rect key="frame" x="8" y="7" width="1044" height="30"/>
                     <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
                         <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="30" id="XJC-GP-oOJ"/>
@@ -29,14 +29,14 @@
                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                 </textView>
                 <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Myo-1S-Vg1" userLabel="Right button container">
-                    <rect key="frame" x="997" y="49" width="55" height="32"/>
+                    <rect key="frame" x="997" y="51" width="55" height="32"/>
                     <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="32" id="PJu-SC-9YT"/>
                     </constraints>
                 </view>
-                <view hidden="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="LEq-G7-jGt" userLabel="Left button container">
-                    <rect key="frame" x="8" y="47" width="34" height="32"/>
+                <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LEq-G7-jGt" userLabel="Left button container">
+                    <rect key="frame" x="8" y="50" width="34" height="32"/>
                     <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="32" id="0sE-GV-joM"/>
@@ -48,12 +48,14 @@
             <constraints>
                 <constraint firstItem="Myo-1S-Vg1" firstAttribute="centerY" secondItem="4eB-Id-RM9" secondAttribute="centerY" id="6cg-j5-Wr0"/>
                 <constraint firstItem="dm4-NT-mvr" firstAttribute="trailing" secondItem="1" secondAttribute="trailingMargin" id="8LH-Kh-ZZf"/>
+                <constraint firstItem="LEq-G7-jGt" firstAttribute="centerY" secondItem="4eB-Id-RM9" secondAttribute="centerY" id="9JP-8J-aRA"/>
                 <constraint firstItem="4eB-Id-RM9" firstAttribute="leading" secondItem="dm4-NT-mvr" secondAttribute="leading" id="EnX-Jo-nTO"/>
                 <constraint firstItem="dm4-NT-mvr" firstAttribute="leading" secondItem="1" secondAttribute="leadingMargin" id="HtT-Yh-tBY"/>
                 <constraint firstAttribute="bottom" secondItem="4eB-Id-RM9" secondAttribute="bottom" id="OZk-q7-1ao"/>
                 <constraint firstItem="dm4-NT-mvr" firstAttribute="top" secondItem="1" secondAttribute="top" constant="7" id="ZKu-1D-C2I"/>
                 <constraint firstItem="4eB-Id-RM9" firstAttribute="top" secondItem="dm4-NT-mvr" secondAttribute="bottom" constant="7" id="e8J-jZ-aEC"/>
                 <constraint firstItem="Myo-1S-Vg1" firstAttribute="leading" secondItem="4eB-Id-RM9" secondAttribute="trailing" symbolic="YES" id="r1a-Df-shs"/>
+                <constraint firstItem="LEq-G7-jGt" firstAttribute="leading" secondItem="dm4-NT-mvr" secondAttribute="leading" id="ujp-Qu-gRT"/>
                 <constraint firstItem="dm4-NT-mvr" firstAttribute="trailing" secondItem="Myo-1S-Vg1" secondAttribute="trailing" id="xgr-Wt-7bM"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>

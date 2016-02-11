@@ -37,6 +37,7 @@
 @end
 
 @implementation MessagesViewController {
+    CKContainer *container;
     AppDelegate *appDelegate;
     DemoModelData *model;
     NSDictionary *allMessages;
@@ -63,6 +64,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    container = [CKContainer containerWithIdentifier:@"iCloud.com.raysun.Intercom"];
 
     [[NSNotificationCenter defaultCenter]
      addObserver:self
@@ -298,8 +300,7 @@
     
     [self.demoData.messages addObject:message];
 
-//    CKDatabase *publicDB = [[CKContainer defaultContainer] publicCloudDatabase];
-    CKDatabase *privateDB = [[CKContainer containerWithIdentifier:@"iCloud.com.raysun.Intercom"] privateCloudDatabase];
+    CKDatabase *privateDB = [container privateCloudDatabase];
     CKRecord *dbMessage = [[CKRecord alloc] initWithRecordType:@"Message"];
     dbMessage[@"From"] = appDelegate.myID;  //mydeviceid
     dbMessage[@"FromFriendlyName"] = appDelegate.myName;
@@ -427,8 +428,7 @@
     
     [self.demoData.messages addObject:photoMessage];
     
-    //    CKDatabase *publicDB = [[CKContainer defaultContainer] publicCloudDatabase];
-    CKDatabase *publicDB = [[CKContainer containerWithIdentifier:@"iCloud.com.raysun.Intercom"] privateCloudDatabase];
+    CKDatabase *privateDB = [container privateCloudDatabase];
     CKRecord *dbMessage = [[CKRecord alloc] initWithRecordType:@"Message"];
     dbMessage[@"From"] = appDelegate.myID;  //mydeviceid
     dbMessage[@"FromFriendlyName"] = appDelegate.myName;
@@ -450,7 +450,7 @@
         dbMessage[@"Image"] = asset;
     }
     
-    [publicDB saveRecord:dbMessage completionHandler:^(CKRecord *savedPlace, NSError *error) {
+    [privateDB saveRecord:dbMessage completionHandler:^(CKRecord *savedPlace, NSError *error) {
         // handle errors here
         if (!error) {
             NSLog(@"Saved record %@",savedPlace);
@@ -542,8 +542,7 @@
         // Was saving the full size image to the local db, but moved it to after the scale down. No point wasting space, it's a TODO: to let you view the full size image anyway. Also, this prevents another bug where the JSQMessage bubble shows a portrait photo squished, since it doesn't crop properly until UI refresh. The createCachedImageFromImage call below does the right cropping.
         //        [self.demoData.messages addObject:photoMessage];
         
-        //    CKDatabase *publicDB = [[CKContainer defaultContainer] publicCloudDatabase];
-        CKDatabase *publicDB = [[CKContainer containerWithIdentifier:@"iCloud.com.raysun.Intercom"] privateCloudDatabase];
+        CKDatabase *privateDB = [container privateCloudDatabase];
         CKRecord *dbMessage = [[CKRecord alloc] initWithRecordType:@"Message"];
         dbMessage[@"From"] = appDelegate.myID;  //mydeviceid
         dbMessage[@"FromFriendlyName"] = appDelegate.myName;
@@ -566,7 +565,7 @@
         
         [self.demoData.messages addObject:photoMessage];
         
-        [publicDB saveRecord:dbMessage completionHandler:^(CKRecord *savedPlace, NSError *error) {
+        [privateDB saveRecord:dbMessage completionHandler:^(CKRecord *savedPlace, NSError *error) {
             // handle errors here
             if (!error) {
                 NSLog(@"Saved record %@",savedPlace);
@@ -790,7 +789,7 @@
 {
     [self.demoData.messages removeObjectAtIndex:indexPath.item];
     
-    CKDatabase *privateDB = [[CKContainer containerWithIdentifier:@"iCloud.com.raysun.Intercom"] privateCloudDatabase];
+    CKDatabase *privateDB = [container privateCloudDatabase];
     
     [privateDB deleteRecordWithID:appDelegate.messageIDs[indexPath.row] completionHandler:^(CKRecordID * _Nullable recordID, NSError * _Nullable error) {
         if (!error) {

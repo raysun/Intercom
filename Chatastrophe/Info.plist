@@ -40,38 +40,38 @@
 			<key>UIApplicationShortcutItemType</key>
 			<string>1</string>
 		</dict>
-        <dict>
-            <key>UIApplicationShortcutItemIconType</key>
-            <string>UIApplicationShortcutIconTypeCompose</string>
-            <key>UIApplicationShortcutItemTitle</key>
-            <string>SHORTCUT_TITLE_EAT</string>
-            <key>UIApplicationShortcutItemType</key>
-            <string>2</string>
-        </dict>
-        <dict>
-            <key>UIApplicationShortcutItemIconType</key>
-            <string>UIApplicationShortcutIconTypeCompose</string>
-            <key>UIApplicationShortcutItemTitle</key>
-            <string>SHORTCUT_TITLE_PLAY</string>
-            <key>UIApplicationShortcutItemType</key>
-            <string>3</string>
-        </dict>
-        <dict>
-            <key>UIApplicationShortcutItemIconType</key>
-            <string>UIApplicationShortcutIconTypeCompose</string>
-            <key>UIApplicationShortcutItemTitle</key>
-            <string>SHORTCUT_TITLE_GO</string>
-            <key>UIApplicationShortcutItemType</key>
-            <string>4</string>
-        </dict>
-        <dict>
-            <key>UIApplicationShortcutItemIconType</key>
-            <string>UIApplicationShortcutIconTypeCompose</string>
-            <key>UIApplicationShortcutItemTitle</key>
-            <string>SHORTCUT_TITLE_LOVE</string>
-            <key>UIApplicationShortcutItemType</key>
-            <string>5</string>
-        </dict>
+		<dict>
+			<key>UIApplicationShortcutItemIconType</key>
+			<string>UIApplicationShortcutIconTypeCompose</string>
+			<key>UIApplicationShortcutItemTitle</key>
+			<string>SHORTCUT_TITLE_EAT</string>
+			<key>UIApplicationShortcutItemType</key>
+			<string>2</string>
+		</dict>
+		<dict>
+			<key>UIApplicationShortcutItemIconType</key>
+			<string>UIApplicationShortcutIconTypeCompose</string>
+			<key>UIApplicationShortcutItemTitle</key>
+			<string>SHORTCUT_TITLE_PLAY</string>
+			<key>UIApplicationShortcutItemType</key>
+			<string>3</string>
+		</dict>
+		<dict>
+			<key>UIApplicationShortcutItemIconType</key>
+			<string>UIApplicationShortcutIconTypeCompose</string>
+			<key>UIApplicationShortcutItemTitle</key>
+			<string>SHORTCUT_TITLE_GO</string>
+			<key>UIApplicationShortcutItemType</key>
+			<string>4</string>
+		</dict>
+		<dict>
+			<key>UIApplicationShortcutItemIconType</key>
+			<string>UIApplicationShortcutIconTypeCompose</string>
+			<key>UIApplicationShortcutItemTitle</key>
+			<string>SHORTCUT_TITLE_LOVE</string>
+			<key>UIApplicationShortcutItemType</key>
+			<string>5</string>
+		</dict>
 	</array>
 	<key>UIBackgroundModes</key>
 	<array>
