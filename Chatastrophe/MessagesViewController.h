@@ -34,7 +34,7 @@
 
 
 
-@interface MessagesViewController : JSQMessagesViewController <UIActionSheetDelegate, JSQMessagesComposerTextViewPasteDelegate, UIImagePickerControllerDelegate, UIAdaptivePresentationControllerDelegate>
+@interface MessagesViewController : JSQMessagesViewController <JSQMessagesComposerTextViewPasteDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 
 @property (weak, nonatomic) id<JSQDemoViewControllerDelegate> delegateModal;
 
@@ -43,10 +43,6 @@
 @property (strong, nonatomic) UIImage *selectedImage;
 @property (strong, nonatomic) NSString *selectedEmoticon;
 - (void)receiveMessagePressed:(UIBarButtonItem *)sender;
-
 - (void)closePressed:(UIBarButtonItem *)sender;
-
-- (void)didDismissPhotoPicker;
-
 
 @end

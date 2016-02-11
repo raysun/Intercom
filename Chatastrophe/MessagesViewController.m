@@ -586,37 +586,6 @@
 
 #pragma mark - Fake JSQ messages stuff
 
-- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex
-{
-    if (buttonIndex == actionSheet.cancelButtonIndex) {
-        [self.inputToolbar.contentView.textView becomeFirstResponder];
-        return;
-    }
-    
-    switch (buttonIndex) {
-        case 0:
-            [self.demoData addPhotoMediaMessage];
-            break;
-            
-        case 1:
-        {
-            __weak UICollectionView *weakView = self.collectionView;
-            
-            [self.demoData addLocationMediaMessageCompletion:^{
-                [weakView reloadData];
-            }];
-        }
-            break;
-            
-        case 2:
-            [self.demoData addVideoMediaMessage];
-            break;
-    }
-    
-    [JSQSystemSoundPlayer jsq_playMessageSentSound];
-    
-    [self finishSendingMessageAnimated:YES];
-}
 
 - (void)receiveMessagePressed:(UIBarButtonItem *)sender
 {
@@ -973,13 +942,6 @@
 - (void)customAction:(id)sender
 {
     NSLog(@"Custom action received! Sender: %@", sender);
-
-    [[[UIAlertView alloc] initWithTitle:@"Custom Action"
-                               message:nil
-                              delegate:nil
-                     cancelButtonTitle:@"OK"
-                      otherButtonTitles:nil]
-     show];
 }
 
 #pragma mark - JSQMessages collection view flow layout delegate

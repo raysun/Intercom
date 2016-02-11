@@ -17,6 +17,7 @@
     CKContainer *container;
     CKDatabase *privateDB;
     NSUbiquitousKeyValueStore *store;
+    NSUserDefaults *localStore;
     NSArray *notificationSoundFileNames;
     UIAlertController *alert;
     SystemSoundID inAppSound;
@@ -37,7 +38,6 @@
 //    NSLog(@"App launching, notifications missed: %@",launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey]);
     
     self.atLeastOneMessageReceived = NO;
-    self.notificationIDs = [NSMutableArray new];
     
     // Get the device's name to use in the UI on other devices
     self.myName = [[UIDevice currentDevice] name];
@@ -116,13 +116,15 @@
     
     NSSet *categories = [NSSet setWithObjects:category, nil];
     
-    UIUserNotificationSettings *notificationSettings = [UIUserNotificationSettings settingsForTypes:(UIUserNotificationTypeAlert | UIUserNotificationTypeBadge | UIUserNotificationTypeSound) categories:categories];
+    UIUserNotificationSettings *notificationSettings = [UIUserNotificationSettings settingsForTypes:(UIUserNotificationTypeBadge | UIUserNotificationTypeSound) categories:categories];
     
     [application registerUserNotificationSettings:notificationSettings];
     [application registerForRemoteNotifications];
     
     store = [NSUbiquitousKeyValueStore defaultStore];
-    NSUserDefaults *localStore = [NSUserDefaults standardUserDefaults];
+    localStore = [NSUserDefaults standardUserDefaults];
+    
+    if (![localStore valueForKey:@"unreadCount"]) [localStore setValue:0 forKey:@"unreadCount"];
 
     // RESET APP - uncomment next line
 //    [store removeObjectForKey:@"deviceList"];
@@ -219,17 +221,23 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(nonnull NSDictionary *)userInfo fetchCompletionHandler:(nonnull void (^)(UIBackgroundFetchResult))completionHandler {
     
 //    application.applicationIconBadgeNumber = 0;
-    
-    self.atLeastOneMessageReceived = YES;
-    
+
     CKQueryNotification *cloudKitNotification = (CKQueryNotification *)[CKNotification notificationFromRemoteNotificationDictionary:userInfo];
     
     UIApplicationState appState = [[UIApplication sharedApplication] applicationState];
-    NSLog(@"%ld",(long)appState);
+    NSLog(@"Notification received, appstate = %ld",(long)appState);
     
     // Must check for UIAppStateInactive - means user tapped on notification, and we need to not save the message twice - it was saved in background already
     if (cloudKitNotification.notificationType == CKNotificationTypeQuery && appState != UIApplicationStateInactive) {
-        [self.notificationIDs addObject:cloudKitNotification.notificationID];
+        self.atLeastOneMessageReceived = YES;
+        NSInteger unreadCount = [[localStore valueForKey:@"unreadCount"] integerValue];
+        unreadCount++;
+        if (appState == UIApplicationStateActive) {
+            unreadCount = 0;
+        }
+        [localStore setValue:[NSString stringWithFormat:@"%ld",unreadCount] forKey:@"unreadCount"];
+        [localStore synchronize];
+        application.applicationIconBadgeNumber = unreadCount;
         NSLog(@"received Cloud notification ID: %@",cloudKitNotification);
         
         CKRecordID *recordID = [cloudKitNotification recordID];
@@ -381,7 +389,7 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
         }
 
         // TODO: Fix the hacky check above with a real check for the actual predicates.
-        /*
+
         NSUInteger i = [subscriptions indexOfObjectPassingTest:^BOOL(id obj, NSUInteger idx, BOOL *stop) {
             return ([[(CKSubscription *)obj predicate] isEqual:predicateAll]);
 
@@ -399,7 +407,7 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
 
 - (CKNotificationInfo *)createNotificationInfoWithSound:(NSString *)soundName {
     CKNotificationInfo *info = [CKNotificationInfo new];
-    info.shouldBadge = YES;
+//    info.shouldBadge = YES;
     info.shouldSendContentAvailable = YES;
     info.alertBody = @" ";
     info.soundName = soundName ? soundName : UILocalNotificationDefaultSoundName;
@@ -511,6 +519,10 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
 
     // When app opens, mark unread count back to 0
     application.applicationIconBadgeNumber = 0;
+    [localStore setValue:0 forKey:@"unreadCount"];
+    [localStore synchronize];
+    
+    /* This used to clear the cloud's badge - no need anymore, doing on client like I should have done.
     CKModifyBadgeOperation *clearBadge = [[CKModifyBadgeOperation alloc] initWithBadgeValue:0];
     [clearBadge setModifyBadgeCompletionBlock:^(NSError *error) {
         if (error) {
@@ -521,6 +533,7 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     }];
     [container addOperation:clearBadge];
 
+     */
     /*
     [self.notificationIDs removeAllObjects];
     CKFetchNotificationChangesOperation *fetchNotificationOperation = [CKFetchNotificationChangesOperation new];

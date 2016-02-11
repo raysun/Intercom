@@ -23,26 +23,6 @@
             </objects>
             <point key="canvasLocation" x="-38" y="-630"/>
         </scene>
-        <!--Detail-->
-        <scene sceneID="yUG-lL-AsK">
-            <objects>
-                <viewController title="Detail" id="JEX-9P-axG" customClass="DetailViewController" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="SYR-Wa-9uf"/>
-                        <viewControllerLayoutGuide type="bottom" id="GAO-Cl-Wes"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="svH-Pt-448">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                    </view>
-                    <toolbarItems/>
-                    <navigationItem key="navigationItem" title="Detail" id="mOI-FS-AaM"/>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="FJe-Yq-33r" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1419" y="129"/>
-        </scene>
         <!--Intercom-->
         <scene sceneID="zaH-no-mzE">
             <objects>
@@ -54,23 +34,10 @@
                     <view key="view" contentMode="scaleToFill" id="r55-Z4-AV3">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Send broadcast messages to all of your devices. Just install the app &amp; you're ready to go. No accounts, no setup needed." textAlignment="center" lineBreakMode="wordWrap" numberOfLines="8" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="v6m-DH-niH">
-                                <rect key="frame" x="76" y="220" width="436" height="156"/>
-                                <fontDescription key="fontDescription" name="AvenirNext-Regular" family="Avenir Next" pointSize="20"/>
-                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <constraints>
-                            <constraint firstItem="v6m-DH-niH" firstAttribute="centerY" secondItem="r55-Z4-AV3" secondAttribute="centerY" id="Tlw-BI-Cao"/>
-                            <constraint firstItem="v6m-DH-niH" firstAttribute="centerX" secondItem="r55-Z4-AV3" secondAttribute="centerX" id="l4U-lz-aG1"/>
-                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Intercom" id="ifC-lW-LFH"/>
                     <connections>
-                        <outlet property="welcomeMessage" destination="v6m-DH-niH" id="bDe-xy-tS8"/>
                         <segue destination="eQw-kk-g98" kind="popoverPresentation" identifier="ShowPhotoPicker" popoverAnchorView="r55-Z4-AV3" id="avK-5a-3F3">
                             <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
                         </segue>
