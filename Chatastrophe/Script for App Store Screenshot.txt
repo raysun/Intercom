@@ -1,0 +1,29 @@
+// Script for App Store screenshot
+
+First screen (Nudge your kids into action)
+----------
+iphone
+(eat)
+Time to eat
+
+kid's iPad
+5 minutes mom
+
+(10 minutes later)
+
+iphone
+(eat)
+Are you coming? Dinner's on the table.
+
+kid's iPad
+sorry mom on the way! :)
+
+
+Say it with Siri
+----------------
+Video
+
+Kid is playing some game?
+"It's bedtime." notification with sound
+notification quick reply: 
+k

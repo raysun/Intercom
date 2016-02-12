@@ -10,10 +10,15 @@
 #import "MessagesViewController.h"
 #import "JSQMessage.h"
 @import CloudKit;
+@import AudioToolbox;
 
 @interface AppDelegate () <UISplitViewControllerDelegate> {
-    CKDatabase *publicDB;
+    CKContainer *container;
+    CKDatabase *privateDB;
     NSUbiquitousKeyValueStore *store;
+    NSUserDefaults *localStore;
+    NSArray *notificationSoundFileNames;
+    SystemSoundID inAppSound;
 }
 
 @end
@@ -21,78 +26,120 @@
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    /* Don't need this, unless I go back to the master/detail UI
     // Override point for customization after application launch.
-    UISplitViewController *splitViewController = (UISplitViewController *)self.window.rootViewController;
-    UINavigationController *navigationController = [splitViewController.viewControllers lastObject];
-    navigationController.topViewController.navigationItem.leftBarButtonItem = splitViewController.displayModeButtonItem;
-    splitViewController.delegate = self;
+//    UISplitViewController *splitViewController = (UISplitViewController *)self.window.rootViewController;
+ //   UINavigationController *navigationController = [splitViewController.viewControllers lastObject];
+//    navigationController.topViewController.navigationItem.leftBarButtonItem = splitViewController.displayModeButtonItem;
+//    splitViewController.delegate = self;
+     */
+//    NSLog(@"App launching, notifications missed: %@",launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey]);
+    
+    self.atLeastOneMessageReceived = NO;
     
     // Get the device's name to use in the UI on other devices
     self.myName = [[UIDevice currentDevice] name];
     self.myID = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
-    
+
     self.myDevice = @{@"deviceID":self.myID,
                       @"deviceName":self.myName
                     };
+    self.emoticons = @[@"📚",@"😴",@"🍴",@"🏈",@"🚗",@"❤️"];
     
-    // set up onesignal for APNS
-    self.oneSignal = [[OneSignal alloc]
-                      initWithLaunchOptions:launchOptions
-                      appId:@"ffbc7659-7cd4-4a71-ad91-1c2d31beefa6"
-                      handleNotification:^(NSString* message, NSDictionary* additionalData, BOOL isActive) {
-                          NSLog(@"OneSignal Notification opened:\nMessage: %@", message);
-                          
-                          if (additionalData) {
-                              NSLog(@"additionalData: %@", additionalData);
-                              
-                              // Check for and read any custom values you added to the notification
-                              // This done with the "Additonal Data" section the dashbaord.
-                              // OR setting the 'data' field on our REST API.
-                          }
-                          
-                      }];
-
     // local messages array init
     self.allMessages = [NSMutableDictionary new];
-
+    
+    // Messages are per iCloud account
+    container = [CKContainer containerWithIdentifier:@"iCloud.com.raysun.Intercom"];
+    privateDB = [container privateCloudDatabase];
+    
+    /* TODO check for no iCloud account case - might be ok, though, you should just get the "no other account found" error
     // Make sure user is signed in to iCloud before using CloudKit
     [[CKContainer defaultContainer] accountStatusWithCompletionHandler:^(CKAccountStatus accountStatus, NSError *error) {
         if (accountStatus == CKAccountStatusNoAccount) {
-            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Sign in to iCloud"
-                                                                           message:@"Intercom requires iCloud Drive. Please enable it by..."
-                                                                    preferredStyle:UIAlertControllerStyleAlert];
+                 [self notify:@"ShowWelcomeMessage"];
+
+            alert = [UIAlertController alertControllerWithTitle:@"Mom Says requires iCloud"
+                                                        message:@"Please enable your account in Settings."
+                                                 preferredStyle:UIAlertControllerStyleAlert];
             [alert addAction:[UIAlertAction actionWithTitle:@"OK"
                                                       style:UIAlertActionStyleCancel
                                                     handler:nil]];
-  
-            //BUGBUG: not sure which viewcontroller is alive at this point to present the UI. Maybe this check needs to be somewhere else, like in a new custom class for the uisplitviewcontroller
-//            [self.window makeKeyAndVisible];
-//            [splitViewController presentViewController:alert animated:YES completion:nil];
-            
-        }
-        else {
-            // Insert your just-in-time schema code here
+            [self.window.rootViewController.navigationController presentViewController:alert animated:YES completion:nil];
         }
     }];
+    */
     
-    // CloudKit Public Database
-    publicDB = [[CKContainer defaultContainer] publicCloudDatabase];
+    /* TODO: turning off unless I want to make the app multi-iCloud-friendly
+    // Request making this iCloud account discoverable by other users. Other users still need my email address in their contacts.
+    [[CKContainer defaultContainer] requestApplicationPermission:CKApplicationPermissionUserDiscoverability completionHandler:^(CKApplicationPermissionStatus applicationPermissionStatus, NSError * _Nullable error) {
+        
+    }];
+     */
+    
+    /* Hack to create the schema just for testing, won't need in production */
+    /*
+    CKRecord *dbMessage = [[CKRecord alloc] initWithRecordType:@"Message"];
+    dbMessage[@"From"] = @"Mom Says";  //mydeviceid
+    dbMessage[@"FromFriendlyName"] = @"Mom Says";
+    dbMessage[@"To"] = @"";
+    dbMessage[@"ToFriendlyName"] = @"";
+    dbMessage[@"Body"] = @"";
+    dbMessage[@"Date"] = [NSDate date];
+    dbMessage[@"Special"] = @"NO";
+    
+    [publicDB saveRecord:dbMessage completionHandler:^(CKRecord *savedPlace, NSError *error) {
+        // handle errors here
+        if (!error) {
+            NSLog(@"Saved record %@",savedPlace);
+        }
+    }];
+    [NSThread sleepForTimeInterval:10.0f];
+    */
     
     // Register for CloudKit push notifications (based on the subscription server queries)
-    UIUserNotificationSettings *notificationSettings = [UIUserNotificationSettings settingsForTypes:(UIUserNotificationTypeAlert, UIUserNotificationTypeBadge, UIUserNotificationTypeSound) categories:nil];
+    UIMutableUserNotificationAction *notificationAction1 = [UIMutableUserNotificationAction new];
+    notificationAction1.identifier = @"reply";
+    notificationAction1.title = @"Reply";
+    notificationAction1.activationMode = UIUserNotificationActivationModeBackground;
+    notificationAction1.destructive = NO;
+    notificationAction1.authenticationRequired = NO;
+    notificationAction1.behavior = UIUserNotificationActionBehaviorTextInput;
+    // Customizes the button when you pull down the Action. No need to do this, Send is default.
+//    notificationAction1.parameters = @{UIUserNotificationTextInputActionButtonTitleKey:@"reply"};
+    
+    UIMutableUserNotificationCategory *category = [UIMutableUserNotificationCategory new];
+    category.identifier = @"category";
+    [category setActions:@[notificationAction1] forContext:UIUserNotificationActionContextDefault];
+    [category setActions:@[notificationAction1] forContext:UIUserNotificationActionContextMinimal];
+    
+    NSSet *categories = [NSSet setWithObjects:category, nil];
+    
+    UIUserNotificationSettings *notificationSettings = [UIUserNotificationSettings settingsForTypes:(UIUserNotificationTypeAlert |  UIUserNotificationTypeBadge | UIUserNotificationTypeSound) categories:categories];
+    
     [application registerUserNotificationSettings:notificationSettings];
     [application registerForRemoteNotifications];
     
     store = [NSUbiquitousKeyValueStore defaultStore];
-    NSUserDefaults *localStore = [NSUserDefaults standardUserDefaults];
-
-    // RESET APP - uncomment next line
-//        [store removeObjectForKey:@"deviceList"];
+    localStore = [NSUserDefaults standardUserDefaults];
     
-    // DeviceList is completely empty for this user; create it
+    if (![localStore valueForKey:@"unreadCount"]) [localStore setValue:0 forKey:@"unreadCount"];
+
+    // TODO: Reset app - figure out cleaner way
+    // RESET APP - uncomment next line
+//    [store removeObjectForKey:@"deviceList"];
+    
+    // RESET SUBSCRIPTIONS - only to be used in special builds to kill subscriptions if I change them
+//    [self resetSubscriptions];
+//    [NSThread sleepForTimeInterval: 20.0];
+    
+    // DeviceList is completely empty - first device for this user
     if (![store arrayForKey:@"deviceList"]) {
         [store setArray:[NSMutableArray new] forKey:@"deviceList"];
     }
+
+    // BUGBUG: Should really be done only once per user, but iCloud fails sometimes so redoing it doesn't hurt. If it's a dupe, it doesn't cause any problems. Note that the Subscription Type is created upon CloudKit Dashboard deployment, but no actual subscriptions are created.
+    [self createCloudKitSubscriptions];
 
     [[NSNotificationCenter defaultCenter]
      addObserver: self
@@ -100,17 +147,12 @@
      name: NSUbiquitousKeyValueStoreDidChangeExternallyNotification
      object: [NSUbiquitousKeyValueStore defaultStore]];
     [store synchronize];
-    NSLog(@"Cloud store: %@",[store objectForKey:@"deviceList"]);
+//    NSLog(@"Cloud store: %@",[store objectForKey:@"deviceList"]);
     
     [localStore setObject:[store objectForKey:@"deviceList"] forKey:@"deviceList"];
     self.deviceList = [localStore objectForKey:@"deviceList"];
-    NSLog(@"Local store: %@",[localStore objectForKey:@"deviceList"]);
-
-    // RESET SUBSCRIPTIONS
-//    [self resetSubscriptions];
-    // Set up CloudKit server queries (subscriptions) - only needs to be run once
-//    [self createCloudKitSubscriptions];
-
+//    NSLog(@"Local store: %@",[localStore objectForKey:@"deviceList"]);
+    
     // Add this device if it's new
     if (![[localStore objectForKey:@"deviceList"] containsObject:self.myDevice]) {
         self.deviceList = [self.deviceList arrayByAddingObjectsFromArray:@[self.myDevice]];
@@ -121,16 +163,6 @@
     }
     NSLog(@"Startup device list: %@",self.deviceList);
     
-    // Register my OneSignalID with the deviceList
-    [self.oneSignal IdsAvailable:^(NSString* userId, NSString* pushToken) {
-        
-
-
-
-        
-//    MyObject *object10 = myArray[indexOfObject10];
-    }];
-    
     // Load messages (BUGBUG: really shouldn't reload the whole dang database from CloudKit, just new messages, but I don't have the local store yet
     for (NSDictionary *device in self.deviceList) {
         NSString *deviceID = device[@"deviceID"];
@@ -138,108 +170,82 @@
         [self.allMessages setValue:demoModelData forKey:deviceID];
     }
     [self.allMessages setValue:[DemoModelData new] forKey:@"All"];
+    self.messageIDs = [NSMutableArray new];
 
     CKQuery *query = [[CKQuery alloc] initWithRecordType:@"Message" predicate:[NSPredicate predicateWithValue:YES]];
-    query.sortDescriptors = @[[[NSSortDescriptor alloc] initWithKey:@"Date" ascending:false]];
+    query.sortDescriptors = @[[[NSSortDescriptor alloc] initWithKey:@"Date" ascending:true]];
+    
     [self performQuery:query];
-
-    /*
-    [self.allMessages setValue:[DemoModelData new] forKey:@"All"];
-    CKQuery *query = [[CKQuery alloc] initWithRecordType:@"Message" predicate:[NSPredicate predicateWithFormat:@"To = 'All'"]];
-    query.sortDescriptors = @[[[NSSortDescriptor alloc] initWithKey:@"Date" ascending:false]];
-    [self performQuery:query];
-    for (device in self.deviceList) {
-        NSString *deviceID = device[@"deviceID"];
-        DemoModelData *demoModelData = [DemoModelData new];
-        [self.allMessages setValue:demoModelData forKey:deviceID];
-        query = [[CKQuery alloc] initWithRecordType:@"Message" predicate:[NSPredicate predicateWithFormat:@"To = %@",deviceID]];
-        query.sortDescriptors = @[[[NSSortDescriptor alloc] initWithKey:@"Date" ascending:false]];
-        [self performQuery:query];
-    } */
     
     return YES;
 }
 
-#pragma mark - Callback after registering for CloudKit notifications - now that cloudkit is ready, we load messages
-
 - (void)application:(UIApplication *)application
 didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
-// TODO: handle case where user has disabled (or not accepted) notifications
+    // TODO: handle case where user has disabled (or not accepted) notifications. Doesn't really matter, though, app still works fine.
+    NSLog(@"Notifications enabled: %@",[application currentUserNotificationSettings]);
 }
 
+/**
+ *
+ * Load all messages at app launch
+ *
+ */
 - (void)performQuery:(CKQuery *)query {
-    [publicDB performQuery:query inZoneWithID:nil completionHandler:^(NSArray *results, NSError *error) {
+    // Special failsafe - lets me show a message on everyone's device by manually creating a public message - depending on the date of the message, I can show it at the top or at the end.
+    CKDatabase *db = [container publicCloudDatabase];
+    [db performQuery:query inZoneWithID:nil completionHandler:^(NSArray *results, NSError *error) {
         for (CKRecord *record in results) {
             [self saveRecordToLocalMessages:record];
+            NSLog(@"public message %@",record);
+            [self notify:@"AllMessagesDownloadedFromCloud"];
         }
     }];
     
-}
-
-#pragma mark - Received new message notification from CloudKit
-
-- (void)application:(UIApplication *)application didReceiveRemoteNotification:(nonnull NSDictionary *)userInfo fetchCompletionHandler:(nonnull void (^)(UIBackgroundFetchResult))completionHandler {
-    
-    CKQueryNotification *cloudKitNotification = (CKQueryNotification *)[CKNotification notificationFromRemoteNotificationDictionary:userInfo];
-//    NSString *alertBody = cloudKitNotification.alertBody;
-//    NSLog(@"Awake - even in background");
-    
-    if (cloudKitNotification.notificationType == CKNotificationTypeQuery) {
-        CKRecordID *recordID = [cloudKitNotification recordID];
-        [publicDB fetchRecordWithID:recordID completionHandler:^(CKRecord * _Nullable record, NSError * _Nullable error) {
-//            NSLog(@"CloudKit Notification %@",record);
-
-            NSLog(@"Body is %@",[record valueForKey:@"Body"]);
-            NSLog(@"FromFriendlyName is %@", cloudKitNotification.recordFields[@"FromFriendlyName"]);
-            
-//            NSDictionary *apsDict = [userInfo objectForKey:@"aps"];
-//            NSString *alertText = [apsDict objectForKey:@"alert"];
-            
-//            if(application.applicationState == UIApplicationStateActive) {
-//                UIAlertView * alert = [[UIAlertView alloc] initWithTitle:cloudKitNotification.recordFields[@"From"] message:alertBody delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles: nil];
-//                [alert show];
-//            } else {
-//                    if ([application currentUserNotificationSettings].types & UIUserNotificationTypeBadge) {
-            /*
-                        UILocalNotification * localNotification = [[UILocalNotification alloc] init];
-                        localNotification.alertTitle = cloudKitNotification.recordFields[@"FromFriendlyName"];
-//                        localNotification.alertBody = alertText;
-                        localNotification.alertBody = [record valueForKey:@"Body"];
-                        [application presentLocalNotificationNow:localNotification];
-                        NSLog(@"Local Notification %@",localNotification);
-             */
-//                }
-//            }
-            
+    [privateDB performQuery:query inZoneWithID:nil completionHandler:^(NSArray *results, NSError *error) {
+        for (CKRecord *record in results) {
             [self saveRecordToLocalMessages:record];
-            
-            // Tell message view controller to refresh views
-            [self notifyNewMessageArrived];
-        
-        }];
-    }
-    completionHandler(UIBackgroundFetchResultNewData);
+        }
+        NSLog(@"Query finished, messages loaded");
+        [self notify:@"AllMessagesDownloadedFromCloud"];
+        /* If I want to show a welcome message when there are no messages. Instead showing error if there are no other devices when you send.
+        if (results.count > 0) {
+            [self notify:@"AllMessagesDownloadedFromCloud"];
+        } else {
+            [self notify:@"ShowWelcomeMessage"];
+        }
+         */
+
+    }];
 }
 
-- (void)notifyNewMessageArrived
-{
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"NewMessages" object:nil userInfo:nil];
-}
-
-- (void)notifyNewDevice
-{
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"NewDevice" object:nil userInfo:nil];
-}
-
+/**
+ *
+ * Saves a CloudKit record to the local database
+ *
+ */
 - (void)saveRecordToLocalMessages:(CKRecord *)record {
+    CKRecordID *recordID = record.recordID;
     NSString *from = [record objectForKey:@"From"];
     NSString *fromFriendlyName = [record objectForKey:@"FromFriendlyName"];
     NSString *to = [record objectForKey:@"To"];
     NSString *body = [record objectForKey:@"Body"];
     NSDate *date = [record objectForKey:@"Date"];
-    if (!fromFriendlyName) fromFriendlyName = @"iPhone";
+    CKAsset *imageAsset = [record objectForKey:@"Image"];
+    UIImage *image = [UIImage imageWithContentsOfFile:imageAsset.fileURL.path];
+    if (!fromFriendlyName) fromFriendlyName = @"Unknown name";
     
-    JSQMessage *message = [[JSQMessage alloc] initWithSenderId:from senderDisplayName:fromFriendlyName date:date text:body];
+    // BUGBUG: logging recordIDs that map 1-1 with the index in the message view. Very hacky way to do this; should be storing in overridden JSQMessage object
+    [self.messageIDs addObject:recordID];
+    
+    JSQMessage *message;
+    if (image) {
+        message = [[JSQMessage alloc] initWithSenderId:from senderDisplayName:fromFriendlyName date:date media:[[JSQPhotoMediaItem alloc] initWithImage:image]];
+    } else {
+        message = [[JSQMessage alloc] initWithSenderId:from senderDisplayName:fromFriendlyName date:date text:body];
+    }
+    
+    //    NSLog(@"%@",message);
     
     // Messages to ALL always go to ALL. Then messages NOT FROM ME go to OTHERS' mailboxes. Then messages from ME TO OTHERS go to OTHERS.
     if ([to isEqualToString:@"All"]) {
@@ -250,9 +256,119 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
         [((DemoModelData*) self.allMessages[to]) add:message];
     }
     
+    /* TODO: Later, if we want to implement per-user, can utilize this part of APLCloudManager
+     // we provide the owner of the current record in the subtite of our cell
+     APLCloudManager *cloudManager = [APLCloudManager new];
+     [cloudManager fetchUserNameFromRecordID:record.creatorUserRecordID completionHandler:^(NSString *firstName, NSString *lastName) {
+     NSLog(@"%@, %@",firstName,lastName);
+     if (firstName == nil && lastName == nil)
+     {
+     //            self.createdByLabel.text = [NSString stringWithFormat:@"%@", NSLocalizedString(@"Unknown User Name", nil)];
+     }
+     else
+     {
+     //          self.createdByLabel.text = [NSString stringWithFormat:@"%@", [NSString stringWithFormat:@"%@ %@", firstName, lastName]];
+     }
+     }];
+     */
+    
 }
 
-#pragma mark - Set up CloudKit subscriptions (only need to be called once in app lifetime)
+#pragma mark - Receive message
+
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(nonnull NSDictionary *)userInfo fetchCompletionHandler:(nonnull void (^)(UIBackgroundFetchResult))completionHandler {
+    
+    CKQueryNotification *cloudKitNotification = (CKQueryNotification *)[CKNotification notificationFromRemoteNotificationDictionary:userInfo];
+    CKRecordID *recordID = [cloudKitNotification recordID];
+    
+    UIApplicationState appState = [[UIApplication sharedApplication] applicationState];
+    NSLog(@"Notification received, appstate = %ld",(long)appState);
+    
+    // Must check for UIAppStateInactive - means user tapped on notification, and we need to not save the message twice - it was saved in background already
+    if (cloudKitNotification.notificationType == CKNotificationTypeQuery
+        && appState != UIApplicationStateInactive
+        && recordID) {
+        self.atLeastOneMessageReceived = YES;
+        NSInteger unreadCount = [[localStore valueForKey:@"unreadCount"] integerValue];
+        unreadCount = appState == UIApplicationStateActive ? 0 : unreadCount+1;
+        [localStore setValue:[NSString stringWithFormat:@"%ld", (long)unreadCount] forKey:@"unreadCount"];
+        [localStore synchronize];
+        application.applicationIconBadgeNumber = unreadCount;
+        NSLog(@"received Cloud notification ID: %@",cloudKitNotification);
+        
+        [privateDB fetchRecordWithID:recordID completionHandler:^(CKRecord * _Nullable record, NSError * _Nullable error) {
+            
+            NSString *body = [record valueForKey:@"Body"];
+            NSLog(@"Body is %@",body);
+//            NSLog(@"FromFriendlyName is %@", cloudKitNotification.recordFields[@"FromFriendlyName"]);
+            
+            if (appState == UIApplicationStateActive) {
+                NSUInteger i = [self.emoticons indexOfObject:body];
+                if (i != NSNotFound) {
+                    //playsound
+                    NSString *soundFileName = [NSString stringWithFormat:@"Text to Speech %lu",i+1];
+                    NSString *soundFilePath = [[NSBundle mainBundle]
+                                               pathForResource:soundFileName ofType:@"wav"];
+                    NSURL *soundURL = [NSURL fileURLWithPath:soundFilePath];
+                    AudioServicesCreateSystemSoundID((__bridge CFURLRef)soundURL, &inAppSound);
+                    AudioServicesPlaySystemSound(inAppSound);
+                }
+            }
+            
+            [self saveRecordToLocalMessages:record];
+            
+            // Tell message view controller to refresh views
+            [self notify:@"NewMessages"];
+            
+        }];
+    }
+
+    if (completionHandler != nil) completionHandler(UIBackgroundFetchResultNewData);
+}
+
+/**
+ *
+ * Quick Action from notification
+ *
+ * didReceiveRemoteNotification will be called as usual, but in addition this is called if the quick reply is used
+ */
+
+- (void)application:(UIApplication *)application handleActionWithIdentifier:(NSString *)identifier forRemoteNotification:(NSDictionary *)userInfo withResponseInfo:(nonnull NSDictionary *)responseInfo completionHandler:(nonnull void (^)())completionHandler {
+    
+    CKQueryNotification *cloudKitNotification = (CKQueryNotification *)[CKNotification notificationFromRemoteNotificationDictionary:userInfo];
+    
+    if (cloudKitNotification.notificationType == CKNotificationTypeQuery && [cloudKitNotification.category isEqualToString:@"category"] && [identifier isEqualToString:@"reply"]) {
+        
+        NSString *text = responseInfo[UIUserNotificationActionResponseTypedTextKey];
+        NSDictionary *textDictionary = @{@"Body":text};
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"ActionSend" object:nil userInfo:textDictionary];
+    }
+    
+    if(completionHandler != nil)
+        completionHandler(UIBackgroundFetchResultNewData);
+    
+}
+
+/**
+ *
+ * 3D Touch shortcuts
+ *
+ */
+- (void)application:(UIApplication *)application performActionForShortcutItem:(nonnull UIApplicationShortcutItem *)shortcutItem completionHandler:(nonnull void (^)(BOOL))completionHandler {
+    
+    NSDictionary *textDictionary = @{@"EmoticonIndex":shortcutItem.type};
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"ActionSend" object:nil userInfo:textDictionary];
+    
+    if (completionHandler != nil) completionHandler(UIBackgroundFetchResultNewData);
+}
+
+- (void)notify:(NSString *)notificationName {
+    [[NSNotificationCenter defaultCenter] postNotificationName:notificationName object:nil userInfo:nil];
+}
+
+
+
+#pragma mark - Subscription - create
 
 // Listen for changes to CloudKit objects (message and device)
 - (void)createCloudKitSubscriptions {
@@ -260,13 +376,25 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     /* BUGBUG - hack - i'm not checking for user right now, so all push notifications will go to all devices. 
      MUST BE FIXED before going to production - user's devicelist count is 0, then set up ALL query. */
 //    if (self.deviceList.count == 0) {
-        NSPredicate *predicate = [NSPredicate predicateWithValue:YES];
-        [self addSubscriptionForPredicate:predicate];
-//    }
+//        NSPredicate *predicate = [NSPredicate predicateWithValue:YES];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"Special = 'NO'"];
+    CKNotificationInfo *info = [self createNotificationInfoWithSound:nil];
+    [self addSubscriptionForPredicate:predicate andInfo:info];
+    
+    NSUInteger soundNumber = 1;
+    for (NSString *emoticon in self.emoticons) {
+        predicate = [NSPredicate predicateWithFormat:@"Special = %@",emoticon];
+        info = [self createNotificationInfoWithSound:[NSString stringWithFormat:@"Text to Speech %ld.wav",(unsigned long)soundNumber]];
+        [self addSubscriptionForPredicate:predicate andInfo:info];
+        
+        soundNumber++;  
+    }
+    
+    
+
     /*
     // Create the Notification to ALL and to ME, but do not duplicate else cloudkit will send multiple notifications
     [publicDB fetchAllSubscriptionsWithCompletionHandler:^(NSArray<CKSubscription *> * _Nullable subscriptions, NSError * _Nullable error) {
-
     
         NSPredicate *predicateAll = [NSPredicate predicateWithFormat:@"To = 'All'"];
         NSPredicate *predicate = [NSPredicate predicateWithFormat:@"To = %@",self.myID];
@@ -279,8 +407,7 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
             [self addSubscriptionForPredicate:predicate];
         }
 
-        // TODO: Fix the hacky check above with a real check for the actual predicates.
-        /*
+
         NSUInteger i = [subscriptions indexOfObjectPassingTest:^BOOL(id obj, NSUInteger idx, BOOL *stop) {
             return ([[(CKSubscription *)obj predicate] isEqual:predicateAll]);
 
@@ -292,27 +419,39 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
         NSLog(@"%lu",(unsigned long)i);
          */
 
-
 }
 
-- (void)addSubscriptionForPredicate:(NSPredicate *)predicate {
+- (CKNotificationInfo *)createNotificationInfoWithSound:(NSString *)soundName {
     CKNotificationInfo *info = [CKNotificationInfo new];
-    info.shouldBadge = YES;
+//    info.shouldBadge = YES;
     info.shouldSendContentAvailable = YES;
-//    info.alertBody = @"";
-    /*
-    info.alertLocalizationKey = @"%@: %@";
+//    info.alertBody = @" ";
+    info.soundName = soundName ? soundName : UILocalNotificationDefaultSoundName;
+    /* BUGBUG: Temporarily disabling the From field
+     info.alertLocalizationKey = @"%@: %@";
+     info.alertLocalizationArgs = @[
+     @"FromFriendlyName",
+     @"Body"
+     ];
+     */
+    
+    info.alertLocalizationKey = @"%@";
     info.alertLocalizationArgs = @[
-                                   @"FromFriendlyName",
                                    @"Body"
                                    ];
-     */
-    info.desiredKeys = @[@"FromFriendlyName"];
+    info.category = @"category";
+    // BUGBUG: I can't seem to set the "slide to view (send)" text on the lock screen.
+//    info.alertActionLocalizationKey = @"view";
+//    info.desiredKeys = @[@"FromFriendlyName"];
     
+    return info;
+}
+
+- (void)addSubscriptionForPredicate:(NSPredicate *)predicate andInfo:(CKNotificationInfo*)info {
     CKSubscription *subscription = [[CKSubscription alloc] initWithRecordType:@"Message" predicate:predicate options:CKSubscriptionOptionsFiresOnRecordCreation];
     subscription.notificationInfo = info;
     
-    [publicDB saveSubscription:subscription
+    [privateDB saveSubscription:subscription
              completionHandler:^(CKSubscription *subscription, NSError *error) {
                  if (error) NSLog(@"ERROR: %@\nwhen subscribing to:%@",error,predicate) else
                      NSLog(@"CloudKit subscription saved %@",subscription);
@@ -321,11 +460,11 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
 }
 
 - (void)resetSubscriptions {
-    [publicDB fetchAllSubscriptionsWithCompletionHandler:^(NSArray<CKSubscription *> * _Nullable subscriptions, NSError * _Nullable error) {
+    [privateDB fetchAllSubscriptionsWithCompletionHandler:^(NSArray<CKSubscription *> * _Nullable subscriptions, NSError * _Nullable error) {
 //        [[CKModifySubscriptionsOperation alloc] initWithSubscriptionsToSave:nil subscriptionIDsToDelete:subscriptions];
         NSLog(@"All current subscriptions: %@",subscriptions);
         for (CKSubscription *subscription in subscriptions) {
-            [publicDB deleteSubscriptionWithID:subscription.subscriptionID completionHandler:^(NSString * _Nullable subscriptionID, NSError * _Nullable error) {
+            [privateDB deleteSubscriptionWithID:subscription.subscriptionID completionHandler:^(NSString * _Nullable subscriptionID, NSError * _Nullable error) {
                 //
             }];
         }
@@ -333,6 +472,7 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
 
 }
 
+#pragma mark - Local Store - update
 
 - (void)updateKVStoreItems:(NSNotification*)notification {
     // Get the list of keys that changed.
@@ -360,9 +500,11 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
         for (NSString* key in changedKeys) {
             NSMutableArray *value = (NSMutableArray *)[store objectForKey:key];
             [userDefaults setObject:value forKey:key];
-            self.deviceList = value;
+            if ([key isEqualToString:@"deviceList"]) {
+                self.deviceList = value;
+            }
         }
-        [self notifyNewDevice];
+        [self notify:@"NewDevice"];
         NSLog(@"Cloud KV store update notification: %@",self.deviceList);
     }
 }
@@ -374,8 +516,6 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
 
 
 
-
-#pragma mark - IGNORE - Boilerplate below
 
 - (void)applicationWillResignActive:(UIApplication *)application {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
@@ -391,15 +531,75 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
 }
 
+#pragma mark - App active - reset badge
+
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+
+    // When app opens, mark unread count back to 0
+    application.applicationIconBadgeNumber = 0;
+    [localStore setValue:0 forKey:@"unreadCount"];
+    [localStore synchronize];
+    
+    /* This used to clear the cloud's badge - no need anymore, doing on client like I should have done.
+    CKModifyBadgeOperation *clearBadge = [[CKModifyBadgeOperation alloc] initWithBadgeValue:0];
+    [clearBadge setModifyBadgeCompletionBlock:^(NSError *error) {
+        if (error) {
+            NSLog(@"Set Cloud Badge Error: %@", error);
+        } else {
+            NSLog(@"Cloud Badge Cleared");
+        }
+    }];
+    [container addOperation:clearBadge];
+
+     */
+    /*
+    [self.notificationIDs removeAllObjects];
+    CKFetchNotificationChangesOperation *fetchNotificationOperation = [CKFetchNotificationChangesOperation new];
+    [fetchNotificationOperation setFetchNotificationChangesCompletionBlock:^(CKServerChangeToken *token, NSError *error) {
+        if (error) {
+            NSLog(@"Fetch Notifications Read Error: %@", error);
+        } else {
+//            NSLog(@"Fetch Notifications Read OK - count: %ld", .count);
+        }
+    }];
+    fetchNotificationOperation.notificationChangedBlock = ^(CKNotification *notification){
+        [self.notificationIDs addObject:notification.notificationID];
+
+        NSLog(@"fetched %@",notification.notificationID);
+                NSLog(@"of type %ld",notification.notificationType);
+    };
+
+    CKMarkNotificationsReadOperation *markReadOperation = [[CKMarkNotificationsReadOperation alloc] initWithNotificationIDsToMarkRead:(NSArray *)self.notificationIDs];
+    [markReadOperation setMarkNotificationsReadCompletionBlock:^(NSArray<CKNotificationID *> *ids, NSError *error) {
+        if (error) {
+            NSLog(@"Mark Notifications Read Error: %@", error);
+        } else {
+            NSLog(@"Mark Notifications Read OK - count: %ld", ids.count);
+            [self.notificationIDs removeAllObjects];
+        }
+    }];
+
+
+    [(CKOperation *)markReadOperation setContainer:container];
+    [(CKOperation *)fetchNotificationOperation setContainer:container];
+    [markReadOperation addDependency:fetchNotificationOperation];
+    
+    NSOperationQueue *queue = [NSOperationQueue new];
+    [queue addOperations:@[fetchNotificationOperation, markReadOperation] waitUntilFinished:YES];
+//    [container   :@[fetchNotificationOperation, markReadOperation]];
+*/
+
+//    [privateDB addOperation:clearBadge];
+//    [[[CKContainer defaultContainer] publicCloudDatabase] addOperation:clearBadge];
+    
 }
+
 
 - (void)applicationWillTerminate:(UIApplication *)application {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
 
-#pragma mark - Split view
 
 - (BOOL)splitViewController:(UISplitViewController *)splitViewController collapseSecondaryViewController:(UIViewController *)secondaryViewController ontoPrimaryViewController:(UIViewController *)primaryViewController {
     
@@ -412,5 +612,7 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
  
 //    return YES;
 }
+
+// Check icon from Baby Chick Image Illustration of a ...clipartsheep.com
 
 @end

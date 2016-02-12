@@ -1,0 +1,10 @@
+/* 
+  InfoPlist.strings
+  Intercom
+
+  Created by Karen and Ray Sun on 2/6/16.
+  Copyright © 2016 Ray Sun. All rights reserved.
+*/
+
+"SHORTCUT_TITLE_HOMEWORK" = "It's homework time!";
+"SHORTCUT_TITLE_GOTOBED" = "Time to go to bed";

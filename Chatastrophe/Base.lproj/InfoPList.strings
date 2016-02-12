@@ -1,0 +1,18 @@
+/* 
+  InfoPlist.strings
+  Intercom
+
+  Created by Karen and Ray Sun on 2/6/16.
+  Copyright © 2016 Ray Sun. All rights reserved.
+*/
+
+// Emoticons - same order as the UI
+"SHORTCUT_TITLE_HOMEWORK" = "It's homework time.";
+"SHORTCUT_TITLE_BED" = "It's bedtime.";
+"SHORTCUT_TITLE_EAT" = "Time to eat.";
+"SHORTCUT_TITLE_PLAY" = "Let's play outside.";
+"SHORTCUT_TITLE_GO" = "We're leaving. Let's go.";
+"SHORTCUT_TITLE_LOVE" = "Love you!";
+
+// other emoticons 💤😴🍎
+

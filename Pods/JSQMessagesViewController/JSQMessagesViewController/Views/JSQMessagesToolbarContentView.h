@@ -111,6 +111,9 @@ FOUNDATION_EXPORT const CGFloat kJSQMessagesToolbarContentViewHorizontalSpacingD
  */
 @property (weak, nonatomic, readonly) UIView *rightBarButtonContainerView;
 
+/* TODO - RAYSUN */
+@property (unsafe_unretained, nonatomic) IBOutlet UIToolbar *buttonBar;
+
 #pragma mark - Class methods
 
 /**

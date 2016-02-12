@@ -17,7 +17,7 @@
 //
 
 #import "DemoModelData.h"
-
+#import "AppDelegate.h"
 #import "NSUserDefaults+DemoSettings.h"
 
 
@@ -27,20 +27,17 @@
  *  Do not actually do anything like this.
  */
 
-@implementation DemoModelData
+@implementation DemoModelData {
+    AppDelegate *appDelegate;
+}
 
 - (id)init {
-//- (id)initWithCoder:(NSCoder *)decoder {
     self = [super init];
     if (self) {
+        appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
         
-//        if ([NSUserDefaults emptyMessagesSetting]) {
-            self.messages = [NSMutableArray new];
-            // BUGBUG: eventually when saving to icloud, should be decoding here instead of newing
-//        }
-//        else {
-          // [self loadFakeMessages];
-//        }
+        self.messages = [NSMutableArray new];
+//         [self loadFakeMessages]; // Used only for the App Store screenshot
         
         
         /**
@@ -50,6 +47,7 @@
          *
          *  If you are not using avatars, ignore this.
          */
+        /*
         JSQMessagesAvatarImage *jsqImage = [JSQMessagesAvatarImageFactory avatarImageWithUserInitials:@"JSQ"
                                                                                       backgroundColor:[UIColor colorWithWhite:0.85f alpha:1.0f]
                                                                                             textColor:[UIColor colorWithWhite:0.60f alpha:1.0f]
@@ -64,7 +62,7 @@
         
         JSQMessagesAvatarImage *wozImage = [JSQMessagesAvatarImageFactory avatarImageWithImage:[UIImage imageNamed:@"demo_avatar_woz"]
                                                                                       diameter:kJSQMessagesCollectionViewAvatarSizeDefault];
-
+        
         
         self.avatars = @{ kJSQDemoAvatarIdSquires : jsqImage,
                           kJSQDemoAvatarIdCook : cookImage,
@@ -76,7 +74,7 @@
                         kJSQDemoAvatarIdCook : kJSQDemoAvatarDisplayNameCook,
                         kJSQDemoAvatarIdWoz : kJSQDemoAvatarDisplayNameWoz,
                         kJSQDemoAvatarIdSquires : kJSQDemoAvatarDisplayNameSquires };
-        
+        */
         
         /**
          *  Create message bubble images objects.
@@ -86,59 +84,67 @@
          */
         JSQMessagesBubbleImageFactory *bubbleFactory = [[JSQMessagesBubbleImageFactory alloc] init];
         
-        self.outgoingBubbleImageData = [bubbleFactory outgoingMessagesBubbleImageWithColor:[UIColor jsq_messageBubbleLightGrayColor]];
-        self.incomingBubbleImageData = [bubbleFactory incomingMessagesBubbleImageWithColor:[UIColor jsq_messageBubbleGreenColor]];
+        self.outgoingBubbleImageData = [bubbleFactory outgoingMessagesBubbleImageWithColor:[UIColor jsq_messageBubbleBlueColor]];
+        self.incomingBubbleImageData = [bubbleFactory incomingMessagesBubbleImageWithColor:[UIColor jsq_messageBubbleLightGrayColor]];
     }
     
     return self;
 }
 
-- (void)encodeWithCoder:(NSCoder *)encoder {
-    [encoder encodeObject:self.messages forKey:@"messages"];
+- (void)loadOOBEMessages {
+    self.messages = [[NSMutableArray alloc] initWithObjects:
+                     [[JSQMessage alloc] initWithSenderId:kJSQDemoAvatarIdSquires
+                                        senderDisplayName:kJSQDemoAvatarDisplayNameSquires
+                                                     date:[NSDate distantPast]
+                                                     text:@"Send a message to any of your devices."],
+                     nil];
     
 }
 
 - (void)loadFakeMessages
 {
     /**
-     *  Load some fake messages for demo.
-     *
-     *  You should have a mutable array or orderedSet, or something.
+     *  Load some fake messages for screenshot
      */
     self.messages = [[NSMutableArray alloc] initWithObjects:
-                     [[JSQMessage alloc] initWithSenderId:kJSQDemoAvatarIdSquires
-                                        senderDisplayName:kJSQDemoAvatarDisplayNameSquires
-                                                     date:[NSDate distantPast]
-                                                     text:@"Send a message to any of your devices."],
-                     
+                     [[JSQMessage alloc] initWithSenderId:@"Karen's iPhone"
+                                        senderDisplayName:@"Karen's iPhone"
+                                                     date:[NSDate dateWithTimeInterval:-600 sinceDate:[NSDate date]]
+                                                     text:@"🍴"],
 
+                     [[JSQMessage alloc] initWithSenderId:@"Karen's iPhone"
+                                        senderDisplayName:@"Karen's iPhone"
+                                                     date:[NSDate dateWithTimeInterval:-600 sinceDate:[NSDate date]]
+                                                     text:@"Time to eat"],
                      
-                     [[JSQMessage alloc] initWithSenderId:kJSQDemoAvatarIdSquires
-                                        senderDisplayName:kJSQDemoAvatarDisplayNameSquires
+                     [[JSQMessage alloc] initWithSenderId:appDelegate.myID
+                                        senderDisplayName:appDelegate.myID
+                                                     date:[NSDate dateWithTimeInterval:-600 sinceDate:[NSDate date]]
+                                                     text:@"5 minutes mom"],
+                     
+                     [[JSQMessage alloc] initWithSenderId:@"Karen's iPhone"
+                                        senderDisplayName:@"Karen's iPhone"
                                                      date:[NSDate date]
-                                                     text:@"<more text>"],
+                                                     text:@"🍴"],
+                     
+                     [[JSQMessage alloc] initWithSenderId:@"Karen's iPhone"
+                                        senderDisplayName:@"Karen's iPhone"
+                                                     date:[NSDate date]
+                                                     text:@"Are you coming? Dinner's on the table"],
+                     
+                     [[JSQMessage alloc] initWithSenderId:appDelegate.myID
+                                        senderDisplayName:appDelegate.myID
+                                                     date:[NSDate date]
+                                                     text:@"sorry mom on the way! 😀"],
                      nil];
     
-    [self addPhotoMediaMessage];
-    
-    /**
-     *  Setting to load extra messages for testing/demo
-     */
-    if ([NSUserDefaults extraMessagesSetting]) {
-        NSArray *copyOfMessages = [self.messages copy];
-        for (NSUInteger i = 0; i < 4; i++) {
-            [self.messages addObjectsFromArray:copyOfMessages];
-        }
-    }
+//        self.emoticons = @[@"📚",@"😴",@"🍴",@"🏈",@"🚗",@"❤️"];
     
 }
 
 // Add a new message to the store, which will then be read by message view & displayed
 - (void)add:(JSQMessage *)newMessage {
     [self.messages addObject:newMessage];
-//    [[NSNotificationCenter defaultCenter] postNotificationName:@"Save" object:nil];
-//    NSUbiquitousKeyValueStore *store = [NSUbiquitousKeyValueStore new];
-    
 }
 
 - (void)addPhotoMediaMessage
@@ -146,6 +152,15 @@
     JSQPhotoMediaItem *photoItem = [[JSQPhotoMediaItem alloc] initWithImage:[UIImage imageNamed:@"goldengate"]];
     JSQMessage *photoMessage = [JSQMessage messageWithSenderId:kJSQDemoAvatarIdSquires
                                                    displayName:kJSQDemoAvatarDisplayNameSquires
+                                                         media:photoItem];
+    [self.messages addObject:photoMessage];
+}
+
+- (void)addPhotoMediaMessage:(UIImage *)image
+{
+    JSQPhotoMediaItem *photoItem = [[JSQPhotoMediaItem alloc] initWithImage:image];
+    JSQMessage *photoMessage = [JSQMessage messageWithSenderId:appDelegate.myID
+                                                   displayName:appDelegate.myName
                                                          media:photoItem];
     [self.messages addObject:photoMessage];
 }

@@ -28,7 +28,7 @@
  *  Do not actually do anything like this.
  */
 
-static NSString * const kJSQDemoAvatarDisplayNameSquires = @"iPad";
+static NSString * const kJSQDemoAvatarDisplayNameSquires = @"iPhone";
 static NSString * const kJSQDemoAvatarDisplayNameCook = @"iPhone";
 static NSString * const kJSQDemoAvatarDisplayNameJobs = @"iPad";
 static NSString * const kJSQDemoAvatarDisplayNameWoz = @"iPhone";
@@ -38,7 +38,7 @@ static NSString * const kJSQDemoAvatarIdCook = @"468-768355-23123";
 static NSString * const kJSQDemoAvatarIdJobs = @"707-8956784-57";
 static NSString * const kJSQDemoAvatarIdWoz = @"309-41802-93823";
 
-@interface DemoModelData : NSObject <NSCoding>
+@interface DemoModelData : NSObject
 
 @property (strong, nonatomic) NSMutableArray *messages;
 
@@ -53,7 +53,7 @@ static NSString * const kJSQDemoAvatarIdWoz = @"309-41802-93823";
 - (void)add:(JSQMessage *)newMessage;
 
 - (void)addPhotoMediaMessage;
-
+- (void)addPhotoMediaMessage:(UIImage *)image;
 - (void)addLocationMediaMessageCompletion:(JSQLocationMediaItemCompletionBlock)completion;
 
 - (void)addVideoMediaMessage;

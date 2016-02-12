@@ -8,18 +8,25 @@
 
 /* Begin PBXBuildFile section */
 		9416A7CA7C370A1A97D96CF2 /* libPods-Intercom.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C60F4BE27A10E20A108B166 /* libPods-Intercom.a */; };
+		B61254CE1C6D7CCA00B0F472 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = B61254D01C6D7CCA00B0F472 /* Localizable.strings */; };
 		B637DA771C446C8A00072F0C /* NSUserDefaults+DemoSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = B637DA761C446C8A00072F0C /* NSUserDefaults+DemoSettings.m */; };
 		B637DA791C446D9600072F0C /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B637DA781C446D9600072F0C /* Images.xcassets */; };
+		B63D5D771C5BE86E007BFF5F /* Text to Speech 1.wav in Resources */ = {isa = PBXBuildFile; fileRef = B63D5D701C5BE86E007BFF5F /* Text to Speech 1.wav */; };
+		B63D5D781C5BE86E007BFF5F /* Text to Speech 2.wav in Resources */ = {isa = PBXBuildFile; fileRef = B63D5D711C5BE86E007BFF5F /* Text to Speech 2.wav */; };
+		B63D5D791C5BE86E007BFF5F /* Text to Speech 3.wav in Resources */ = {isa = PBXBuildFile; fileRef = B63D5D721C5BE86E007BFF5F /* Text to Speech 3.wav */; };
+		B63D5D7A1C5BE86E007BFF5F /* Text to Speech 4.wav in Resources */ = {isa = PBXBuildFile; fileRef = B63D5D731C5BE86E007BFF5F /* Text to Speech 4.wav */; };
+		B63D5D7B1C5BE86E007BFF5F /* Text to Speech 5.wav in Resources */ = {isa = PBXBuildFile; fileRef = B63D5D741C5BE86E007BFF5F /* Text to Speech 5.wav */; };
+		B63D5D7C1C5BE86E007BFF5F /* Text to Speech 6.wav in Resources */ = {isa = PBXBuildFile; fileRef = B63D5D751C5BE86E007BFF5F /* Text to Speech 6.wav */; };
 		B63D78B51C3F198300B0401E /* Model.m in Sources */ = {isa = PBXBuildFile; fileRef = B63D78B41C3F198300B0401E /* Model.m */; };
 		B6657BB31C445CE2006DE461 /* Message.m in Sources */ = {isa = PBXBuildFile; fileRef = B6657BB21C445CE2006DE461 /* Message.m */; };
 		B6657BB81C446AEE006DE461 /* MessagesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B6657BB51C446AEE006DE461 /* MessagesViewController.m */; };
 		B6657BB91C446AEE006DE461 /* DemoModelData.m in Sources */ = {isa = PBXBuildFile; fileRef = B6657BB71C446AEE006DE461 /* DemoModelData.m */; };
-		B68D86C31C4891B00007F64E /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B68D86C21C4891B00007F64E /* CloudKit.framework */; };
+		B683452C1C66C4B200437FBB /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = B683452E1C66C4B200437FBB /* InfoPlist.strings */; };
+		B68345311C66E1B700437FBB /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B68345301C66E1B700437FBB /* CloudKit.framework */; };
 		B69513411C45D4A200546E64 /* MessageFile.m in Sources */ = {isa = PBXBuildFile; fileRef = B69513401C45D4A200546E64 /* MessageFile.m */; };
 		B6B584631C3E31E8007B8AB4 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B6B584621C3E31E8007B8AB4 /* main.m */; };
 		B6B584661C3E31E8007B8AB4 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B6B584651C3E31E8007B8AB4 /* AppDelegate.m */; };
 		B6B584691C3E31E8007B8AB4 /* MasterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B6B584681C3E31E8007B8AB4 /* MasterViewController.m */; };
-		B6B5846C1C3E31E8007B8AB4 /* DetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B6B5846B1C3E31E8007B8AB4 /* DetailViewController.m */; };
 		B6B5846F1C3E31E8007B8AB4 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B6B5846D1C3E31E8007B8AB4 /* Main.storyboard */; };
 		B6B584711C3E31E8007B8AB4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B6B584701C3E31E8007B8AB4 /* Assets.xcassets */; };
 		B6B584741C3E31E8007B8AB4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B6B584721C3E31E8007B8AB4 /* LaunchScreen.storyboard */; };
@@ -29,9 +36,17 @@
 		7178E6F393CE110B53531A42 /* Pods-Intercom.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Intercom.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Intercom/Pods-Intercom.debug.xcconfig"; sourceTree = "<group>"; };
 		7C60F4BE27A10E20A108B166 /* libPods-Intercom.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Intercom.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		968E0FBE578EF07C74128882 /* Pods-Intercom.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Intercom.release.xcconfig"; path = "Pods/Target Support Files/Pods-Intercom/Pods-Intercom.release.xcconfig"; sourceTree = "<group>"; };
+		B60ED9F91C64391A00E9A8F2 /* Intercom.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = Intercom.entitlements; path = ../Intercom.entitlements; sourceTree = "<group>"; };
+		B61254CF1C6D7CCA00B0F472 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
 		B637DA751C446C8A00072F0C /* NSUserDefaults+DemoSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSUserDefaults+DemoSettings.h"; sourceTree = "<group>"; };
 		B637DA761C446C8A00072F0C /* NSUserDefaults+DemoSettings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSUserDefaults+DemoSettings.m"; sourceTree = "<group>"; };
 		B637DA781C446D9600072F0C /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		B63D5D701C5BE86E007BFF5F /* Text to Speech 1.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "Text to Speech 1.wav"; sourceTree = "<group>"; };
+		B63D5D711C5BE86E007BFF5F /* Text to Speech 2.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "Text to Speech 2.wav"; sourceTree = "<group>"; };
+		B63D5D721C5BE86E007BFF5F /* Text to Speech 3.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "Text to Speech 3.wav"; sourceTree = "<group>"; };
+		B63D5D731C5BE86E007BFF5F /* Text to Speech 4.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "Text to Speech 4.wav"; sourceTree = "<group>"; };
+		B63D5D741C5BE86E007BFF5F /* Text to Speech 5.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "Text to Speech 5.wav"; sourceTree = "<group>"; };
+		B63D5D751C5BE86E007BFF5F /* Text to Speech 6.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "Text to Speech 6.wav"; sourceTree = "<group>"; };
 		B63D78B21C3EDBD200B0401E /* Chatastrophe.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Chatastrophe.entitlements; sourceTree = "<group>"; };
 		B63D78B31C3F198300B0401E /* Model.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Model.h; sourceTree = "<group>"; };
 		B63D78B41C3F198300B0401E /* Model.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Model.m; sourceTree = "<group>"; };
@@ -41,7 +56,8 @@
 		B6657BB51C446AEE006DE461 /* MessagesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = MessagesViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		B6657BB61C446AEE006DE461 /* DemoModelData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemoModelData.h; sourceTree = "<group>"; };
 		B6657BB71C446AEE006DE461 /* DemoModelData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DemoModelData.m; sourceTree = "<group>"; };
-		B68D86C21C4891B00007F64E /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
+		B683452D1C66C4B200437FBB /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		B68345301C66E1B700437FBB /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		B695133F1C45D4A200546E64 /* MessageFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageFile.h; sourceTree = "<group>"; };
 		B69513401C45D4A200546E64 /* MessageFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageFile.m; sourceTree = "<group>"; };
 		B6B5845E1C3E31E8007B8AB4 /* Intercom.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Intercom.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -50,8 +66,6 @@
 		B6B584651C3E31E8007B8AB4 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = AppDelegate.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		B6B584671C3E31E8007B8AB4 /* MasterViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MasterViewController.h; sourceTree = "<group>"; };
 		B6B584681C3E31E8007B8AB4 /* MasterViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = MasterViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		B6B5846A1C3E31E8007B8AB4 /* DetailViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DetailViewController.h; sourceTree = "<group>"; };
-		B6B5846B1C3E31E8007B8AB4 /* DetailViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DetailViewController.m; sourceTree = "<group>"; };
 		B6B5846E1C3E31E8007B8AB4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		B6B584701C3E31E8007B8AB4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B6B584731C3E31E8007B8AB4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -64,7 +78,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9416A7CA7C370A1A97D96CF2 /* libPods-Intercom.a in Frameworks */,
-				B68D86C31C4891B00007F64E /* CloudKit.framework in Frameworks */,
+				B68345311C66E1B700437FBB /* CloudKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -83,10 +97,23 @@
 		8515E7C8190A4AE1741491C2 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				B68D86C21C4891B00007F64E /* CloudKit.framework */,
+				B68345301C66E1B700437FBB /* CloudKit.framework */,
 				7C60F4BE27A10E20A108B166 /* libPods-Intercom.a */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		B63D5D6F1C5BE7EF007BFF5F /* Notification Sounds */ = {
+			isa = PBXGroup;
+			children = (
+				B63D5D701C5BE86E007BFF5F /* Text to Speech 1.wav */,
+				B63D5D711C5BE86E007BFF5F /* Text to Speech 2.wav */,
+				B63D5D721C5BE86E007BFF5F /* Text to Speech 3.wav */,
+				B63D5D731C5BE86E007BFF5F /* Text to Speech 4.wav */,
+				B63D5D741C5BE86E007BFF5F /* Text to Speech 5.wav */,
+				B63D5D751C5BE86E007BFF5F /* Text to Speech 6.wav */,
+			);
+			name = "Notification Sounds";
 			sourceTree = "<group>";
 		};
 		B69D81691C456C0000866BC9 /* Old */ = {
@@ -100,8 +127,6 @@
 				B6657BB21C445CE2006DE461 /* Message.m */,
 				B63D78B31C3F198300B0401E /* Model.h */,
 				B63D78B41C3F198300B0401E /* Model.m */,
-				B6B5846A1C3E31E8007B8AB4 /* DetailViewController.h */,
-				B6B5846B1C3E31E8007B8AB4 /* DetailViewController.m */,
 				B637DA751C446C8A00072F0C /* NSUserDefaults+DemoSettings.h */,
 				B637DA761C446C8A00072F0C /* NSUserDefaults+DemoSettings.m */,
 			);
@@ -129,18 +154,15 @@
 		B6B584601C3E31E8007B8AB4 /* Chatastrophe */ = {
 			isa = PBXGroup;
 			children = (
-				B6B5846D1C3E31E8007B8AB4 /* Main.storyboard */,
+				B6B584651C3E31E8007B8AB4 /* AppDelegate.m */,
+				B6657BB51C446AEE006DE461 /* MessagesViewController.m */,
+				B6B584641C3E31E8007B8AB4 /* AppDelegate.h */,
+				B6657BB41C446AEE006DE461 /* MessagesViewController.h */,
 				B6657BB61C446AEE006DE461 /* DemoModelData.h */,
 				B6657BB71C446AEE006DE461 /* DemoModelData.m */,
-				B6B584641C3E31E8007B8AB4 /* AppDelegate.h */,
-				B6B584651C3E31E8007B8AB4 /* AppDelegate.m */,
-				B6B584671C3E31E8007B8AB4 /* MasterViewController.h */,
-				B6B584681C3E31E8007B8AB4 /* MasterViewController.m */,
-				B6657BB41C446AEE006DE461 /* MessagesViewController.h */,
-				B6657BB51C446AEE006DE461 /* MessagesViewController.m */,
+				B6B5846D1C3E31E8007B8AB4 /* Main.storyboard */,
 				B637DA781C446D9600072F0C /* Images.xcassets */,
 				B6B584701C3E31E8007B8AB4 /* Assets.xcassets */,
-				B6B584751C3E31E8007B8AB4 /* Info.plist */,
 				B69D81691C456C0000866BC9 /* Old */,
 				B6B584611C3E31E8007B8AB4 /* Supporting Files */,
 			);
@@ -150,6 +172,13 @@
 		B6B584611C3E31E8007B8AB4 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				B60ED9F91C64391A00E9A8F2 /* Intercom.entitlements */,
+				B63D5D6F1C5BE7EF007BFF5F /* Notification Sounds */,
+				B6B584671C3E31E8007B8AB4 /* MasterViewController.h */,
+				B6B584681C3E31E8007B8AB4 /* MasterViewController.m */,
+				B6B584751C3E31E8007B8AB4 /* Info.plist */,
+				B683452E1C66C4B200437FBB /* InfoPlist.strings */,
+				B61254D01C6D7CCA00B0F472 /* Localizable.strings */,
 				B6B584621C3E31E8007B8AB4 /* main.m */,
 			);
 			name = "Supporting Files";
@@ -228,6 +257,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				B6B584741C3E31E8007B8AB4 /* LaunchScreen.storyboard in Resources */,
+				B61254CE1C6D7CCA00B0F472 /* Localizable.strings in Resources */,
+				B683452C1C66C4B200437FBB /* InfoPlist.strings in Resources */,
+				B63D5D7A1C5BE86E007BFF5F /* Text to Speech 4.wav in Resources */,
+				B63D5D7C1C5BE86E007BFF5F /* Text to Speech 6.wav in Resources */,
+				B63D5D771C5BE86E007BFF5F /* Text to Speech 1.wav in Resources */,
+				B63D5D7B1C5BE86E007BFF5F /* Text to Speech 5.wav in Resources */,
+				B63D5D781C5BE86E007BFF5F /* Text to Speech 2.wav in Resources */,
+				B63D5D791C5BE86E007BFF5F /* Text to Speech 3.wav in Resources */,
 				B637DA791C446D9600072F0C /* Images.xcassets in Resources */,
 				B6B584711C3E31E8007B8AB4 /* Assets.xcassets in Resources */,
 				B6B5846F1C3E31E8007B8AB4 /* Main.storyboard in Resources */,
@@ -295,7 +332,6 @@
 				B69513411C45D4A200546E64 /* MessageFile.m in Sources */,
 				B6B584691C3E31E8007B8AB4 /* MasterViewController.m in Sources */,
 				B6B584631C3E31E8007B8AB4 /* main.m in Sources */,
-				B6B5846C1C3E31E8007B8AB4 /* DetailViewController.m in Sources */,
 				B6657BB81C446AEE006DE461 /* MessagesViewController.m in Sources */,
 				B63D78B51C3F198300B0401E /* Model.m in Sources */,
 				B637DA771C446C8A00072F0C /* NSUserDefaults+DemoSettings.m in Sources */,
@@ -305,6 +341,23 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
+		B61254D01C6D7CCA00B0F472 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				B61254CF1C6D7CCA00B0F472 /* Base */,
+			);
+			name = Localizable.strings;
+			path = ..;
+			sourceTree = "<group>";
+		};
+		B683452E1C66C4B200437FBB /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				B683452D1C66C4B200437FBB /* Base */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
 		B6B5846D1C3E31E8007B8AB4 /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -411,7 +464,7 @@
 			baseConfigurationReference = 7178E6F393CE110B53531A42 /* Pods-Intercom.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = Chatastrophe/Chatastrophe.entitlements;
+				CODE_SIGN_ENTITLEMENTS = Intercom.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = Chatastrophe/Info.plist;
@@ -428,7 +481,7 @@
 			baseConfigurationReference = 968E0FBE578EF07C74128882 /* Pods-Intercom.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = Chatastrophe/Chatastrophe.entitlements;
+				CODE_SIGN_ENTITLEMENTS = Intercom.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = Chatastrophe/Info.plist;
