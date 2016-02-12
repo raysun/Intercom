@@ -24,8 +24,7 @@
 #import "DemoModelData.h"
 #import "JSQMessage.h"
 
-#import "APLViewController.h"
-#import "APLCloudManager.h"
+//#import "APLViewController.h"
 
 @interface MessagesViewController()
 
@@ -45,7 +44,7 @@
     
     NSString *deviceID;
     NSString *deviceName;
-    APLViewController *photoPickerVC;
+//    APLViewController *photoPickerVC;
     UIAlertController *alert;
     
 }
@@ -104,7 +103,6 @@
     self.senderDisplayName = appDelegate.myName;
     
     self.inputToolbar.contentView.textView.pasteDelegate = self;
-//    self.inputToolbar.preferredDefaultHeight = 88.0f;
     allMessages = appDelegate.allMessages;
     
 //    NSLog(@"%@",self.inputToolbar.contentView);
@@ -113,46 +111,14 @@
     for (NSString *emoticon in emoticons) {
         UIBarButtonItem *emotiButton = [[UIBarButtonItem alloc] initWithTitle:emoticon style:UIBarButtonItemStylePlain target:self action:@selector(didSelectEmoticon:)];
         emotiButton.tag = 1;    // 1 is a special emoticon button
-
-        //Trying to move the buttons up a bit
-    //[emotiButton setTitlePositionAdjustment:UIOffsetMake(0.0,40.0) forBarMetrics:UIBarMetricsCompact];
         
-    [toolbarItems addObject:emotiButton];
-//        UIButton *emotiButt = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-  //      [emotiButt setTitle:@"📚📚📚📚" forState:UIControlStateNormal];
-
-//        self.inputToolbar.contentView.leftBarButtonItemWidth = 200.0f;
-    //    [self.inputToolbar.contentView.leftBarButtonContainerView addSubview:emotiButt];
+        [toolbarItems addObject:emotiButton];
     }
     UIBarButtonItem *cameraButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCamera target:self action:@selector(didSelectCamera:)];
     cameraButton.tintColor = [UIColor darkGrayColor];
     [toolbarItems insertObject:cameraButton atIndex:0];
-//    NSArray *mergedToolbarItems = [self.inputToolbar.contentView.buttonBar.items arrayByAddingObjectsFromArray:toolbarItems];
     [self.inputToolbar.contentView.buttonBar setItems:toolbarItems animated:NO];
 
-    /*
-    float height = self.inputToolbar.contentView.leftBarButtonContainerView.frame.size.height;
-    UIImage *image = [UIImage imageNamed:@"smileButton"];
-    UIButton* smileButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [smileButton setImage:image forState:UIControlStateNormal];
-    [smileButton addTarget:self action:@selector(smileButtonTouched:) forControlEvents:UIControlEventTouchUpInside];
-    [smileButton setFrame:CGRectMake(0, 0, 25, height)];
-    
-    image = [UIImage imageNamed:@"attachButton"];
-    UIButton* attachButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [attachButton setImage:image forState:UIControlStateNormal];
-    [attachButton addTarget:self action:@selector(attachButtonTouched:) forControlEvents:UIControlEventTouchUpInside];
-    [attachButton setFrame:CGRectMake(30, 0, 25, height)];
-    
-    self.inputToolbar.contentView.leftBarButtonItemWidth = 55;
-    self.inputToolbar.contentView.rightBarButtonItemWidth = 30;
-    [self.inputToolbar.contentView.leftBarButtonContainerView addSubview:smileButton];
-    [self.inputToolbar.contentView.leftBarButtonContainerView addSubview:attachButton];
-    [self.inputToolbar.contentView.rightBarButtonItem setImage:[UIImage imageNamed:@"sendButton"] forState:UIControlStateNormal];
-    [self.inputToolbar.contentView.rightBarButtonItem setTitle:@"" forState:UIControlStateNormal];
-//    self.inputToolbar.contentView.leftBarButtonItem.hidden = YES;
-    */
-    
     // Set the title
     // no longer checking selectedindex - all messages to ALL
 //    if (self.selectedIndex.section == 0) {
@@ -180,23 +146,16 @@
     }
     
   //  self.showLoadEarlierMessagesHeader = YES;
-
-    /*
-    // BUGBUG: Plus button for add friend is not correct, will finalize later.
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd
-                                                                             target:self
-                                                                             action:@selector(receiveMessagePressed:)];
-    self.navigationItem.rightBarButtonItem.tintColor = [UIColor whiteColor];
-     */
     
     /**
      *  Register custom menu actions for cells.
      */
+
     /*
     [JSQMessagesCollectionViewCell registerMenuAction:@selector(customAction:)];
     [UIMenuController sharedMenuController].menuItems = @[ [[UIMenuItem alloc] initWithTitle:@"Custom Action"
                                                                                       action:@selector(customAction:)] ];
-*/
+     */
     
     /**
      *  OPT-IN: allow cells to be deleted
@@ -517,7 +476,7 @@
      */
 }
 
-
+/*
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     photoPickerVC = [segue destinationViewController];
@@ -580,7 +539,7 @@
     }
     
 }
-
+*/
 
 
 

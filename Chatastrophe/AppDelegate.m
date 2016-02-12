@@ -10,7 +10,6 @@
 #import "MessagesViewController.h"
 #import "JSQMessage.h"
 @import CloudKit;
-#import "APLCloudManager.h"
 @import AudioToolbox;
 
 @interface AppDelegate () <UISplitViewControllerDelegate> {
@@ -19,7 +18,6 @@
     NSUbiquitousKeyValueStore *store;
     NSUserDefaults *localStore;
     NSArray *notificationSoundFileNames;
-    UIAlertController *alert;
     SystemSoundID inAppSound;
 }
 
@@ -102,12 +100,13 @@
     // Register for CloudKit push notifications (based on the subscription server queries)
     UIMutableUserNotificationAction *notificationAction1 = [UIMutableUserNotificationAction new];
     notificationAction1.identifier = @"reply";
-    notificationAction1.title = @"Send";
+    notificationAction1.title = @"Reply";
     notificationAction1.activationMode = UIUserNotificationActivationModeBackground;
     notificationAction1.destructive = NO;
     notificationAction1.authenticationRequired = NO;
     notificationAction1.behavior = UIUserNotificationActionBehaviorTextInput;
-//    notificationAction1.parameters = @{UIUserNotificationTextInputActionButtonTitleKey:@"Yo"};
+    // Customizes the button when you pull down the Action. No need to do this, Send is default.
+//    notificationAction1.parameters = @{UIUserNotificationTextInputActionButtonTitleKey:@"reply"};
     
     UIMutableUserNotificationCategory *category = [UIMutableUserNotificationCategory new];
     category.identifier = @"category";
@@ -183,7 +182,7 @@
 
 - (void)application:(UIApplication *)application
 didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
-    // TODO: handle case where user has disabled (or not accepted) notifications
+    // TODO: handle case where user has disabled (or not accepted) notifications. Doesn't really matter, though, app still works fine.
     NSLog(@"Notifications enabled: %@",[application currentUserNotificationSettings]);
 }
 
@@ -248,7 +247,7 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
                 NSUInteger i = [self.emoticons indexOfObject:body];
                 if (i != NSNotFound) {
                     //playsound
-                    NSString *soundFileName = [NSString stringWithFormat:@"Text to Speech %u",i+1];
+                    NSString *soundFileName = [NSString stringWithFormat:@"Text to Speech %lu",i+1];
                     NSString *soundFilePath = [[NSBundle mainBundle]
                                                pathForResource:soundFileName ofType:@"wav"];
                     NSURL *soundURL = [NSURL fileURLWithPath:soundFilePath];
@@ -407,9 +406,8 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     CKNotificationInfo *info = [CKNotificationInfo new];
 //    info.shouldBadge = YES;
     info.shouldSendContentAvailable = YES;
-    info.alertBody = @" ";
+//    info.alertBody = @" ";
     info.soundName = soundName ? soundName : UILocalNotificationDefaultSoundName;
-    //    info.soundName = UILocalNotificationDefaultSoundName;
     /* BUGBUG: Temporarily disabling the From field
      info.alertLocalizationKey = @"%@: %@";
      info.alertLocalizationArgs = @[
@@ -423,7 +421,8 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
                                    @"Body"
                                    ];
     info.category = @"category";
-    info.alertActionLocalizationKey = @"Send";
+    // BUGBUG: I can't seem to set the "slide to send" text on the lock screen.
+//    info.alertActionLocalizationKey = @"view";
 //    info.desiredKeys = @[@"FromFriendlyName"];
     
     return info;
@@ -566,13 +565,8 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     
     NSOperationQueue *queue = [NSOperationQueue new];
     [queue addOperations:@[fetchNotificationOperation, markReadOperation] waitUntilFinished:YES];
-
-
 //    [container   :@[fetchNotificationOperation, markReadOperation]];
 */
-
-    
-
 
 //    [privateDB addOperation:clearBadge];
 //    [[[CKContainer defaultContainer] publicCloudDatabase] addOperation:clearBadge];

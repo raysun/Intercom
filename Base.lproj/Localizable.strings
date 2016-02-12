@@ -1,0 +1,9 @@
+/* 
+  Localizable.strings
+  Intercom
+
+  Created by Karen and Ray Sun on 2/11/16.
+  Copyright © 2016 Ray Sun. All rights reserved.
+*/
+
+"LOCKSCREEN_ACTION_REPLY" = "reply";
