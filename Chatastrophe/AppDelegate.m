@@ -129,8 +129,7 @@
     // RESET APP - uncomment next line
 //    [store removeObjectForKey:@"deviceList"];
     
-    // RESET SUBSCRIPTIONS
-    // Can't be done in production - for development testing only
+    // RESET SUBSCRIPTIONS - only to be used in special builds to kill subscriptions if I change them
 //    [self resetSubscriptions];
 //    [NSThread sleepForTimeInterval: 20.0];
     
@@ -187,7 +186,11 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     NSLog(@"Notifications enabled: %@",[application currentUserNotificationSettings]);
 }
 
-// Load all messages
+/**
+ *
+ * Load all messages at app launch
+ *
+ */
 - (void)performQuery:(CKQuery *)query {
     // Special failsafe - lets me show a message on everyone's device by manually creating a public message - depending on the date of the message, I can show it at the top or at the end.
     CKDatabase *db = [container publicCloudDatabase];
@@ -216,7 +219,62 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     }];
 }
 
-#pragma mark - Received new message notification from CloudKit
+/**
+ *
+ * Saves a CloudKit record to the local database
+ *
+ */
+- (void)saveRecordToLocalMessages:(CKRecord *)record {
+    CKRecordID *recordID = record.recordID;
+    NSString *from = [record objectForKey:@"From"];
+    NSString *fromFriendlyName = [record objectForKey:@"FromFriendlyName"];
+    NSString *to = [record objectForKey:@"To"];
+    NSString *body = [record objectForKey:@"Body"];
+    NSDate *date = [record objectForKey:@"Date"];
+    CKAsset *imageAsset = [record objectForKey:@"Image"];
+    UIImage *image = [UIImage imageWithContentsOfFile:imageAsset.fileURL.path];
+    if (!fromFriendlyName) fromFriendlyName = @"Unknown name";
+    
+    // BUGBUG: logging recordIDs that map 1-1 with the index in the message view. Very hacky way to do this; should be storing in overridden JSQMessage object
+    [self.messageIDs addObject:recordID];
+    
+    JSQMessage *message;
+    if (image) {
+        message = [[JSQMessage alloc] initWithSenderId:from senderDisplayName:fromFriendlyName date:date media:[[JSQPhotoMediaItem alloc] initWithImage:image]];
+    } else {
+        message = [[JSQMessage alloc] initWithSenderId:from senderDisplayName:fromFriendlyName date:date text:body];
+    }
+    
+    //    NSLog(@"%@",message);
+    
+    // Messages to ALL always go to ALL. Then messages NOT FROM ME go to OTHERS' mailboxes. Then messages from ME TO OTHERS go to OTHERS.
+    if ([to isEqualToString:@"All"]) {
+        [((DemoModelData*) self.allMessages[@"All"]) add:message];
+    } else if (![from isEqualToString:self.myID]) {
+        [((DemoModelData*) self.allMessages[from]) add:message];
+    } else {
+        [((DemoModelData*) self.allMessages[to]) add:message];
+    }
+    
+    /* TODO: Later, if we want to implement per-user, can utilize this part of APLCloudManager
+     // we provide the owner of the current record in the subtite of our cell
+     APLCloudManager *cloudManager = [APLCloudManager new];
+     [cloudManager fetchUserNameFromRecordID:record.creatorUserRecordID completionHandler:^(NSString *firstName, NSString *lastName) {
+     NSLog(@"%@, %@",firstName,lastName);
+     if (firstName == nil && lastName == nil)
+     {
+     //            self.createdByLabel.text = [NSString stringWithFormat:@"%@", NSLocalizedString(@"Unknown User Name", nil)];
+     }
+     else
+     {
+     //          self.createdByLabel.text = [NSString stringWithFormat:@"%@", [NSString stringWithFormat:@"%@ %@", firstName, lastName]];
+     }
+     }];
+     */
+    
+}
+
+#pragma mark - Receive message
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(nonnull NSDictionary *)userInfo fetchCompletionHandler:(nonnull void (^)(UIBackgroundFetchResult))completionHandler {
     
@@ -268,13 +326,19 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     if (completionHandler != nil) completionHandler(UIBackgroundFetchResultNewData);
 }
 
-// didReceiveRemoteNotification will be called as usual, but in addition this is called if the quick reply is used
-    - (void)application:(UIApplication *)application handleActionWithIdentifier:(NSString *)identifier forRemoteNotification:(NSDictionary *)userInfo withResponseInfo:(nonnull NSDictionary *)responseInfo completionHandler:(nonnull void (^)())completionHandler {
+/**
+ *
+ * Quick Action from notification
+ *
+ * didReceiveRemoteNotification will be called as usual, but in addition this is called if the quick reply is used
+ */
 
+- (void)application:(UIApplication *)application handleActionWithIdentifier:(NSString *)identifier forRemoteNotification:(NSDictionary *)userInfo withResponseInfo:(nonnull NSDictionary *)responseInfo completionHandler:(nonnull void (^)())completionHandler {
+    
     CKQueryNotification *cloudKitNotification = (CKQueryNotification *)[CKNotification notificationFromRemoteNotificationDictionary:userInfo];
     
     if (cloudKitNotification.notificationType == CKNotificationTypeQuery && [cloudKitNotification.category isEqualToString:@"category"] && [identifier isEqualToString:@"reply"]) {
-
+        
         NSString *text = responseInfo[UIUserNotificationActionResponseTypedTextKey];
         NSDictionary *textDictionary = @{@"Body":text};
         [[NSNotificationCenter defaultCenter] postNotificationName:@"ActionSend" object:nil userInfo:textDictionary];
@@ -282,9 +346,14 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     
     if(completionHandler != nil)
         completionHandler(UIBackgroundFetchResultNewData);
-
+    
 }
 
+/**
+ *
+ * 3D Touch shortcuts
+ *
+ */
 - (void)application:(UIApplication *)application performActionForShortcutItem:(nonnull UIApplicationShortcutItem *)shortcutItem completionHandler:(nonnull void (^)(BOOL))completionHandler {
     
     NSDictionary *textDictionary = @{@"EmoticonIndex":shortcutItem.type};
@@ -297,57 +366,9 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     [[NSNotificationCenter defaultCenter] postNotificationName:notificationName object:nil userInfo:nil];
 }
 
-- (void)saveRecordToLocalMessages:(CKRecord *)record {
-    CKRecordID *recordID = record.recordID;
-    NSString *from = [record objectForKey:@"From"];
-    NSString *fromFriendlyName = [record objectForKey:@"FromFriendlyName"];
-    NSString *to = [record objectForKey:@"To"];
-    NSString *body = [record objectForKey:@"Body"];
-    NSDate *date = [record objectForKey:@"Date"];
-    CKAsset *imageAsset = [record objectForKey:@"Image"];
-    UIImage *image = [UIImage imageWithContentsOfFile:imageAsset.fileURL.path];
-    if (!fromFriendlyName) fromFriendlyName = @"Unknown name";
-    
-    // BUGBUG: logging recordIDs that map 1-1 with the index in the message view. Very hacky way to do this; should be storing in overridden JSQMessage object
-    [self.messageIDs addObject:recordID];
-    
-    JSQMessage *message;
-    if (image) {
-        message = [[JSQMessage alloc] initWithSenderId:from senderDisplayName:fromFriendlyName date:date media:[[JSQPhotoMediaItem alloc] initWithImage:image]];
-    } else {
-        message = [[JSQMessage alloc] initWithSenderId:from senderDisplayName:fromFriendlyName date:date text:body];
-    }
-    
-//    NSLog(@"%@",message);
-    
-    // Messages to ALL always go to ALL. Then messages NOT FROM ME go to OTHERS' mailboxes. Then messages from ME TO OTHERS go to OTHERS.
-    if ([to isEqualToString:@"All"]) {
-        [((DemoModelData*) self.allMessages[@"All"]) add:message];
-    } else if (![from isEqualToString:self.myID]) {
-        [((DemoModelData*) self.allMessages[from]) add:message];
-    } else {
-        [((DemoModelData*) self.allMessages[to]) add:message];
-    }
-    
-    /* TODO: Later, if we want to implement per-user, can utilize this part of APLCloudManager
-    // we provide the owner of the current record in the subtite of our cell
-    APLCloudManager *cloudManager = [APLCloudManager new];
-    [cloudManager fetchUserNameFromRecordID:record.creatorUserRecordID completionHandler:^(NSString *firstName, NSString *lastName) {
-        NSLog(@"%@, %@",firstName,lastName);
-        if (firstName == nil && lastName == nil)
-        {
-//            self.createdByLabel.text = [NSString stringWithFormat:@"%@", NSLocalizedString(@"Unknown User Name", nil)];
-        }
-        else
-        {
-  //          self.createdByLabel.text = [NSString stringWithFormat:@"%@", [NSString stringWithFormat:@"%@ %@", firstName, lastName]];
-        }
-    }];
-    */
-    
-}
 
-#pragma mark - Set up CloudKit subscriptions (only called once in development)
+
+#pragma mark - Subscription - create
 
 // Listen for changes to CloudKit objects (message and device)
 - (void)createCloudKitSubscriptions {
@@ -400,8 +421,6 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
 
 }
 
-#pragma mark - Define Notification content for subscription
-
 - (CKNotificationInfo *)createNotificationInfoWithSound:(NSString *)soundName {
     CKNotificationInfo *info = [CKNotificationInfo new];
 //    info.shouldBadge = YES;
@@ -453,6 +472,7 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
 
 }
 
+#pragma mark - Local Store - update
 
 - (void)updateKVStoreItems:(NSNotification*)notification {
     // Get the list of keys that changed.
@@ -497,8 +517,6 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
 
 
 
-#pragma mark - IGNORE - Boilerplate below
-
 - (void)applicationWillResignActive:(UIApplication *)application {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
     // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
@@ -512,6 +530,8 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
 - (void)applicationWillEnterForeground:(UIApplication *)application {
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
 }
+
+#pragma mark - App active - reset badge
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
@@ -580,7 +600,6 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
 
-#pragma mark - Split view
 
 - (BOOL)splitViewController:(UISplitViewController *)splitViewController collapseSecondaryViewController:(UIViewController *)secondaryViewController ontoPrimaryViewController:(UIViewController *)primaryViewController {
     
