@@ -37,7 +37,7 @@
         appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
         
         self.messages = [NSMutableArray new];
-        // [self loadFakeMessages]; // Used only for the App Store screenshot
+//         [self loadFakeMessages]; // Used only for the App Store screenshot
         
         
         /**
@@ -47,6 +47,7 @@
          *
          *  If you are not using avatars, ignore this.
          */
+        /*
         JSQMessagesAvatarImage *jsqImage = [JSQMessagesAvatarImageFactory avatarImageWithUserInitials:@"JSQ"
                                                                                       backgroundColor:[UIColor colorWithWhite:0.85f alpha:1.0f]
                                                                                             textColor:[UIColor colorWithWhite:0.60f alpha:1.0f]
@@ -73,7 +74,7 @@
                         kJSQDemoAvatarIdCook : kJSQDemoAvatarDisplayNameCook,
                         kJSQDemoAvatarIdWoz : kJSQDemoAvatarDisplayNameWoz,
                         kJSQDemoAvatarIdSquires : kJSQDemoAvatarDisplayNameSquires };
-        
+        */
         
         /**
          *  Create message bubble images objects.

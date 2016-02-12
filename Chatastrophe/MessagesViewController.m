@@ -40,7 +40,6 @@
     AppDelegate *appDelegate;
     DemoModelData *model;
     NSDictionary *allMessages;
-    NSMutableArray *deviceList;
     
     NSString *deviceID;
     NSString *deviceName;
@@ -90,7 +89,6 @@
      object:nil];
     
     appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    deviceList = [[NSMutableArray alloc] initWithArray:appDelegate.deviceList];
     /**
      *  You MUST set your senderId and display name
      */
@@ -285,7 +283,7 @@
 }
 
 - (void)showWarningIfOnlyDevice {
-    if (deviceList.count == 1 && appDelegate.atLeastOneMessageReceived == NO) {
+    if (appDelegate.deviceList.count == 1 && appDelegate.atLeastOneMessageReceived == NO) {
         JSQMessage *message = [[JSQMessage alloc] initWithSenderId:@"WarningID"
                                                  senderDisplayName:@"Warning"
                                                               date:[NSDate date]

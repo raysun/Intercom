@@ -36,7 +36,7 @@
 		7178E6F393CE110B53531A42 /* Pods-Intercom.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Intercom.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Intercom/Pods-Intercom.debug.xcconfig"; sourceTree = "<group>"; };
 		7C60F4BE27A10E20A108B166 /* libPods-Intercom.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Intercom.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		968E0FBE578EF07C74128882 /* Pods-Intercom.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Intercom.release.xcconfig"; path = "Pods/Target Support Files/Pods-Intercom/Pods-Intercom.release.xcconfig"; sourceTree = "<group>"; };
-		B60ED9F91C64391A00E9A8F2 /* Intercom.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Intercom.entitlements; sourceTree = "<group>"; };
+		B60ED9F91C64391A00E9A8F2 /* Intercom.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = Intercom.entitlements; path = ../Intercom.entitlements; sourceTree = "<group>"; };
 		B61254CF1C6D7CCA00B0F472 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
 		B637DA751C446C8A00072F0C /* NSUserDefaults+DemoSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSUserDefaults+DemoSettings.h"; sourceTree = "<group>"; };
 		B637DA761C446C8A00072F0C /* NSUserDefaults+DemoSettings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSUserDefaults+DemoSettings.m"; sourceTree = "<group>"; };
@@ -136,8 +136,6 @@
 		B6B584551C3E31E8007B8AB4 = {
 			isa = PBXGroup;
 			children = (
-				B61254D01C6D7CCA00B0F472 /* Localizable.strings */,
-				B60ED9F91C64391A00E9A8F2 /* Intercom.entitlements */,
 				B6B584601C3E31E8007B8AB4 /* Chatastrophe */,
 				B6B5845F1C3E31E8007B8AB4 /* Products */,
 				56756BCF1D5423D62198871C /* Pods */,
@@ -156,13 +154,13 @@
 		B6B584601C3E31E8007B8AB4 /* Chatastrophe */ = {
 			isa = PBXGroup;
 			children = (
-				B6B5846D1C3E31E8007B8AB4 /* Main.storyboard */,
-				B6B584641C3E31E8007B8AB4 /* AppDelegate.h */,
 				B6B584651C3E31E8007B8AB4 /* AppDelegate.m */,
-				B6657BB41C446AEE006DE461 /* MessagesViewController.h */,
 				B6657BB51C446AEE006DE461 /* MessagesViewController.m */,
+				B6B584641C3E31E8007B8AB4 /* AppDelegate.h */,
+				B6657BB41C446AEE006DE461 /* MessagesViewController.h */,
 				B6657BB61C446AEE006DE461 /* DemoModelData.h */,
 				B6657BB71C446AEE006DE461 /* DemoModelData.m */,
+				B6B5846D1C3E31E8007B8AB4 /* Main.storyboard */,
 				B637DA781C446D9600072F0C /* Images.xcassets */,
 				B6B584701C3E31E8007B8AB4 /* Assets.xcassets */,
 				B69D81691C456C0000866BC9 /* Old */,
@@ -174,11 +172,13 @@
 		B6B584611C3E31E8007B8AB4 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				B60ED9F91C64391A00E9A8F2 /* Intercom.entitlements */,
 				B63D5D6F1C5BE7EF007BFF5F /* Notification Sounds */,
 				B6B584671C3E31E8007B8AB4 /* MasterViewController.h */,
 				B6B584681C3E31E8007B8AB4 /* MasterViewController.m */,
 				B6B584751C3E31E8007B8AB4 /* Info.plist */,
 				B683452E1C66C4B200437FBB /* InfoPlist.strings */,
+				B61254D01C6D7CCA00B0F472 /* Localizable.strings */,
 				B6B584621C3E31E8007B8AB4 /* main.m */,
 			);
 			name = "Supporting Files";
@@ -347,6 +347,7 @@
 				B61254CF1C6D7CCA00B0F472 /* Base */,
 			);
 			name = Localizable.strings;
+			path = ..;
 			sourceTree = "<group>";
 		};
 		B683452E1C66C4B200437FBB /* InfoPlist.strings */ = {

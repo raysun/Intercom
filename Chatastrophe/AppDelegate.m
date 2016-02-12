@@ -125,6 +125,7 @@
     
     if (![localStore valueForKey:@"unreadCount"]) [localStore setValue:0 forKey:@"unreadCount"];
 
+    // TODO: Reset app - figure out cleaner way
     // RESET APP - uncomment next line
 //    [store removeObjectForKey:@"deviceList"];
     
@@ -268,7 +269,7 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
 }
 
 // didReceiveRemoteNotification will be called as usual, but in addition this is called if the quick reply is used
-- (void)application:(UIApplication *)application handleActionWithIdentifier:(NSString *)identifier forRemoteNotification:(NSDictionary *)userInfo withResponseInfo:(nonnull NSDictionary *)responseInfo completionHandler:(nonnull void (^)())completionHandler {
+    - (void)application:(UIApplication *)application handleActionWithIdentifier:(NSString *)identifier forRemoteNotification:(NSDictionary *)userInfo withResponseInfo:(nonnull NSDictionary *)responseInfo completionHandler:(nonnull void (^)())completionHandler {
 
     CKQueryNotification *cloudKitNotification = (CKQueryNotification *)[CKNotification notificationFromRemoteNotificationDictionary:userInfo];
     
@@ -385,7 +386,6 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
             [self addSubscriptionForPredicate:predicate];
         }
 
-        // TODO: Fix the hacky check above with a real check for the actual predicates.
 
         NSUInteger i = [subscriptions indexOfObjectPassingTest:^BOOL(id obj, NSUInteger idx, BOOL *stop) {
             return ([[(CKSubscription *)obj predicate] isEqual:predicateAll]);
@@ -421,7 +421,7 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
                                    @"Body"
                                    ];
     info.category = @"category";
-    // BUGBUG: I can't seem to set the "slide to send" text on the lock screen.
+    // BUGBUG: I can't seem to set the "slide to view (send)" text on the lock screen.
 //    info.alertActionLocalizationKey = @"view";
 //    info.desiredKeys = @[@"FromFriendlyName"];
     
@@ -480,7 +480,9 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
         for (NSString* key in changedKeys) {
             NSMutableArray *value = (NSMutableArray *)[store objectForKey:key];
             [userDefaults setObject:value forKey:key];
-            self.deviceList = value;
+            if ([key isEqualToString:@"deviceList"]) {
+                self.deviceList = value;
+            }
         }
         [self notify:@"NewDevice"];
         NSLog(@"Cloud KV store update notification: %@",self.deviceList);
