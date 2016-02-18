@@ -173,7 +173,7 @@
     self.messageIDs = [NSMutableArray new];
 
     CKQuery *query = [[CKQuery alloc] initWithRecordType:@"Message" predicate:[NSPredicate predicateWithValue:YES]];
-    query.sortDescriptors = @[[[NSSortDescriptor alloc] initWithKey:@"Date" ascending:true]];
+    query.sortDescriptors = @[[[NSSortDescriptor alloc] initWithKey:@"creationDate" ascending:true]];
     
     [self performQuery:query];
     
@@ -233,7 +233,13 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     NSDate *date = [record objectForKey:@"Date"];
     CKAsset *imageAsset = [record objectForKey:@"Image"];
     UIImage *image = [UIImage imageWithContentsOfFile:imageAsset.fileURL.path];
-    if (!fromFriendlyName) fromFriendlyName = @"Unknown name";
+
+    // Handle missing fields
+    if (!from) from = @"Unknown";
+    if (!fromFriendlyName) fromFriendlyName = @"Unknown";
+    if (!to) to = @"Unknown";
+    if (!date) date = record[@"creationDate"];
+   // NSLog(@"Creation Date: %@",record[@"creationDate"]);
     
     // BUGBUG: logging recordIDs that map 1-1 with the index in the message view. Very hacky way to do this; should be storing in overridden JSQMessage object
     [self.messageIDs addObject:recordID];
