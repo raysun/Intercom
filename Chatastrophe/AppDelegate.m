@@ -34,8 +34,8 @@
 //    splitViewController.delegate = self;
      */
 //    NSLog(@"App launching, notifications missed: %@",launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey]);
-    
-    self.atLeastOneMessageReceived = NO;
+    localStore = [NSUserDefaults standardUserDefaults];
+    if (![localStore valueForKey:@"atLeastOneMessageReceived"]) [localStore setValue:@"NO" forKey:@"atLeastOneMessageReceived"];
     
     // Get the device's name to use in the UI on other devices
     self.myName = [[UIDevice currentDevice] name];
@@ -233,7 +233,9 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     NSDate *date = [record objectForKey:@"Date"];
     CKAsset *imageAsset = [record objectForKey:@"Image"];
     UIImage *image = [UIImage imageWithContentsOfFile:imageAsset.fileURL.path];
+
     if (!fromFriendlyName) fromFriendlyName = @"Unknown name";
+    if (!date) date = record[@"creationDate"];
     
     // BUGBUG: logging recordIDs that map 1-1 with the index in the message view. Very hacky way to do this; should be storing in overridden JSQMessage object
     [self.messageIDs addObject:recordID];
@@ -288,7 +290,8 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     if (cloudKitNotification.notificationType == CKNotificationTypeQuery
         && appState != UIApplicationStateInactive
         && recordID) {
-        self.atLeastOneMessageReceived = YES;
+        [localStore setValue:@"YES" forKey:@"atLeastOneMessageReceived"];
+        //        self.atLeastOneMessageReceived = YES;
         NSInteger unreadCount = [[localStore valueForKey:@"unreadCount"] integerValue];
         unreadCount = appState == UIApplicationStateActive ? 0 : unreadCount+1;
         [localStore setValue:[NSString stringWithFormat:@"%ld", (long)unreadCount] forKey:@"unreadCount"];

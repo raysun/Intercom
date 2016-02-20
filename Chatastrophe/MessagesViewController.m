@@ -283,7 +283,8 @@
 }
 
 - (void)showWarningIfOnlyDevice {
-    if (appDelegate.deviceList.count == 1 && appDelegate.atLeastOneMessageReceived == NO) {
+    NSUserDefaults *localStore = [NSUserDefaults standardUserDefaults];
+    if (appDelegate.deviceList.count < 2 && [[localStore valueForKey:@"atLeastOneMessageReceived"] isEqual: @"NO"]) {
         JSQMessage *message = [[JSQMessage alloc] initWithSenderId:@"WarningID"
                                                  senderDisplayName:@"Warning"
                                                               date:[NSDate date]
