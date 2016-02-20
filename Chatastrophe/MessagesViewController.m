@@ -288,7 +288,7 @@
         JSQMessage *message = [[JSQMessage alloc] initWithSenderId:@"WarningID"
                                                  senderDisplayName:@"Warning"
                                                               date:[NSDate date]
-                                                              text:@"No other iPhones or iPads found. Intercom only sends messages to devices with your iCloud account."];
+                                                              text:@"No other iPhones or iPads found. Intercom only sends messages to devices with iCloud Drive enabled and signed in with your iCloud account."];
         
         [self.demoData.messages addObject:message];
         dispatch_async(dispatch_get_main_queue(), ^(void){
