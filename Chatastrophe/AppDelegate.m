@@ -36,6 +36,8 @@
 //    NSLog(@"App launching, notifications missed: %@",launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey]);
     localStore = [NSUserDefaults standardUserDefaults];
     if (![localStore valueForKey:@"atLeastOneMessageReceived"]) [localStore setValue:@"NO" forKey:@"atLeastOneMessageReceived"];
+    if (![localStore valueForKey:@"unreadCount"]) [localStore setValue:0 forKey:@"unreadCount"];
+    [localStore synchronize];
     
     // Get the device's name to use in the UI on other devices
     self.myName = [[UIDevice currentDevice] name];
@@ -121,9 +123,9 @@
     [application registerForRemoteNotifications];
     
     store = [NSUbiquitousKeyValueStore defaultStore];
-    localStore = [NSUserDefaults standardUserDefaults];
+//    localStore = [NSUserDefaults standardUserDefaults];
     
-    if (![localStore valueForKey:@"unreadCount"]) [localStore setValue:0 forKey:@"unreadCount"];
+
 
     // TODO: Reset app - figure out cleaner way
     // RESET APP - uncomment next line
@@ -173,7 +175,8 @@
     self.messageIDs = [NSMutableArray new];
 
     CKQuery *query = [[CKQuery alloc] initWithRecordType:@"Message" predicate:[NSPredicate predicateWithValue:YES]];
-    query.sortDescriptors = @[[[NSSortDescriptor alloc] initWithKey:@"Date" ascending:true]];
+//    query.sortDescriptors = @[[[NSSortDescriptor alloc] initWithKey:@"Date" ascending:true]];
+      query.sortDescriptors = @[[[NSSortDescriptor alloc] initWithKey:@"creationDate" ascending:true]];
     
     [self performQuery:query];
     
