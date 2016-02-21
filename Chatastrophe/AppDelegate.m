@@ -35,8 +35,8 @@
      */
 //    NSLog(@"App launching, notifications missed: %@",launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey]);
     localStore = [NSUserDefaults standardUserDefaults];
-    if (![localStore valueForKey:@"atLeastOneMessageReceived"]) [localStore setValue:@"NO" forKey:@"atLeastOneMessageReceived"];
-    if (![localStore valueForKey:@"unreadCount"]) [localStore setValue:0 forKey:@"unreadCount"];
+    if (![localStore boolForKey:@"atLeastOneMessageReceived"]) [localStore setBool:NO forKey:@"atLeastOneMessageReceived"];
+    if (![localStore integerForKey:@"unreadCount"]) [localStore setInteger:0 forKey:@"unreadCount"];
     [localStore synchronize];
     
     // Get the device's name to use in the UI on other devices
@@ -129,7 +129,7 @@
 
     // TODO: Reset app - figure out cleaner way
     // RESET APP - uncomment next line
-//    [store removeObjectForKey:@"deviceList"];
+    //    [store removeObjectForKey:@"deviceList"];
     
     // RESET SUBSCRIPTIONS - only to be used in special builds to kill subscriptions if I change them
 //    [self resetSubscriptions];
@@ -237,8 +237,15 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     CKAsset *imageAsset = [record objectForKey:@"Image"];
     UIImage *image = [UIImage imageWithContentsOfFile:imageAsset.fileURL.path];
 
+    // Failsafe - set values if some of these fields are blank for unknown reasons
+    if (!from) from = @"Unknown ID";
     if (!fromFriendlyName) fromFriendlyName = @"Unknown name";
+    if (!to) from = @"Unknown ID";
     if (!date) date = record[@"creationDate"];
+    
+    // If we're saving a record, at least one message has been received
+    [localStore setBool:YES forKey:@"atLeastOneMessageReceived"];
+    [localStore synchronize];
     
     // BUGBUG: logging recordIDs that map 1-1 with the index in the message view. Very hacky way to do this; should be storing in overridden JSQMessage object
     [self.messageIDs addObject:recordID];
@@ -293,11 +300,11 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     if (cloudKitNotification.notificationType == CKNotificationTypeQuery
         && appState != UIApplicationStateInactive
         && recordID) {
-        [localStore setValue:@"YES" forKey:@"atLeastOneMessageReceived"];
+        [localStore setBool:YES forKey:@"atLeastOneMessageReceived"];
         //        self.atLeastOneMessageReceived = YES;
-        NSInteger unreadCount = [[localStore valueForKey:@"unreadCount"] integerValue];
+        NSInteger unreadCount = [localStore integerForKey:@"unreadCount"];
         unreadCount = appState == UIApplicationStateActive ? 0 : unreadCount+1;
-        [localStore setValue:[NSString stringWithFormat:@"%ld", (long)unreadCount] forKey:@"unreadCount"];
+        [localStore setInteger:unreadCount forKey:@"unreadCount"];
         [localStore synchronize];
         application.applicationIconBadgeNumber = unreadCount;
         NSLog(@"received Cloud notification ID: %@",cloudKitNotification);
@@ -497,17 +504,22 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
         // If something is changing externally, get the changes
         // and update the corresponding keys locally.
         NSArray* changedKeys = [userInfo objectForKey:NSUbiquitousKeyValueStoreChangedKeysKey];
-        //        NSUbiquitousKeyValueStore* store = [NSUbiquitousKeyValueStore defaultStore];
         NSLog(@"Changed Keys %@", changedKeys);
-        NSUserDefaults* userDefaults = [NSUserDefaults standardUserDefaults];
+//        NSUserDefaults* userDefaults = [NSUserDefaults standardUserDefaults];
         
         // This loop assumes you are using the same key names in both
         // the user defaults database and the iCloud key-value store
         for (NSString* key in changedKeys) {
-            NSMutableArray *value = (NSMutableArray *)[store objectForKey:key];
-            [userDefaults setObject:value forKey:key];
+//            [userDefaults setObject:value forKey:key];
+
             if ([key isEqualToString:@"deviceList"]) {
-                self.deviceList = value;
+                NSArray *value = (NSArray *)[store objectForKey:key];
+                NSMutableSet *set = [NSMutableSet setWithArray:value];
+                [set addObjectsFromArray:self.deviceList];
+                self.deviceList = [set allObjects];
+                [store setObject:self.deviceList forKey:@"deviceList"];
+                [localStore setObject:self.deviceList forKey:@"deviceList"];
+                [localStore synchronize];
             }
         }
         [self notify:@"NewDevice"];
@@ -544,7 +556,7 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
 
     // When app opens, mark unread count back to 0
     application.applicationIconBadgeNumber = 0;
-    [localStore setValue:0 forKey:@"unreadCount"];
+    [localStore setInteger:0 forKey:@"unreadCount"];
     [localStore synchronize];
     
     /* This used to clear the cloud's badge - no need anymore, doing on client like I should have done.
